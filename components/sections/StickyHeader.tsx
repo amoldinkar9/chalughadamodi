@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
-  { label: "मुख्यपान", href: "#hero" },
-  { label: "मासिके", href: "#magazine" },
-  { label: "टेस्ट", href: "#tests" },
-  { label: "संपर्क", href: "#faq" },
+  { label: "Home", href: "#hero" },
+  { label: "Current Affairs Magazine", href: "#magazine" },
+  { label: "Tests", href: "#tests" },
+  { label: "Contact", href: "#faq" },
 ];
 
 export default function StickyHeader() {
@@ -37,11 +37,10 @@ export default function StickyHeader() {
     <>
       <header
         id="site-header"
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-          scrolled
-            ? "bg-surface shadow-sm border-b border-transparent"
-            : "bg-cream border-b border-border"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${scrolled
+          ? "bg-surface shadow-sm border-b border-transparent"
+          : "bg-cream border-b border-border"
+          }`}
       >
         <div className="max-w-[1200px] mx-auto px-6 md:px-12 flex items-center justify-between h-16 md:h-[72px]">
           {/* Logo */}
@@ -73,7 +72,7 @@ export default function StickyHeader() {
               rel="noopener noreferrer"
               className="btn-primary px-4 py-2 rounded-md font-semibold text-sm"
             >
-              मोफत टेस्ट द्या
+              Start Test
             </a>
 
             {/* Hamburger */}
@@ -101,7 +100,7 @@ export default function StickyHeader() {
         >
           <X size={28} />
         </button>
-        <nav className="flex flex-col items-center gap-8" aria-label="मोबाईल नेव्हिगेशन">
+        <nav className="flex flex-col items-left gap-8" aria-label="मोबाईल नेव्हिगेशन">
           {navLinks.map((link) => (
             <a
               key={link.href}
@@ -118,7 +117,7 @@ export default function StickyHeader() {
             rel="noopener noreferrer"
             className="btn-primary px-8 py-3 rounded-md font-semibold text-lg mt-4"
           >
-            मोफत टेस्ट द्या
+            Start Test
           </a>
         </nav>
       </div>

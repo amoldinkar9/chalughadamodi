@@ -3,9 +3,9 @@
 import { useRef, useEffect, useState } from "react";
 
 const steps = [
-  { number: "१", label: "बातमी", heading: "प्रोजेक्ट HANUMAN", sub: "आंध्र प्रदेश सरकारचा वन्यजीव संरक्षण उपक्रम" },
-  { number: "२", label: "Static GS topic", heading: "GS - पर्यावरण, सरकारी योजना", sub: "" },
-  { number: "३", label: "परीक्षेसाठी", heading: "वनरक्षक, MPSC, तलाठी साठी संभाव्य प्रश्न", sub: "" },
+  { number: "1", label: "बातमी", heading: "प्रोजेक्ट HANUMAN", sub: "आंध्र प्रदेश सरकारचा वन्यजीव संरक्षण उपक्रम" },
+  { number: "2", label: "Static GS topic", heading: "GS - पर्यावरण, सरकारी योजना", sub: "" },
+  { number: "3", label: "परीक्षेसाठी", heading: "वनरक्षक, MPSC, तलाठी साठी संभाव्य प्रश्न", sub: "" },
 ];
 
 export default function StaticGS() {

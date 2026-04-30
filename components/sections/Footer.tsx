@@ -98,7 +98,7 @@ export default function Footer() {
         {/* Bottom strip */}
         <div className="border-t border-gold pt-5 flex flex-col md:flex-row items-center justify-between gap-2">
           <p className="text-muted font-medium text-[13px]">
-            © २०२६ चालू घडामोडी. सर्व हक्क राखीव.
+            © 2026 चालू घडामोडी. सर्व हक्क राखीव.
           </p>
           <p className="text-muted/60 font-medium text-[12px]">
             एक TCS9 उपक्रम

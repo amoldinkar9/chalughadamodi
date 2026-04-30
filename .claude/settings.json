@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s 'https://cxhpyymramduwuwktfir.supabase.co/rest/v1/announcements?select=id&limit=1' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4aHB5eW1yYW1kdXd1d2t0ZmlyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzQ1OTgwNSwiZXhwIjoyMDkzMDM1ODA1fQ.nrqdJRK6JAdjYEeCHKcafpGOgVKewZ2Se3BRDTVmk1A' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4aHB5eW1yYW1kdXd1d2t0ZmlyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzQ1OTgwNSwiZXhwIjoyMDkzMDM1ODA1fQ.nrqdJRK6JAdjYEeCHKcafpGOgVKewZ2Se3BRDTVmk1A')",
+      "Bash(claude mcp *)"
+    ]
+  }
+}

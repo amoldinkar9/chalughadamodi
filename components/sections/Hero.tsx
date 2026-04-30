@@ -17,7 +17,7 @@ export default function Hero() {
               आता मराठीत.
             </h1>
             <p className="text-navy-soft font-medium text-lg md:text-xl max-w-[520px] mb-8 leading-relaxed">
-              MPSC, तलाठी, पोलीस भरती, रेल्वे, SSC GD — एका जागी. रोज अपडेट. मोफत.
+              UPSC, MPSC, तलाठी, सरळसेवा — एका जागी. रोज अपडेट. मोफत.
             </p>
 
             {/* Buttons */}
@@ -28,13 +28,13 @@ export default function Hero() {
                 rel="noopener noreferrer"
                 className="btn-primary px-6 py-3 rounded-md font-semibold text-base"
               >
-                आजची टेस्ट सुरू करा
+                Start Test
               </a>
               <a
                 href="#magazine"
                 className="btn-outline px-6 py-3 rounded-md font-semibold text-base"
               >
-                मासिक पहा
+                Read Magazine
               </a>
             </div>
 
@@ -42,7 +42,7 @@ export default function Hero() {
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-muted font-medium text-sm">
               <span>रोज अपडेट</span>
               <span className="text-gold">•</span>
-              <span>१००% मोफत</span>
+              <span>100% मोफत</span>
               <span className="text-gold">•</span>
               <span>मराठीत स्पष्टीकरण</span>
               <span className="text-gold">•</span>

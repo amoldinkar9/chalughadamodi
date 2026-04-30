@@ -1,0 +1,412 @@
+"use client";
+
+import { useState, useRef } from "react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, Upload, X, ImageIcon } from "lucide-react";
+
+interface FieldConfig {
+  key: string;
+  label: string;
+  type: "text" | "textarea" | "switch" | "number" | "image";
+  placeholder?: string;
+  uploadFolder?: string;
+}
+
+interface AdminCrudPageProps {
+  title: string;
+  apiPath: string;
+  fields: FieldConfig[];
+  columns: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  initialData: any[];
+}
+
+export default function AdminCrudPage({ title, apiPath, fields, columns, initialData }: AdminCrudPageProps) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [items, setItems] = useState<any[]>(initialData);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [editItem, setEditItem] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [formData, setFormData] = useState<any>({});
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState<Record<string, boolean>>({});
+  const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+
+  const uploadFile = async (file: File, folder: string, fieldKey: string) => {
+    setUploading((prev) => ({ ...prev, [fieldKey]: true }));
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      body.append("folder", folder);
+      const res = await fetch("/api/admin/upload", { method: "POST", body });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Upload failed");
+      }
+      const { url } = await res.json();
+      setFormData((prev: Record<string, unknown>) => ({ ...prev, [fieldKey]: url }));
+      toast.success("Image uploaded!");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setUploading((prev) => ({ ...prev, [fieldKey]: false }));
+    }
+  };
+
+  const resetForm = () => {
+    const defaults: Record<string, string | boolean | number> = {};
+    fields.forEach((f) => {
+      if (f.key === "published") defaults[f.key] = true;
+      else if (f.key === "display_order") {
+        const maxOrder = items.reduce((max, item) => Math.max(max, item.display_order || 0), 0);
+        defaults[f.key] = maxOrder + 1;
+      } else if (f.type === "switch") defaults[f.key] = false;
+      else if (f.type === "number") defaults[f.key] = 0;
+      else defaults[f.key] = "";
+    });
+    setFormData(defaults);
+    setEditItem(null);
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const openEdit = (item: any) => {
+    setEditItem(item);
+    const data: Record<string, unknown> = {};
+    fields.forEach((f) => { data[f.key] = item[f.key] ?? ""; });
+    setFormData(data);
+    setDialogOpen(true);
+  };
+
+  const openCreate = () => {
+    resetForm();
+    setDialogOpen(true);
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      if (editItem) {
+        const res = await fetch(apiPath, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: editItem.id, ...formData }),
+        });
+        const result = await res.json();
+        if (!res.ok) throw new Error(result.error || "Update failed");
+        setItems(items.map((i) => (i.id === result.id ? result : i)));
+        toast.success("अपडेट यशस्वी!");
+      } else {
+        const payload = { ...formData, published: true };
+        const res = await fetch(apiPath, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const result = await res.json();
+        if (!res.ok) throw new Error(result.error || "Create failed");
+        setItems([...items, result]);
+        toast.success("नवीन entry तयार झाली!");
+      }
+      setDialogOpen(false);
+      resetForm();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "काहीतरी चुकलं. पुन्हा प्रयत्न करा.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await fetch(apiPath, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (!res.ok) throw new Error("Delete failed");
+      setItems(items.filter((i) => i.id !== id));
+      toast.success("Delete यशस्वी!");
+    } catch {
+      toast.error("Delete अयशस्वी.");
+    }
+  };
+
+  const togglePublish = async (item: { id: string; published: boolean }) => {
+    try {
+      const res = await fetch(apiPath, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: item.id, published: !item.published }),
+      });
+      if (!res.ok) throw new Error("Toggle failed");
+      const updated = await res.json();
+      setItems(items.map((i) => (i.id === updated.id ? updated : i)));
+      toast.success(updated.published ? "Published!" : "Unpublished!");
+    } catch {
+      toast.error("Toggle अयशस्वी.");
+    }
+  };
+
+  const moveItem = async (item: { id: string; display_order: number }, direction: "up" | "down") => {
+    const sorted = [...items].sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+    const idx = sorted.findIndex((i) => i.id === item.id);
+    const swapIdx = direction === "up" ? idx - 1 : idx + 1;
+    if (swapIdx < 0 || swapIdx >= sorted.length) return;
+
+    const other = sorted[swapIdx];
+    try {
+      await Promise.all([
+        fetch(apiPath, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: item.id, display_order: other.display_order }),
+        }),
+        fetch(apiPath, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: other.id, display_order: item.display_order }),
+        }),
+      ]);
+      setItems(items.map((i) => {
+        if (i.id === item.id) return { ...i, display_order: other.display_order };
+        if (i.id === other.id) return { ...i, display_order: item.display_order };
+        return i;
+      }));
+    } catch {
+      toast.error("Reorder अयशस्वी.");
+    }
+  };
+
+  const sortedItems = [...items].sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold">{title}</h1>
+          <p className="text-sm text-muted-foreground">{items.length} entries</p>
+        </div>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogTrigger render={<Button />} onClick={openCreate}>
+            <Plus size={16} className="mr-2" /> नवीन जोडा
+          </DialogTrigger>
+          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{editItem ? "Edit" : "नवीन"} {title}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 mt-4">
+              {fields.map((field) => (
+                <div key={field.key} className="space-y-2">
+                  <Label htmlFor={field.key}>{field.label}</Label>
+                  {field.type === "textarea" ? (
+                    <Textarea
+                      id={field.key}
+                      value={formData[field.key] || ""}
+                      onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
+                      placeholder={field.placeholder}
+                      rows={3}
+                    />
+                  ) : field.type === "switch" ? (
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        id={field.key}
+                        checked={!!formData[field.key]}
+                        onCheckedChange={(v) => setFormData({ ...formData, [field.key]: v })}
+                      />
+                      <span className="text-sm text-muted-foreground">
+                        {formData[field.key] ? "होय" : "नाही"}
+                      </span>
+                    </div>
+                  ) : field.type === "image" ? (
+                    <div className="space-y-3">
+                      {formData[field.key] && (
+                        <div className="relative rounded-md overflow-hidden border">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={formData[field.key]}
+                            alt="Preview"
+                            className="w-full h-auto max-h-48 object-cover"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2 h-6 w-6"
+                            onClick={() => setFormData({ ...formData, [field.key]: "" })}
+                          >
+                            <X size={12} />
+                          </Button>
+                        </div>
+                      )}
+                      <div
+                        className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 transition-colors"
+                        onClick={() => fileInputRefs.current[field.key]?.click()}
+                        onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const file = e.dataTransfer.files[0];
+                          if (file) uploadFile(file, field.uploadFolder || "general", field.key);
+                        }}
+                      >
+                        <input
+                          ref={(el) => { fileInputRefs.current[field.key] = el; }}
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp,image/gif"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) uploadFile(file, field.uploadFolder || "general", field.key);
+                            e.target.value = "";
+                          }}
+                        />
+                        {uploading[field.key] ? (
+                          <p className="text-sm text-muted-foreground">Uploading...</p>
+                        ) : (
+                          <>
+                            <Upload size={24} className="mx-auto mb-2 text-muted-foreground" />
+                            <p className="text-sm text-muted-foreground">
+                              Click or drag image here (max 5MB)
+                            </p>
+                          </>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <ImageIcon size={12} />
+                        <span>किंवा URL paste करा:</span>
+                      </div>
+                      <Input
+                        id={field.key}
+                        value={formData[field.key] || ""}
+                        onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
+                        placeholder={field.placeholder || "https://example.com/image.jpg"}
+                      />
+                    </div>
+                  ) : field.type === "number" ? (
+                    <Input
+                      id={field.key}
+                      type="number"
+                      value={formData[field.key] || 0}
+                      onChange={(e) => setFormData({ ...formData, [field.key]: parseInt(e.target.value) || 0 })}
+                      placeholder={field.placeholder}
+                    />
+                  ) : (
+                    <Input
+                      id={field.key}
+                      value={formData[field.key] || ""}
+                      onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
+                      placeholder={field.placeholder}
+                    />
+                  )}
+                </div>
+              ))}
+              <Button className="w-full" onClick={handleSave} disabled={saving}>
+                {saving ? "Saving..." : editItem ? "बदल जतन करा" : "तयार करा"}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <div className="border rounded-lg overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[60px]">क्रम</TableHead>
+              {columns.map((col) => (
+                <TableHead key={col}>{fields.find((f) => f.key === col)?.label || col}</TableHead>
+              ))}
+              <TableHead>Published</TableHead>
+              <TableHead className="w-[120px]">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {sortedItems.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={columns.length + 3} className="text-center py-8 text-muted-foreground">
+                  अजून entries नाहीत. &quot;नवीन जोडा&quot; वर click करा.
+                </TableCell>
+              </TableRow>
+            ) : (
+              sortedItems.map((item, idx) => (
+                <TableRow key={item.id}>
+                  <TableCell>
+                    <div className="flex items-center gap-0.5">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        disabled={idx === 0}
+                        onClick={() => moveItem(item, "up")}
+                      >
+                        <ArrowUp size={12} />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        disabled={idx === sortedItems.length - 1}
+                        onClick={() => moveItem(item, "down")}
+                      >
+                        <ArrowDown size={12} />
+                      </Button>
+                    </div>
+                  </TableCell>
+                  {columns.map((col) => (
+                    <TableCell key={col} className="max-w-[200px] truncate">
+                      {typeof item[col] === "boolean" ? (
+                        item[col] ? <Badge variant="default">होय</Badge> : <Badge variant="secondary">नाही</Badge>
+                      ) : (
+                        String(item[col] ?? "")
+                      )}
+                    </TableCell>
+                  ))}
+                  <TableCell>
+                    <Switch
+                      checked={item.published}
+                      onCheckedChange={() => togglePublish(item)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <Button variant="ghost" size="icon" onClick={() => openEdit(item)}>
+                        <Pencil size={14} />
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger render={<Button variant="ghost" size="icon" className="text-destructive" />}>
+                          <Trash2 size={14} />
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>ही entry delete करायची?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              हे action undo करता येणार नाही. ही entry कायमची delete होईल.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>रद्द करा</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDelete(item.id)}>Delete करा</AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  );
+}

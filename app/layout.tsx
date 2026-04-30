@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
-import { Anek_Devanagari } from "next/font/google";
+import { Anek_Devanagari, Geist } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-geist'});
 
 const anekDevanagari = Anek_Devanagari({
   variable: "--font-anek-devanagari",
@@ -28,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="mr" className={`${anekDevanagari.variable} antialiased`}>
+    <html lang="mr" className={cn("antialiased", anekDevanagari.variable, "font-sans", geist.variable)}>
       <head>
         <script
           type="application/ld+json"

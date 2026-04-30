@@ -2,18 +2,13 @@
 
 import { useState, useRef, useEffect } from "react";
 import { MessageCircle } from "lucide-react";
+import type { FAQ as FAQType } from "@/lib/types";
 
-const faqs = [
-  { q: "हे website मोफत आहे का?", a: "होय, संपूर्णपणे मोफत. कुठलेही शुल्क नाही, login नाही." },
-  { q: "मासिक PDF download करता येते का?", a: "होय. प्रत्येक मासिकाच्या पानावर PDF download बटण आहे." },
-  { q: "टेस्ट किती कठीण आहे?", a: "MPSC, तलाठी, पोलीस भरती च्या प्रत्यक्ष परीक्षेसारखीच पातळी. सरावासाठी योग्य." },
-  { q: "MPSC आणि तलाठी दोन्हीसाठी useful आहे का?", a: "होय. आम्ही प्रत्येक चालू घडामोडी सर्व प्रमुख परीक्षांच्या syllabus नुसार tag करतो." },
-  { q: "Content रोज update होते का?", a: "होय. आठवड्यातील ६ दिवस ताज्या चालू घडामोडी. मासिक एकदा PDF स्वरूपात." },
-  { q: "मराठीतच सर्व content आहे का?", a: "होय. १००% मराठी. कठीण इंग्रजी संज्ञा असल्यास त्यांचा मराठीत अर्थ देखील दिला जातो." },
-  { q: "अजून प्रश्न असतील तर?", a: "खाली WhatsApp बटणावर click करा. आम्हाला थेट संपर्क करा." },
-];
+interface FAQProps {
+  faqs: FAQType[];
+}
 
-export default function FAQ() {
+export default function FAQ({ faqs }: FAQProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
@@ -36,14 +31,14 @@ export default function FAQ() {
     <section ref={sectionRef} id="faq" className="bg-cream py-16 md:py-24">
       <div className="max-w-[800px] mx-auto px-6 md:px-12">
         <div className={`text-center mb-12 ${visible ? "animate-fade-in" : "opacity-0"}`}>
-          <h2 className="text-navy font-bold text-2xl md:text-[32px]">तुमचे प्रश्न</h2>
+          <h2 className="text-navy font-bold text-2xl md:text-[32px]">FAQ&apos;s</h2>
           <span className="section-underline" />
           <p className="text-muted font-medium text-base mt-4">तुमचे शंका — आमची उत्तरे</p>
         </div>
 
         <div className={`${visible ? "animate-fade-in animate-delay-200" : "opacity-0"}`} role="region" aria-label="वारंवार विचारले जाणारे प्रश्न">
           {faqs.map((faq, i) => (
-            <div key={i} className="accordion-item">
+            <div key={faq.id} className="accordion-item">
               <button
                 id={`faq-trigger-${i}`}
                 className="accordion-trigger"
@@ -52,7 +47,7 @@ export default function FAQ() {
                 aria-expanded={openIndex === i}
                 aria-controls={`faq-content-${i}`}
               >
-                <span className="pr-4">{faq.q}</span>
+                <span className="pr-4">{faq.question}</span>
                 <span className="accordion-icon">{openIndex === i ? "−" : "+"}</span>
               </button>
               <div
@@ -61,7 +56,7 @@ export default function FAQ() {
                 role="region"
                 aria-labelledby={`faq-trigger-${i}`}
               >
-                <p className="text-muted font-medium text-[15px] pb-5 leading-relaxed">{faq.a}</p>
+                <p className="text-muted font-medium text-[15px] pb-5 leading-relaxed">{faq.answer}</p>
               </div>
             </div>
           ))}
