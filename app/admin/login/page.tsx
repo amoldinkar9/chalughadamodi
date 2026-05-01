@@ -28,7 +28,7 @@ export default function AdminLogin() {
       router.push("/admin");
       router.refresh();
     } else {
-      setError("चुकीचा पासवर्ड. पुन्हा प्रयत्न करा.");
+      setError("Wrong Password | Try Again");
     }
     setLoading(false);
   };
