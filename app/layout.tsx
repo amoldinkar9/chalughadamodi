@@ -34,14 +34,18 @@ export default function RootLayout({
     <html lang="mr" className={cn("antialiased", anekDevanagari.variable, "font-sans", geist.variable)}>
       <head>
 
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-DDQPJQ7VLG"></script>
-        <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-DDQPJQ7VLG');
-        </script>
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-DDQPJQ7VLG" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-DDQPJQ7VLG');
+            `,
+          }}
+        />
 
         <script
           type="application/ld+json"
