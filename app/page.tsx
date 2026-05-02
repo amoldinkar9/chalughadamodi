@@ -96,7 +96,7 @@ async function getContent(): Promise<PublicContent> {
   }
 }
 
-export const revalidate = 60; // ISR: revalidate every 60 seconds
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   const [content, heroImageUrl] = await Promise.all([getContent(), getHeroImageUrl()]);

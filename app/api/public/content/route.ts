@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import type { PublicContent } from "@/lib/types";
 
-export const revalidate = 60; // Revalidate every 60 seconds
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const [announcements, gallery, magazines, tests, testimonials, faqs] = await Promise.all([
