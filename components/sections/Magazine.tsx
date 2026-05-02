@@ -7,9 +7,12 @@ interface MagazineProps {
   magazines: MagazineType[];
 }
 
+const ITEMS_PER_LOAD = 6;
+
 export default function Magazine({ magazines }: MagazineProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_LOAD);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -19,6 +22,9 @@ export default function Magazine({ magazines }: MagazineProps) {
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
+
+  const displayedMagazines = magazines.slice(0, visibleCount);
+  const hasMore = visibleCount < magazines.length;
 
   return (
     <section ref={sectionRef} id="magazine" className="bg-cream py-16 md:py-24">
@@ -30,7 +36,7 @@ export default function Magazine({ magazines }: MagazineProps) {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {magazines.map((mag, i) => (
+          {displayedMagazines.map((mag, i) => (
             <div key={mag.id} className={`card-hover bg-surface border border-border rounded-md overflow-hidden ${visible ? `animate-fade-in animate-delay-${(i % 3 + 1) * 100}` : "opacity-0"}`}>
               {mag.image_url ? (
                 <img
@@ -50,11 +56,16 @@ export default function Magazine({ magazines }: MagazineProps) {
           ))}
         </div>
 
-        {/* 
-        <div className="text-center mt-10">
-          <a href="#" className="text-gold font-medium text-sm hover:underline transition-all duration-200">जुनी मासिके पहा →</a>
-        </div>
-        */}
+        {hasMore && (
+          <div className="text-center mt-10">
+            <button
+              onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_LOAD)}
+              className="btn-primary px-6 py-2.5 rounded-md font-semibold text-sm"
+            >
+              अजून मासिके पहा →
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

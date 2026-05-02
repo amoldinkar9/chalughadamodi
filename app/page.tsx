@@ -107,10 +107,10 @@ export default async function Home() {
       <main>
         <Hero imageUrl={heroImageUrl} />
         <Announcements announcements={content.announcements} />
-        <Gallery posts={content.gallery} />
         <Magazine magazines={content.magazines} />
-        <Tests tests={content.tests} />
         <StaticGS />
+        <Tests tests={content.tests} />
+        <Gallery posts={content.gallery} />
         <Testimonials testimonials={content.testimonials} />
         <FAQ faqs={content.faqs} />
         <FinalCTA />
