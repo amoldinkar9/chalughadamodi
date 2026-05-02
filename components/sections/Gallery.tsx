@@ -15,10 +15,12 @@ function daysUntil(dateStr: string): number {
   return Math.ceil((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 }
 
+const MARATHI_MONTHS = ["जानेवारी", "फेब्रुवारी", "मार्च", "एप्रिल", "मे", "जून", "जुलै", "ऑगस्ट", "सप्टेंबर", "ऑक्टोबर", "नोव्हेंबर", "डिसेंबर"];
+
 function formatDate(dateStr: string): string {
   if (!dateStr) return "";
   const d = new Date(dateStr);
-  return d.toLocaleDateString("mr-IN", { day: "numeric", month: "long", year: "numeric" });
+  return `${d.getDate()} ${MARATHI_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 export default function Gallery({ posts }: GalleryProps) {

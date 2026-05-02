@@ -46,7 +46,7 @@ export default function Announcements({ announcements }: AnnouncementsProps) {
     <section ref={sectionRef} id="announcements" className="bg-cream py-10 md:py-16">
       <div className="max-w-[1200px] mx-auto px-6 md:px-12">
         <div className={`text-center mb-8 ${visible ? "animate-fade-in" : "opacity-0"}`}>
-          <h2 className="text-navy font-bold text-2xl md:text-[32px]">सूचना - Announcements</h2>
+          <h2 className="text-navy font-bold text-2xl md:text-[32px]">सूचना</h2>
           <span className="section-underline" />
           <p className="text-muted font-medium text-base mt-4">ताज्या घोषणा आणि अपडेट्स</p>
         </div>
@@ -87,9 +87,8 @@ export default function Announcements({ announcements }: AnnouncementsProps) {
                 <button
                   key={i}
                   onClick={() => setCurrent(i)}
-                  className={`w-2.5 h-2.5 rounded-full transition-colors duration-200 ${
-                    i === current ? "bg-gold" : "bg-navy/20 hover:bg-navy/40"
-                  }`}
+                  className={`w-2.5 h-2.5 rounded-full transition-colors duration-200 ${i === current ? "bg-gold" : "bg-navy/20 hover:bg-navy/40"
+                    }`}
                   aria-label={`सूचना ${i + 1} पहा`}
                 />
               ))}

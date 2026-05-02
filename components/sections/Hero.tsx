@@ -15,11 +15,17 @@ export default function Hero({ imageUrl }: HeroProps) {
             <p className="text-gold font-semibold uppercase text-[15px] md:text-[17px] mb-4">
               स्पर्धा परीक्षा विद्यार्थ्यांसाठी
             </p>
-            <h1 className="text-navy font-extrabold text-[36px] md:text-[56px] leading-[1.1] tracking-tight mb-6">
-              चालू घडामोडी,
+            <h1 className="text-navy font-extrabold text-[36px] md:text-[40px] leading-[1.3] tracking-tight mb-6">
+              तयारी कुठून सुरू करायची
               <br />
-              आता मराठीत.
+              — कळत नाहीये?
+
             </h1>
+            <h3 className="text-navy font-extrabold text-[36px] md:text-[36px] leading-[1.3] tracking-tight mb-6">
+              चालू घडामोडी, आता मराठीत.
+            </h3>
+
+
             <p className="text-navy-soft font-medium text-lg md:text-xl max-w-[520px] mb-8 leading-relaxed">
               UPSC, MPSC, तलाठी, सरळसेवा — एका जागी. रोज अपडेट. मोफत.
             </p>
