@@ -65,9 +65,8 @@ export default function Gallery({ posts }: GalleryProps) {
             return (
               <div
                 key={post.id}
-                className={`card-hover bg-surface border rounded-md overflow-hidden ${
-                  isUrgent ? "border-red-500 border-2 shadow-lg shadow-red-100" : "border-border"
-                } ${visible ? `animate-fade-in animate-delay-${(i % 4 + 1) * 100}` : "opacity-0"}`}
+                className={`card-hover bg-surface border rounded-md overflow-hidden ${isUrgent ? "border-red-500 border-2 shadow-lg shadow-red-100" : "border-border"
+                  } ${visible ? `animate-fade-in animate-delay-${(i % 4 + 1) * 100}` : "opacity-0"}`}
               >
                 <div className="relative">
                   {post.image_url ? (
@@ -114,9 +113,11 @@ export default function Gallery({ posts }: GalleryProps) {
           })}
         </div>
 
+        {/*
         <div className="text-center mt-10">
           <a href="#" className="btn-outline inline-block px-6 py-3 rounded-md font-semibold text-sm">सर्व जाहिराती पहा</a>
         </div>
+        */}
       </div>
     </section>
   );

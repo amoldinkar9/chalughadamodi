@@ -50,9 +50,11 @@ export default function Magazine({ magazines }: MagazineProps) {
           ))}
         </div>
 
+        {/* 
         <div className="text-center mt-10">
           <a href="#" className="text-gold font-medium text-sm hover:underline transition-all duration-200">जुनी मासिके पहा →</a>
         </div>
+        */}
       </div>
     </section>
   );

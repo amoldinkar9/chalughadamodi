@@ -12,8 +12,8 @@ export default function Hero({ imageUrl }: HeroProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
           {/* Text */}
           <div className="animate-fade-in">
-            <p className="text-gold font-semibold uppercase tracking-widest text-[12px] md:text-[13px] mb-4">
-              मराठी विद्यार्थ्यांसाठी
+            <p className="text-gold font-semibold uppercase text-[15px] md:text-[17px] mb-4">
+              स्पर्धा परीक्षा विद्यार्थ्यांसाठी
             </p>
             <h1 className="text-navy font-extrabold text-[36px] md:text-[56px] leading-[1.1] tracking-tight mb-6">
               चालू घडामोडी,
@@ -27,9 +27,7 @@ export default function Hero({ imageUrl }: HeroProps) {
             {/* Buttons */}
             <div className="flex flex-wrap gap-4 mb-8">
               <a
-                href="https://www.tcs9.in/mr/test-series"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#tests"
                 className="btn-primary px-6 py-3 rounded-md font-semibold text-base"
               >
                 Start Test
@@ -43,8 +41,8 @@ export default function Hero({ imageUrl }: HeroProps) {
             </div>
 
             {/* Trust strip */}
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-muted font-medium text-sm">
-              <span>रोज अपडेट</span>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-muted font-semibold text-sm">
+              <span>Current + Static GS</span>
               <span className="text-gold">•</span>
               <span>100% मोफत</span>
               <span className="text-gold">•</span>
