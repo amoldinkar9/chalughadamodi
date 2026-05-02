@@ -3,7 +3,7 @@ import { Anek_Devanagari, Geist } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-geist'});
+const geist = Geist({ subsets: ['latin'], variable: '--font-geist' });
 
 const anekDevanagari = Anek_Devanagari({
   variable: "--font-anek-devanagari",
@@ -33,6 +33,16 @@ export default function RootLayout({
   return (
     <html lang="mr" className={cn("antialiased", anekDevanagari.variable, "font-sans", geist.variable)}>
       <head>
+
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-DDQPJQ7VLG"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-DDQPJQ7VLG');
+        </script>
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
