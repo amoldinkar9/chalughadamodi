@@ -3,12 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Megaphone, Newspaper, BookOpen, ClipboardList, MessageSquareQuote, HelpCircle, LogOut, Menu, X, ExternalLink } from "lucide-react";
+import { LayoutDashboard, ImageIcon, Megaphone, Newspaper, BookOpen, ClipboardList, MessageSquareQuote, HelpCircle, LogOut, Menu, X, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/hero", label: "Hero Image", icon: ImageIcon },
   { href: "/admin/announcements", label: "Announcements", icon: Megaphone },
   { href: "/admin/gallery", label: "Job Recruitments", icon: Newspaper },
   { href: "/admin/magazines", label: "Magazines", icon: BookOpen },

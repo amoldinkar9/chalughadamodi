@@ -3,9 +3,12 @@
 export interface GalleryPost {
   id: string;
   name: string;
-  date: string;
+  image_url: string;
+  start_date: string;
+  last_date: string;
   link: string;
   is_new: boolean;
+  date_extended?: boolean;
   published: boolean;
   display_order: number;
   created_at: string;
@@ -15,8 +18,7 @@ export interface GalleryPost {
 export interface Magazine {
   id: string;
   month: string;
-  questions: string;
-  pages: string;
+  image_url: string;
   pdf_url: string;
   published: boolean;
   display_order: number;
@@ -30,6 +32,7 @@ export interface Test {
   questions: string;
   duration: string;
   href: string;
+  image_url: string;
   published: boolean;
   display_order: number;
   created_at: string;

@@ -1,4 +1,8 @@
-export default function Hero() {
+interface HeroProps {
+  imageUrl?: string;
+}
+
+export default function Hero({ imageUrl }: HeroProps) {
   return (
     <section
       id="hero"
@@ -50,16 +54,25 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Illustration Placeholder */}
+          {/* Hero Image */}
           <div className="animate-fade-in animate-delay-200 flex justify-center md:justify-end">
-            <div
-              className="w-full max-w-[400px] border border-navy rounded-lg bg-cream flex items-center justify-center text-navy font-medium text-lg"
-              style={{ aspectRatio: "5/6" }}
-              role="img"
-              aria-label="चालू घडामोडी हिरो प्रतिमा — लवकरच येत आहे"
-            >
-              हिरो प्रतिमा
-            </div>
+            {imageUrl ? (
+              <img
+                src={imageUrl}
+                alt="चालू घडामोडी हिरो प्रतिमा"
+                className="w-full max-w-[400px] rounded-lg object-cover"
+                style={{ aspectRatio: "5/6" }}
+              />
+            ) : (
+              <div
+                className="w-full max-w-[400px] border border-navy rounded-lg bg-cream flex items-center justify-center text-navy font-medium text-lg"
+                style={{ aspectRatio: "5/6" }}
+                role="img"
+                aria-label="चालू घडामोडी हिरो प्रतिमा"
+              >
+                हिरो प्रतिमा
+              </div>
+            )}
           </div>
         </div>
       </div>

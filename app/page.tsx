@@ -20,25 +20,25 @@ const fallbackContent: PublicContent = {
     { id: "a3", title: "मोफत मासिक PDF डाउनलोड करा", image_url: "https://placehold.co/1280x360/D4A24C/0A2540?text=मोफत+मासिक+PDF", backlink: "#magazine", published: true, display_order: 3, created_at: "", updated_at: "" },
   ],
   gallery: [
-    { id: "1", name: "महाराष्ट्र पोलीस भरती 2026", date: "15 मे 2026", link: "#", is_new: true, published: true, display_order: 1, created_at: "", updated_at: "" },
-    { id: "2", name: "तलाठी भरती 2026", date: "20 मे 2026", link: "#", is_new: true, published: true, display_order: 2, created_at: "", updated_at: "" },
-    { id: "3", name: "रेल्वे RRB Group D", date: "1 जून 2026", link: "#", is_new: false, published: true, display_order: 3, created_at: "", updated_at: "" },
-    { id: "4", name: "SSC GD भरती", date: "10 जून 2026", link: "#", is_new: false, published: true, display_order: 4, created_at: "", updated_at: "" },
-    { id: "5", name: "वनरक्षक भरती", date: "25 जून 2026", link: "#", is_new: false, published: true, display_order: 5, created_at: "", updated_at: "" },
-    { id: "6", name: "सरळसेवा भरती", date: "30 जून 2026", link: "#", is_new: false, published: true, display_order: 6, created_at: "", updated_at: "" },
+    { id: "1", name: "महाराष्ट्र पोलीस भरती 2026", image_url: "", start_date: "2026-04-01", last_date: "2026-05-05", link: "#", is_new: true, date_extended: false, published: true, display_order: 1, created_at: "", updated_at: "" },
+    { id: "2", name: "तलाठी भरती 2026", image_url: "", start_date: "2026-04-10", last_date: "2026-05-20", link: "#", is_new: true, date_extended: false, published: true, display_order: 2, created_at: "", updated_at: "" },
+    { id: "3", name: "रेल्वे RRB Group D", image_url: "", start_date: "2026-04-15", last_date: "2026-06-01", link: "#", is_new: false, date_extended: false, published: true, display_order: 3, created_at: "", updated_at: "" },
+    { id: "4", name: "SSC GD भरती", image_url: "", start_date: "2026-05-01", last_date: "2026-06-10", link: "#", is_new: false, date_extended: true, published: true, display_order: 4, created_at: "", updated_at: "" },
+    { id: "5", name: "वनरक्षक भरती", image_url: "", start_date: "2026-05-05", last_date: "2026-06-25", link: "#", is_new: false, date_extended: false, published: true, display_order: 5, created_at: "", updated_at: "" },
+    { id: "6", name: "सरळसेवा भरती", image_url: "", start_date: "2026-05-10", last_date: "2026-06-30", link: "#", is_new: false, date_extended: false, published: true, display_order: 6, created_at: "", updated_at: "" },
   ],
   magazines: [
-    { id: "1", month: "एप्रिल 2026", questions: "150", pages: "80", pdf_url: "", published: true, display_order: 1, created_at: "", updated_at: "" },
-    { id: "2", month: "मार्च 2026", questions: "150", pages: "80", pdf_url: "", published: true, display_order: 2, created_at: "", updated_at: "" },
-    { id: "3", month: "फेब्रुवारी 2026", questions: "150", pages: "80", pdf_url: "", published: true, display_order: 3, created_at: "", updated_at: "" },
-    { id: "4", month: "जानेवारी 2026", questions: "150", pages: "80", pdf_url: "", published: true, display_order: 4, created_at: "", updated_at: "" },
-    { id: "5", month: "डिसेंबर 2025", questions: "150", pages: "80", pdf_url: "", published: true, display_order: 5, created_at: "", updated_at: "" },
-    { id: "6", month: "नोव्हेंबर 2025", questions: "150", pages: "80", pdf_url: "", published: true, display_order: 6, created_at: "", updated_at: "" },
+    { id: "1", month: "एप्रिल 2026", image_url: "", pdf_url: "", published: true, display_order: 1, created_at: "", updated_at: "" },
+    { id: "2", month: "मार्च 2026", image_url: "", pdf_url: "", published: true, display_order: 2, created_at: "", updated_at: "" },
+    { id: "3", month: "फेब्रुवारी 2026", image_url: "", pdf_url: "", published: true, display_order: 3, created_at: "", updated_at: "" },
+    { id: "4", month: "जानेवारी 2026", image_url: "", pdf_url: "", published: true, display_order: 4, created_at: "", updated_at: "" },
+    { id: "5", month: "डिसेंबर 2025", image_url: "", pdf_url: "", published: true, display_order: 5, created_at: "", updated_at: "" },
+    { id: "6", month: "नोव्हेंबर 2025", image_url: "", pdf_url: "", published: true, display_order: 6, created_at: "", updated_at: "" },
   ],
   tests: [
-    { id: "1", title: "आजची टेस्ट", questions: "10", duration: "5 मिनिट", href: "https://www.tcs9.in/mr/test-series", published: true, display_order: 1, created_at: "", updated_at: "" },
-    { id: "2", title: "या आठवड्याची टेस्ट", questions: "30", duration: "15 मिनिट", href: "https://www.tcs9.in/mr/test-series", published: true, display_order: 2, created_at: "", updated_at: "" },
-    { id: "3", title: "मागील महिना टेस्ट", questions: "50", duration: "30 मिनिट", href: "https://www.tcs9.in/mr/test-series", published: true, display_order: 3, created_at: "", updated_at: "" },
+    { id: "1", title: "आजची टेस्ट", questions: "10", duration: "5 मिनिट", href: "https://www.tcs9.in/mr/test-series", image_url: "", published: true, display_order: 1, created_at: "", updated_at: "" },
+    { id: "2", title: "या आठवड्याची टेस्ट", questions: "30", duration: "15 मिनिट", href: "https://www.tcs9.in/mr/test-series", image_url: "", published: true, display_order: 2, created_at: "", updated_at: "" },
+    { id: "3", title: "मागील महिना टेस्ट", questions: "50", duration: "30 मिनिट", href: "https://www.tcs9.in/mr/test-series", image_url: "", published: true, display_order: 3, created_at: "", updated_at: "" },
   ],
   testimonials: [
     { id: "1", initials: "प्रि", name: "प्रिया देशमुख", exam: "तलाठी, 2025", quote: "Static GS शी प्रत्येक बातमीची जोडणी मला खूप आवडली. Revision सोपी झाली.", published: true, display_order: 1, created_at: "", updated_at: "" },
@@ -55,6 +55,18 @@ const fallbackContent: PublicContent = {
     { id: "7", question: "अजून प्रश्न असतील तर?", answer: "खाली WhatsApp बटणावर click करा. आम्हाला थेट संपर्क करा.", published: true, display_order: 7, created_at: "", updated_at: "" },
   ],
 };
+
+async function getHeroImageUrl(): Promise<string> {
+  try {
+    if (!process.env.SUPABASE_URL || process.env.SUPABASE_URL === "https://your-project.supabase.co") {
+      return "";
+    }
+    const { data } = await supabase.from("site_settings").select("value").eq("key", "hero_image_url").single();
+    return data?.value || "";
+  } catch {
+    return "";
+  }
+}
 
 async function getContent(): Promise<PublicContent> {
   try {
@@ -87,13 +99,13 @@ async function getContent(): Promise<PublicContent> {
 export const revalidate = 60; // ISR: revalidate every 60 seconds
 
 export default async function Home() {
-  const content = await getContent();
+  const [content, heroImageUrl] = await Promise.all([getContent(), getHeroImageUrl()]);
 
   return (
     <>
       <StickyHeader />
       <main>
-        <Hero />
+        <Hero imageUrl={heroImageUrl} />
         <Announcements announcements={content.announcements} />
         <Gallery posts={content.gallery} />
         <Magazine magazines={content.magazines} />

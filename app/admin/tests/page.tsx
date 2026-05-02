@@ -5,6 +5,7 @@ import AdminCrudPage from "@/components/admin/AdminCrudPage";
 
 const fields = [
   { key: "title", label: "Test Title", type: "text" as const, placeholder: "आजची टेस्ट" },
+  { key: "image_url", label: "Image", type: "image" as const, placeholder: "https://example.com/image.jpg", uploadFolder: "tests" },
   { key: "questions", label: "Questions", type: "text" as const, placeholder: "10" },
   { key: "duration", label: "Duration", type: "text" as const, placeholder: "5 मिनिट" },
   { key: "href", label: "Test URL", type: "text" as const, placeholder: "https://www.tcs9.in/mr/test-series" },
@@ -22,7 +23,7 @@ export default async function TestsAdmin() {
       title="टेस्ट - Test"
       apiPath="/api/admin/tests"
       fields={fields}
-      columns={["title", "questions", "duration"]}
+      columns={["title", "image_url", "questions", "duration"]}
       initialData={data || []}
     />
   );

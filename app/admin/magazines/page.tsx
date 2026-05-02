@@ -5,8 +5,7 @@ import AdminCrudPage from "@/components/admin/AdminCrudPage";
 
 const fields = [
   { key: "month", label: "Month", type: "text" as const, placeholder: "एप्रिल 2026" },
-  { key: "questions", label: "Questions Count", type: "text" as const, placeholder: "150" },
-  { key: "pages", label: "Pages Count", type: "text" as const, placeholder: "80" },
+  { key: "image_url", label: "मासिक मुखपृष्ठ (Cover Image 4:5)", type: "image" as const, placeholder: "https://example.com/cover.jpg", uploadFolder: "magazines" },
   { key: "pdf_url", label: "PDF URL", type: "text" as const, placeholder: "https://..." },
   { key: "display_order", label: "Display Order", type: "number" as const },
 ];
@@ -22,7 +21,7 @@ export default async function MagazinesAdmin() {
       title="मासिके - Magazines"
       apiPath="/api/admin/magazines"
       fields={fields}
-      columns={["month", "questions", "pages"]}
+      columns={["month"]}
       initialData={data || []}
     />
   );

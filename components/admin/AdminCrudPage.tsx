@@ -16,7 +16,7 @@ import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, Upload, X, ImageIcon } from "
 interface FieldConfig {
   key: string;
   label: string;
-  type: "text" | "textarea" | "switch" | "number" | "image";
+  type: "text" | "textarea" | "switch" | "number" | "image" | "date";
   placeholder?: string;
   uploadFolder?: string;
 }
@@ -82,7 +82,11 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
   const openEdit = (item: any) => {
     setEditItem(item);
     const data: Record<string, unknown> = {};
-    fields.forEach((f) => { data[f.key] = item[f.key] ?? ""; });
+    fields.forEach((f) => {
+      if (f.type === "switch") data[f.key] = !!item[f.key];
+      else if (f.type === "number") data[f.key] = item[f.key] ?? 0;
+      else data[f.key] = item[f.key] ?? "";
+    });
     setFormData(data);
     setDialogOpen(true);
   };
@@ -292,6 +296,13 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
                         placeholder={field.placeholder || "https://example.com/image.jpg"}
                       />
                     </div>
+                  ) : field.type === "date" ? (
+                    <Input
+                      id={field.key}
+                      type="date"
+                      value={formData[field.key] || ""}
+                      onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
+                    />
                   ) : field.type === "number" ? (
                     <Input
                       id={field.key}

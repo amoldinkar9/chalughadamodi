@@ -17,9 +17,12 @@ CREATE TABLE IF NOT EXISTS announcements (
 CREATE TABLE IF NOT EXISTS gallery (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   name TEXT NOT NULL,
-  date TEXT NOT NULL,
+  image_url TEXT DEFAULT '',
+  start_date DATE,
+  last_date DATE,
   link TEXT DEFAULT '',
   is_new BOOLEAN DEFAULT false,
+  date_extended BOOLEAN DEFAULT false,
   published BOOLEAN DEFAULT true,
   display_order INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT now(),
@@ -30,8 +33,7 @@ CREATE TABLE IF NOT EXISTS gallery (
 CREATE TABLE IF NOT EXISTS magazines (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   month TEXT NOT NULL,
-  questions TEXT DEFAULT '150',
-  pages TEXT DEFAULT '80',
+  image_url TEXT DEFAULT '',
   pdf_url TEXT DEFAULT '',
   published BOOLEAN DEFAULT true,
   display_order INTEGER DEFAULT 0,
@@ -46,6 +48,7 @@ CREATE TABLE IF NOT EXISTS tests (
   questions TEXT NOT NULL,
   duration TEXT NOT NULL,
   href TEXT DEFAULT 'https://www.tcs9.in/mr/test-series',
+  image_url TEXT DEFAULT '',
   published BOOLEAN DEFAULT true,
   display_order INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT now(),
@@ -76,6 +79,13 @@ CREATE TABLE IF NOT EXISTS faqs (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Site Settings (key-value store for hero image, etc.)
+CREATE TABLE IF NOT EXISTS site_settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL DEFAULT '',
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
 -- Enable Row Level Security
 ALTER TABLE announcements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE gallery ENABLE ROW LEVEL SECURITY;
@@ -83,6 +93,7 @@ ALTER TABLE magazines ENABLE ROW LEVEL SECURITY;
 ALTER TABLE tests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE testimonials ENABLE ROW LEVEL SECURITY;
 ALTER TABLE faqs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
 
 -- Public read access (anon can read published rows)
 CREATE POLICY "Public can read published announcements" ON announcements FOR SELECT USING (published = true);
@@ -91,8 +102,12 @@ CREATE POLICY "Public can read published magazines" ON magazines FOR SELECT USIN
 CREATE POLICY "Public can read published tests" ON tests FOR SELECT USING (published = true);
 CREATE POLICY "Public can read published testimonials" ON testimonials FOR SELECT USING (published = true);
 CREATE POLICY "Public can read published faqs" ON faqs FOR SELECT USING (published = true);
+CREATE POLICY "Public can read site_settings" ON site_settings FOR SELECT USING (true);
 
 -- Service role (used by admin API) bypasses RLS, so no admin policies needed
+
+-- Seed data: Site Settings
+INSERT INTO site_settings (key, value) VALUES ('hero_image_url', '') ON CONFLICT (key) DO NOTHING;
 
 -- Seed data: Announcements
 INSERT INTO announcements (title, image_url, backlink, display_order) VALUES
@@ -101,22 +116,22 @@ INSERT INTO announcements (title, image_url, backlink, display_order) VALUES
   ('मोफत मासिक PDF डाउनलोड करा', 'https://placehold.co/1280x360/D4A24C/0A2540?text=मोफत+मासिक+PDF', '#magazine', 3);
 
 -- Seed data: Gallery
-INSERT INTO gallery (name, date, link, is_new, display_order) VALUES
-  ('महाराष्ट्र पोलीस भरती 2026', '15 मे 2026', '#', true, 1),
-  ('तलाठी भरती 2026', '20 मे 2026', '#', true, 2),
-  ('रेल्वे RRB Group D', '1 जून 2026', '#', false, 3),
-  ('SSC GD भरती', '10 जून 2026', '#', false, 4),
-  ('वनरक्षक भरती', '25 जून 2026', '#', false, 5),
-  ('सरळसेवा भरती', '30 जून 2026', '#', false, 6);
+INSERT INTO gallery (name, start_date, last_date, link, is_new, date_extended, display_order) VALUES
+  ('महाराष्ट्र पोलीस भरती 2026', '2026-04-01', '2026-05-15', '#', true, false, 1),
+  ('तलाठी भरती 2026', '2026-04-10', '2026-05-20', '#', true, false, 2),
+  ('रेल्वे RRB Group D', '2026-04-15', '2026-06-01', '#', false, false, 3),
+  ('SSC GD भरती', '2026-05-01', '2026-06-10', '#', false, true, 4),
+  ('वनरक्षक भरती', '2026-05-05', '2026-06-25', '#', false, false, 5),
+  ('सरळसेवा भरती', '2026-05-10', '2026-06-30', '#', false, false, 6);
 
 -- Seed data: Magazines
-INSERT INTO magazines (month, questions, pages, display_order) VALUES
-  ('एप्रिल 2026', '150', '80', 1),
-  ('मार्च 2026', '150', '80', 2),
-  ('फेब्रुवारी 2026', '150', '80', 3),
-  ('जानेवारी 2026', '150', '80', 4),
-  ('डिसेंबर 2025', '150', '80', 5),
-  ('नोव्हेंबर 2025', '150', '80', 6);
+INSERT INTO magazines (month, display_order) VALUES
+  ('एप्रिल 2026', 1),
+  ('मार्च 2026', 2),
+  ('फेब्रुवारी 2026', 3),
+  ('जानेवारी 2026', 4),
+  ('डिसेंबर 2025', 5),
+  ('नोव्हेंबर 2025', 6);
 
 -- Seed data: Tests
 INSERT INTO tests (title, questions, duration, href, display_order) VALUES
