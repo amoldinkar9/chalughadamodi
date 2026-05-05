@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Anek_Devanagari, Geist } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
@@ -31,6 +31,12 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#0A2540",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -39,6 +45,10 @@ export default function RootLayout({
   return (
     <html lang="mr" className={cn("antialiased", anekDevanagari.variable, "font-sans", geist.variable)}>
       <head>
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

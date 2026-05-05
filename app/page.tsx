@@ -1,16 +1,18 @@
+import dynamic from "next/dynamic";
 import StickyHeader from "@/components/sections/StickyHeader";
 import Hero from "@/components/sections/Hero";
 import Announcements from "@/components/sections/Announcements";
-import Gallery from "@/components/sections/Gallery";
 import Magazine from "@/components/sections/Magazine";
-import Tests from "@/components/sections/Tests";
-import StaticGS from "@/components/sections/StaticGS";
-import Testimonials from "@/components/sections/Testimonials";
-import FAQ from "@/components/sections/FAQ";
-import FinalCTA from "@/components/sections/FinalCTA";
-import Footer from "@/components/sections/Footer";
 import { supabase } from "@/lib/supabase";
 import type { PublicContent } from "@/lib/types";
+
+const StaticGS = dynamic(() => import("@/components/sections/StaticGS"));
+const Tests = dynamic(() => import("@/components/sections/Tests"));
+const Gallery = dynamic(() => import("@/components/sections/Gallery"));
+const Testimonials = dynamic(() => import("@/components/sections/Testimonials"));
+const FAQ = dynamic(() => import("@/components/sections/FAQ"));
+const FinalCTA = dynamic(() => import("@/components/sections/FinalCTA"));
+const Footer = dynamic(() => import("@/components/sections/Footer"));
 
 // Fallback data in case Supabase is not configured yet
 const fallbackContent: PublicContent = {
@@ -96,7 +98,7 @@ async function getContent(): Promise<PublicContent> {
   }
 }
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export default async function Home() {
   const [content, heroImageUrl] = await Promise.all([getContent(), getHeroImageUrl()]);
