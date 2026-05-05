@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
 import type { Announcement } from "@/lib/types";
 
@@ -58,7 +59,7 @@ export default function Announcements({ announcements }: AnnouncementsProps) {
             className="flex gap-5 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {announcements.map((item) => (
+            {announcements.map((item, idx) => (
               <a
                 key={item.id}
                 href={item.backlink || "#"}
@@ -67,13 +68,14 @@ export default function Announcements({ announcements }: AnnouncementsProps) {
                 className="flex-shrink-0 w-full snap-center group block rounded-lg overflow-hidden border border-border card-hover"
               >
                 <div className="relative w-full" style={{ aspectRatio: "32/9" }}>
-                  <img
+                  <Image
                     src={item.image_url}
                     alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                    loading="eager"
-                    fetchPriority="high"
-                    sizes="(max-width: 768px) 100vw, 1200px"
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                    sizes="(max-width: 768px) 100vw, 1152px"
+                    priority={idx === 0}
+                    loading={idx === 0 ? "eager" : "lazy"}
                   />
                   <div className="absolute inset-0 bg-navy/0 group-hover:bg-navy/10 transition-colors duration-300 pointer-events-none" />
                 </div>

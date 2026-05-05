@@ -1,10 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Anek_Devanagari, Geist } from "next/font/google";
+import { Anek_Devanagari } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-
-const geist = Geist({ subsets: ['latin'], variable: '--font-geist' });
 
 const anekDevanagari = Anek_Devanagari({
   variable: "--font-anek-devanagari",
@@ -43,12 +41,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="mr" className={cn("antialiased", anekDevanagari.variable, "font-sans", geist.variable)}>
+    <html lang="mr" className={cn("antialiased", anekDevanagari.variable, "font-sans")}>
       <head>
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        <link rel="preconnect" href="https://dw44bia1z0v5t.cloudfront.net" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

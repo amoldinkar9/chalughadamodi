@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 interface HeroProps {
   imageUrl?: string;
 }
@@ -60,15 +62,16 @@ export default function Hero({ imageUrl }: HeroProps) {
           {/* Hero Image */}
           <div className="animate-fade-in animate-delay-200 flex justify-center md:justify-end">
             {imageUrl ? (
-              <img
-                src={imageUrl}
-                alt="चालू घडामोडी हिरो प्रतिमा"
-                className="w-full max-w-[400px] rounded-lg object-cover"
-                style={{ aspectRatio: "5/6" }}
-                sizes="(max-width: 768px) 100vw, 400px"
-                loading="eager"
-                fetchPriority="high"
-              />
+              <div className="relative w-full max-w-[400px]" style={{ aspectRatio: "5/6" }}>
+                <Image
+                  src={imageUrl}
+                  alt="चालू घडामोडी हिरो प्रतिमा"
+                  fill
+                  className="rounded-lg object-cover"
+                  sizes="(max-width: 768px) 80vw, 400px"
+                  priority
+                />
+              </div>
             ) : (
               <div
                 className="w-full max-w-[400px] border border-navy rounded-lg bg-cream flex items-center justify-center text-navy font-medium text-lg"
