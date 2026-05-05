@@ -44,6 +44,8 @@ export default function Magazine({ magazines }: MagazineProps) {
                   alt={`${mag.month} मासिक मुखपृष्ठ`}
                   className="w-full bg-cream border-b border-navy/20 object-cover"
                   style={{ aspectRatio: "4/5" }}
+                  sizes="(max-width: 768px) 50vw, 33vw"
+                  loading="lazy"
                 />
               ) : (
                 <div className="w-full bg-cream border-b border-navy/20 flex items-center justify-center text-navy/50 font-medium text-sm" style={{ aspectRatio: "4/5" }} role="img" aria-label={`${mag.month} मासिक मुखपृष्ठ`}>मासिक मुखपृष्ठ</div>
@@ -60,7 +62,7 @@ export default function Magazine({ magazines }: MagazineProps) {
           <div className="text-center mt-10">
             <button
               onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_LOAD)}
-              className="btn-primary px-6 py-4 rounded-md font-semibold text-sm" style={{ backgroundColor: "#01a854ff", color: "#ffffff" }}>
+              className="btn-primary px-6 py-4 rounded-md font-semibold text-sm" style={{ backgroundColor: "#1B7340", color: "#ffffff" }}>
               अजून मासिके पहा →
             </button>
           </div>

@@ -27,7 +27,6 @@ export default function Tests({ tests }: TestsProps) {
           <h2 className="text-white font-bold text-2xl md:text-[32px]">टेस्ट - Test</h2>
           <span className="section-underline" />
           <p className="text-cream font-medium text-base mt-4">रोजची टेस्ट. 10 प्रश्न. 5 मिनिट. लगेच निकाल.</p>
-         /* <p className="text-gold font-medium text-sm mt-3 italic">आज 542 विद्यार्थ्यांनी टेस्ट दिली</p> */
         </div>
 
         <div className="flex flex-col md:flex-row md:flex-wrap justify-center gap-6">
@@ -35,13 +34,12 @@ export default function Tests({ tests }: TestsProps) {
             <div key={test.id} className={`w-full md:w-[calc((100%-3rem)/3)] bg-surface rounded-md overflow-hidden text-center ${visible ? `animate-fade-in animate-delay-${(i + 1) * 100}` : "opacity-0"}`}>
               {test.image_url && (
                 <div className="w-full aspect-video overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={test.image_url}
                     alt={test.title}
                     className="w-full h-full object-cover"
-                    //className="w-full bg-cream border-b border-navy/20 object-cover"
-                    style={{ aspectRatio: "16/9" }}
+                    sizes="(max-width: 768px) 100vw, 352px"
+                    loading="lazy"
                   />
                 </div>
               )}
@@ -52,7 +50,7 @@ export default function Tests({ tests }: TestsProps) {
                   <span className="text-gold">•</span>
                   <span>{test.duration}</span>
                 </div>
-                <a href={test.href} target="_blank" rel="noopener noreferrer" className="btn-primary inline-block px-6 py-3 rounded-md font-semibold text-sm">Start Test</a>
+                <a href={test.href} target="_blank" rel="noopener noreferrer" className="btn-primary inline-block px-6 py-3 rounded-md font-semibold text-sm" aria-label={`Start Test — ${test.title}`}>Start Test</a>
               </div>
             </div>
           ))}

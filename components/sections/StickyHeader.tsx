@@ -71,6 +71,7 @@ export default function StickyHeader() {
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary px-4 py-2 rounded-md font-semibold text-sm"
+              aria-label="Start Test — मोफत टेस्ट सुरू करा"
             >
               Start Test
             </a>
@@ -92,11 +93,13 @@ export default function StickyHeader() {
       <div
         className={`mobile-menu ${menuOpen ? "open" : ""}`}
         aria-hidden={!menuOpen}
+        inert={!menuOpen ? true : undefined}
       >
         <button
           className="absolute top-5 right-6 p-2 text-navy"
           onClick={() => setMenuOpen(false)}
           aria-label="मेनू बंद करा"
+          tabIndex={menuOpen ? 0 : -1}
         >
           <X size={28} />
         </button>
@@ -107,6 +110,7 @@ export default function StickyHeader() {
               href={link.href}
               className="text-navy font-semibold text-2xl"
               onClick={() => setMenuOpen(false)}
+              tabIndex={menuOpen ? 0 : -1}
             >
               {link.label}
             </a>
@@ -116,6 +120,8 @@ export default function StickyHeader() {
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary px-8 py-3 rounded-md font-semibold text-lg mt-4"
+            tabIndex={menuOpen ? 0 : -1}
+            aria-label="Start Test — TCS9 टेस्ट सिरीज"
           >
             Start Test
           </a>

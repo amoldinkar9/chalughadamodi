@@ -77,6 +77,8 @@ export default function Gallery({ posts }: GalleryProps) {
                       alt={`${post.name} जाहिरात प्रतिमा`}
                       className="w-full bg-cream border-b border-navy/20 object-cover"
                       style={{ aspectRatio: "4/3" }}
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                      loading="lazy"
                     />
                   ) : (
                     <div

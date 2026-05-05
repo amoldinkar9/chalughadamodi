@@ -12,18 +12,17 @@ export default function Hero({ imageUrl }: HeroProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
           {/* Text */}
           <div className="animate-fade-in">
-            <p className="text-gold font-semibold uppercase text-[15px] md:text-[17px] mb-4">
+            <p className="text-[#9A7B2E] font-semibold uppercase text-[15px] md:text-[17px] mb-4">
               स्पर्धा परीक्षा विद्यार्थ्यांसाठी
             </p>
             <h1 className="text-navy font-extrabold text-[36px] md:text-[40px] leading-[1.3] tracking-tight mb-6">
               तयारी कुठून सुरू करायची
               <br />
               — कळत नाहीये?
-
             </h1>
-            <h3 className="text-navy font-extrabold text-[36px] md:text-[36px] leading-[1.3] tracking-tight mb-6">
+            <h2 className="text-navy font-extrabold text-[32px] md:text-[36px] leading-[1.3] tracking-tight mb-6">
               चालू घडामोडी, आता मराठीत.
-            </h3>
+            </h2>
 
 
             <p className="text-navy-soft font-medium text-lg md:text-xl max-w-[520px] mb-8 leading-relaxed">
@@ -66,6 +65,9 @@ export default function Hero({ imageUrl }: HeroProps) {
                 alt="चालू घडामोडी हिरो प्रतिमा"
                 className="w-full max-w-[400px] rounded-lg object-cover"
                 style={{ aspectRatio: "5/6" }}
+                sizes="(max-width: 768px) 100vw, 400px"
+                loading="eager"
+                fetchPriority="high"
               />
             ) : (
               <div
