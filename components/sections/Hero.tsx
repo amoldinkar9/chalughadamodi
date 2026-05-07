@@ -56,6 +56,8 @@ export default function Hero({ imageUrl }: HeroProps) {
               <span>मराठीत स्पष्टीकरण</span>
               <span className="text-gold">•</span>
               <span>Static GS शी जोडलेले</span>
+              <span className="text-gold">•</span>
+              <span>सविस्तर विश्लेषण</span>
             </div>
           </div>
 
