@@ -72,11 +72,6 @@ export default function RootLayout({
               "@type": "Organization",
               name: "चालू घडामोडी",
               url: "https://chalughadamodi.in",
-              parentOrganization: {
-                "@type": "Organization",
-                name: "TCS9",
-                url: "https://tcs9.in",
-              },
             }),
           }}
         />

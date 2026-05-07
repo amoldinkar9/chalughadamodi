@@ -67,9 +67,7 @@ export default function StickyHeader() {
           {/* Right side */}
           <div className="flex items-center gap-3">
             <a
-              href="https://www.tcs9.in/mr/test-series"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#tests"
               className="btn-primary px-4 py-2 rounded-md font-semibold text-sm"
               aria-label="Start Test — मोफत टेस्ट सुरू करा"
             >
@@ -116,12 +114,10 @@ export default function StickyHeader() {
             </a>
           ))}
           <a
-            href="https://www.tcs9.in/mr/test-series"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#tests"
             className="btn-primary px-8 py-3 rounded-md font-semibold text-lg mt-4"
             tabIndex={menuOpen ? 0 : -1}
-            aria-label="Start Test — TCS9 टेस्ट सिरीज"
+            aria-label="Start Test — मोफत टेस्ट सुरू करा"
           >
             Start Test
           </a>

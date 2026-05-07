@@ -101,7 +101,7 @@ export default function Footer() {
             © 2026 चालू घडामोडी. सर्व हक्क राखीव.
           </p>
           <p className="text-muted/60 font-medium text-[12px]">
-            एक TCS9 उपक्रम
+            एक चालू घडामोडी उपक्रम
           </p>
         </div>
       </div>

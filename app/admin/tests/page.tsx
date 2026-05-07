@@ -8,7 +8,7 @@ const fields = [
   { key: "image_url", label: "Image", type: "image" as const, placeholder: "https://example.com/image.jpg", uploadFolder: "tests" },
   { key: "questions", label: "Questions", type: "text" as const, placeholder: "10" },
   { key: "duration", label: "Duration", type: "text" as const, placeholder: "5 मिनिट" },
-  { key: "href", label: "Test URL", type: "text" as const, placeholder: "https://www.tcs9.in/mr/test-series" },
+  { key: "href", label: "Test URL", type: "text" as const, placeholder: "https://chalughadamodi.in/test" },
   { key: "display_order", label: "Display Order", type: "number" as const },
 ];
 

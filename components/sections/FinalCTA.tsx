@@ -9,9 +9,7 @@ export default function FinalCTA() {
           मोफत टेस्ट द्या. स्वतःची तयारी तपासा.
         </p>
         <a
-          href="https://www.tcs9.in/mr/test-series"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="#tests"
           className="btn-primary inline-block px-8 py-4 rounded-md font-semibold text-base md:text-lg"
         >
           मोफत टेस्ट द्या

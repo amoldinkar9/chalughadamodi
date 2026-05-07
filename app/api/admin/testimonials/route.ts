@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
 import { supabase } from "@/lib/supabase";
 import { verifyAdmin } from "@/lib/auth";
 
@@ -15,7 +14,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const { data, error } = await supabase.from("testimonials").insert(body).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  revalidatePath("/");
+
   return NextResponse.json(data);
 }
 
@@ -26,7 +25,7 @@ export async function PUT(req: NextRequest) {
   updates.updated_at = new Date().toISOString();
   const { data, error } = await supabase.from("testimonials").update(updates).eq("id", id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  revalidatePath("/");
+
   return NextResponse.json(data);
 }
 
@@ -35,6 +34,6 @@ export async function DELETE(req: NextRequest) {
   const { id } = await req.json();
   const { error } = await supabase.from("testimonials").delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  revalidatePath("/");
+
   return NextResponse.json({ success: true });
 }

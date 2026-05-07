@@ -1,4 +1,4 @@
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import StickyHeader from "@/components/sections/StickyHeader";
 import Hero from "@/components/sections/Hero";
 import Announcements from "@/components/sections/Announcements";
@@ -6,19 +6,19 @@ import Magazine from "@/components/sections/Magazine";
 import { supabase } from "@/lib/supabase";
 import type { PublicContent } from "@/lib/types";
 
-const StaticGS = dynamic(() => import("@/components/sections/StaticGS"));
-const Tests = dynamic(() => import("@/components/sections/Tests"));
-const Gallery = dynamic(() => import("@/components/sections/Gallery"));
-const Testimonials = dynamic(() => import("@/components/sections/Testimonials"));
-const FAQ = dynamic(() => import("@/components/sections/FAQ"));
-const FinalCTA = dynamic(() => import("@/components/sections/FinalCTA"));
-const Footer = dynamic(() => import("@/components/sections/Footer"));
+const StaticGS = nextDynamic(() => import("@/components/sections/StaticGS"));
+const Tests = nextDynamic(() => import("@/components/sections/Tests"));
+const Gallery = nextDynamic(() => import("@/components/sections/Gallery"));
+const Testimonials = nextDynamic(() => import("@/components/sections/Testimonials"));
+const FAQ = nextDynamic(() => import("@/components/sections/FAQ"));
+const FinalCTA = nextDynamic(() => import("@/components/sections/FinalCTA"));
+const Footer = nextDynamic(() => import("@/components/sections/Footer"));
 
 // Fallback data in case Supabase is not configured yet
 const fallbackContent: PublicContent = {
   announcements: [
-    { id: "a1", title: "MPSC राज्यसेवा 2026 अधिसूचना", image_url: "https://placehold.co/1280x360/0A2540/D4A24C?text=MPSC+राज्यसेवा+2026", backlink: "https://www.tcs9.in/mr/test-series", published: true, display_order: 1, created_at: "", updated_at: "" },
-    { id: "a2", title: "तलाठी भरती अपडेट", image_url: "https://placehold.co/1280x360/163A5F/FAF7F2?text=तलाठी+भरती+अपडेट", backlink: "https://www.tcs9.in/mr/test-series", published: true, display_order: 2, created_at: "", updated_at: "" },
+    { id: "a1", title: "MPSC राज्यसेवा 2026 अधिसूचना", image_url: "https://placehold.co/1280x360/0A2540/D4A24C?text=MPSC+राज्यसेवा+2026", backlink: "#tests", published: true, display_order: 1, created_at: "", updated_at: "" },
+    { id: "a2", title: "तलाठी भरती अपडेट", image_url: "https://placehold.co/1280x360/163A5F/FAF7F2?text=तलाठी+भरती+अपडेट", backlink: "#tests", published: true, display_order: 2, created_at: "", updated_at: "" },
     { id: "a3", title: "मोफत मासिक PDF डाउनलोड करा", image_url: "https://placehold.co/1280x360/D4A24C/0A2540?text=मोफत+मासिक+PDF", backlink: "#magazine", published: true, display_order: 3, created_at: "", updated_at: "" },
   ],
   gallery: [
@@ -38,9 +38,9 @@ const fallbackContent: PublicContent = {
     { id: "6", month: "नोव्हेंबर 2025", image_url: "", pdf_url: "", published: true, display_order: 6, created_at: "", updated_at: "" },
   ],
   tests: [
-    { id: "1", title: "आजची टेस्ट", questions: "10", duration: "5 मिनिट", href: "https://www.tcs9.in/mr/test-series", image_url: "", published: true, display_order: 1, created_at: "", updated_at: "" },
-    { id: "2", title: "या आठवड्याची टेस्ट", questions: "30", duration: "15 मिनिट", href: "https://www.tcs9.in/mr/test-series", image_url: "", published: true, display_order: 2, created_at: "", updated_at: "" },
-    { id: "3", title: "मागील महिना टेस्ट", questions: "50", duration: "30 मिनिट", href: "https://www.tcs9.in/mr/test-series", image_url: "", published: true, display_order: 3, created_at: "", updated_at: "" },
+    { id: "1", title: "आजची टेस्ट", questions: "10", duration: "5 मिनिट", href: "#tests", image_url: "", published: true, display_order: 1, created_at: "", updated_at: "" },
+    { id: "2", title: "या आठवड्याची टेस्ट", questions: "30", duration: "15 मिनिट", href: "#tests", image_url: "", published: true, display_order: 2, created_at: "", updated_at: "" },
+    { id: "3", title: "मागील महिना टेस्ट", questions: "50", duration: "30 मिनिट", href: "#tests", image_url: "", published: true, display_order: 3, created_at: "", updated_at: "" },
   ],
   testimonials: [
     { id: "1", initials: "प्रि", name: "प्रिया देशमुख", exam: "तलाठी, 2025", quote: "Static GS शी प्रत्येक बातमीची जोडणी मला खूप आवडली. Revision सोपी झाली.", published: true, display_order: 1, created_at: "", updated_at: "" },
@@ -98,7 +98,7 @@ async function getContent(): Promise<PublicContent> {
   }
 }
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const [content, heroImageUrl] = await Promise.all([getContent(), getHeroImageUrl()]);
