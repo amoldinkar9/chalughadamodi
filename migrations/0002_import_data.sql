@@ -1,4 +1,4 @@
--- Auto-generated: Supabase data export for D1 import
+-- Auto-generated: data import for D1
 -- Exported at: 2026-05-08T06:34:58.735Z
 
 -- Clear seed data before importing real data

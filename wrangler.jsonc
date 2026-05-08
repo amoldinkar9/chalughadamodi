@@ -14,11 +14,17 @@
       "custom_domain": true
     }
   ],
+  "r2_buckets": [
+    {
+      "binding": "IMAGES_BUCKET",
+      "bucket_name": "chalughadamodi-images"
+    }
+  ],
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "chalughadamodi-db",
-      "database_id": "YOUR_D1_DATABASE_ID",
+      "database_id": "a4e6f551-c242-4eef-82ab-5ef7428e1da2",
       "migrations_dir": "migrations"
     }
   ]

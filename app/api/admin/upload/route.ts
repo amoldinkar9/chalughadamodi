@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getR2 } from "@/lib/db";
 import { verifyAdmin } from "@/lib/auth";
 
 const MAX_SIZE = 5 * 1024 * 1024;
@@ -7,17 +8,6 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 export async function POST(req: NextRequest) {
   if (!(await verifyAdmin()))
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  let r2: R2Bucket;
-  try {
-    const { getR2 } = await import("@/lib/db");
-    r2 = await getR2();
-  } catch {
-    return NextResponse.json(
-      { error: "Image upload not available. Enable R2 in Cloudflare Dashboard and add the IMAGES_BUCKET binding. For now, paste the image URL directly." },
-      { status: 503 }
-    );
-  }
 
   const formData = await req.formData();
   const file = formData.get("file") as File | null;
@@ -41,11 +31,13 @@ export async function POST(req: NextRequest) {
   const ext = file.name.split(".").pop() || "jpg";
   const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
+  const r2 = await getR2();
   await r2.put(fileName, await file.arrayBuffer(), {
     httpMetadata: { contentType: file.type },
   });
 
-  const publicUrl = `${process.env.R2_PUBLIC_URL}/${fileName}`;
+  const origin = new URL(req.url).origin;
+  const publicUrl = `${origin}/api/images?key=${encodeURIComponent(fileName)}`;
 
   return NextResponse.json({ url: publicUrl });
 }
