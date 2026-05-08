@@ -59,9 +59,9 @@ export default function HeroAdmin() {
         body: JSON.stringify({ key: "hero_image_url", value: imageUrl }),
       });
       if (!res.ok) throw new Error("Save failed");
-      toast.success("हिरो प्रतिमा जतन झाली!");
+      toast.success("Hero image saved!");
     } catch {
-      toast.error("Save अयशस्वी. पुन्हा प्रयत्न करा.");
+      toast.error("Save failed. Please try again.");
     } finally {
       setSaving(false);
     }
@@ -70,13 +70,13 @@ export default function HeroAdmin() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">हिरो प्रतिमा - Hero Image</h1>
-        <p className="text-sm text-muted-foreground">मुख्यपृष्ठावरील हिरो प्रतिमा बदला</p>
+        <h1 className="text-2xl font-bold">Hero Image</h1>
+        <p className="text-sm text-muted-foreground">Change the hero image on the homepage</p>
       </div>
 
       <div className="max-w-lg space-y-6">
         <div className="space-y-2">
-          <Label>हिरो प्रतिमा (5:6 ratio)</Label>
+          <Label>Hero Image (5:6 ratio)</Label>
           {imageUrl && (
             <div className="relative rounded-md overflow-hidden border" style={{ maxWidth: "320px" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -132,7 +132,7 @@ export default function HeroAdmin() {
 
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <ImageIcon size={12} />
-            <span>किंवा URL paste करा:</span>
+            <span>Or paste a URL:</span>
           </div>
           <Input
             value={imageUrl}
@@ -142,7 +142,7 @@ export default function HeroAdmin() {
         </div>
 
         <Button className="w-full" onClick={handleSave} disabled={saving}>
-          {saving ? "Saving..." : "जतन करा"}
+          {saving ? "Saving..." : "Save"}
         </Button>
       </div>
     </div>

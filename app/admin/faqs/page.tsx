@@ -4,7 +4,7 @@ import { getDb, mapRows } from "@/lib/db";
 import AdminCrudPage from "@/components/admin/AdminCrudPage";
 
 const fields = [
-  { key: "question", label: "Question", type: "text" as const, placeholder: "हे website मोफत आहे का?" },
+  { key: "question", label: "Question", type: "text" as const, placeholder: "Is this website free?" },
   { key: "answer", label: "Answer", type: "textarea" as const, placeholder: "Answer text..." },
   { key: "display_order", label: "Display Order", type: "number" as const },
 ];

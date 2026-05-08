@@ -4,9 +4,9 @@ import { getDb, mapRows } from "@/lib/db";
 import AdminCrudPage from "@/components/admin/AdminCrudPage";
 
 const fields = [
-  { key: "name", label: "Name", type: "text" as const, placeholder: "प्रिया देशमुख" },
-  { key: "initials", label: "Initials", type: "text" as const, placeholder: "प्रि" },
-  { key: "exam", label: "Exam & Year", type: "text" as const, placeholder: "तलाठी, 2025" },
+  { key: "name", label: "Name", type: "text" as const, placeholder: "Priya Deshmukh" },
+  { key: "initials", label: "Initials", type: "text" as const, placeholder: "PD" },
+  { key: "exam", label: "Exam & Year", type: "text" as const, placeholder: "Talathi, 2025" },
   { key: "quote", label: "Quote", type: "textarea" as const, placeholder: "Testimonial quote..." },
   { key: "display_order", label: "Display Order", type: "number" as const },
 ];

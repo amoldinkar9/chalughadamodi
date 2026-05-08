@@ -4,8 +4,8 @@ import { getDb, mapRows } from "@/lib/db";
 import AdminCrudPage from "@/components/admin/AdminCrudPage";
 
 const fields = [
-  { key: "name", label: "Post Name", type: "text" as const, placeholder: "महाराष्ट्र पोलीस भरती 2026" },
-  { key: "image_url", label: "जाहिरात प्रतिमा (Image URL)", type: "image" as const, placeholder: "https://example.com/image.jpg" },
+  { key: "name", label: "Post Name", type: "text" as const, placeholder: "Maharashtra Police Recruitment 2026" },
+  { key: "image_url", label: "Advertisement Image (Image URL)", type: "image" as const, placeholder: "https://example.com/image.jpg" },
   { key: "start_date", label: "Start Date", type: "date" as const },
   { key: "last_date", label: "Last Date", type: "date" as const },
   { key: "link", label: "Link URL", type: "text" as const, placeholder: "https://..." },

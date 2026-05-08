@@ -20,10 +20,10 @@ async function getCounts() {
 }
 
 const sections = [
-  { key: "announcements", label: "सूचना - Announcements", icon: Megaphone, href: "/admin/announcements", color: "text-orange-600" },
-  { key: "gallery", label: "भरती जाहिराती - Job Recruitments", icon: Newspaper, href: "/admin/gallery", color: "text-blue-600" },
-  { key: "magazines", label: "मासिके - Magazines", icon: BookOpen, href: "/admin/magazines", color: "text-amber-600" },
-  { key: "tests", label: "टेस्ट - Test", icon: ClipboardList, href: "/admin/tests", color: "text-green-600" },
+  { key: "announcements", label: "Announcements", icon: Megaphone, href: "/admin/announcements", color: "text-orange-600" },
+  { key: "gallery", label: "Job Recruitments", icon: Newspaper, href: "/admin/gallery", color: "text-blue-600" },
+  { key: "magazines", label: "Magazines", icon: BookOpen, href: "/admin/magazines", color: "text-amber-600" },
+  { key: "tests", label: "Tests", icon: ClipboardList, href: "/admin/tests", color: "text-green-600" },
   { key: "testimonials", label: "Testimonials", icon: MessageSquareQuote, href: "/admin/testimonials", color: "text-purple-600" },
   { key: "faqs", label: "FAQ's", icon: HelpCircle, href: "/admin/faqs", color: "text-rose-600" },
 ] as const;
@@ -39,7 +39,7 @@ export default async function AdminDashboard() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-1">Dashboard</h1>
-          <p className="text-muted-foreground">चालू घडामोडी content manage करा</p>
+          <p className="text-muted-foreground">Manage your website content</p>
         </div>
         <Link
           href="/"
@@ -47,7 +47,7 @@ export default async function AdminDashboard() {
           className="hidden sm:inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ExternalLink size={16} />
-          Website पहा
+          View Website
         </Link>
       </div>
 
@@ -77,13 +77,13 @@ export default async function AdminDashboard() {
       </div>
 
       <div className="mt-8 p-4 border rounded-lg bg-card">
-        <h2 className="font-semibold mb-2">कसं काम करतं?</h2>
+        <h2 className="font-semibold mb-2">How it works</h2>
         <ul className="text-sm text-muted-foreground space-y-1.5">
-          <li>1. वरील कोणत्याही section वर click करा</li>
-          <li>2. &quot;नवीन जोडा&quot; बटण वापरून content add करा</li>
-          <li>3. Published toggle ON ठेवा — Website वर लगेच दिसेल</li>
-          <li>4. जुने content delete करायचे असल्यास trash icon वापरा</li>
-          <li>5. क्रम बदलायचा असल्यास arrow buttons वापरा</li>
+          <li>1. Click on any section above</li>
+          <li>2. Use the &quot;Add New&quot; button to add content</li>
+          <li>3. Keep the Published toggle ON — it will appear on the website immediately</li>
+          <li>4. Use the trash icon to delete old content</li>
+          <li>5. Use arrow buttons to reorder items</li>
         </ul>
       </div>
     </div>

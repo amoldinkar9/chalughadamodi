@@ -108,7 +108,7 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
         const result = await res.json() as Record<string, unknown>;
         if (!res.ok) throw new Error((result.error as string) || "Update failed");
         setItems(items.map((i) => (i.id === result.id ? result : i)));
-        toast.success("अपडेट यशस्वी!");
+        toast.success("Updated successfully!");
       } else {
         const payload = { ...formData, published: true };
         const res = await fetch(apiPath, {
@@ -119,12 +119,12 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
         const result = await res.json() as Record<string, unknown>;
         if (!res.ok) throw new Error((result.error as string) || "Create failed");
         setItems([...items, result]);
-        toast.success("नवीन entry तयार झाली!");
+        toast.success("New entry created!");
       }
       setDialogOpen(false);
       resetForm();
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "काहीतरी चुकलं. पुन्हा प्रयत्न करा.");
+      toast.error(e instanceof Error ? e.message : "Something went wrong. Please try again.");
     } finally {
       setSaving(false);
     }
@@ -139,9 +139,9 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
       });
       if (!res.ok) throw new Error("Delete failed");
       setItems(items.filter((i) => i.id !== id));
-      toast.success("Delete यशस्वी!");
+      toast.success("Deleted successfully!");
     } catch {
-      toast.error("Delete अयशस्वी.");
+      toast.error("Delete failed.");
     }
   };
 
@@ -157,7 +157,7 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
       setItems(items.map((i) => (i.id === updated.id ? updated : i)));
       toast.success(updated.published ? "Published!" : "Unpublished!");
     } catch {
-      toast.error("Toggle अयशस्वी.");
+      toast.error("Toggle failed.");
     }
   };
 
@@ -187,7 +187,7 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
         return i;
       }));
     } catch {
-      toast.error("Reorder अयशस्वी.");
+      toast.error("Reorder failed.");
     }
   };
 
@@ -202,11 +202,11 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger render={<Button />} onClick={openCreate}>
-            <Plus size={16} className="mr-2" /> नवीन जोडा
+            <Plus size={16} className="mr-2" /> Add New
           </DialogTrigger>
           <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{editItem ? "Edit" : "नवीन"} {title}</DialogTitle>
+              <DialogTitle>{editItem ? "Edit" : "New"} {title}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 mt-4">
               {fields.map((field) => (
@@ -228,7 +228,7 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
                         onCheckedChange={(v) => setFormData({ ...formData, [field.key]: v })}
                       />
                       <span className="text-sm text-muted-foreground">
-                        {formData[field.key] ? "होय" : "नाही"}
+                        {formData[field.key] ? "Yes" : "No"}
                       </span>
                     </div>
                   ) : field.type === "image" ? (
@@ -287,7 +287,7 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
                       </div>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <ImageIcon size={12} />
-                        <span>किंवा URL paste करा:</span>
+                        <span>Or paste a URL:</span>
                       </div>
                       <Input
                         id={field.key}
@@ -322,7 +322,7 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
                 </div>
               ))}
               <Button className="w-full" onClick={handleSave} disabled={saving}>
-                {saving ? "Saving..." : editItem ? "बदल जतन करा" : "तयार करा"}
+                {saving ? "Saving..." : editItem ? "Save Changes" : "Create"}
               </Button>
             </div>
           </DialogContent>
@@ -333,7 +333,7 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[60px]">क्रम</TableHead>
+              <TableHead className="w-[60px]">Order</TableHead>
               {columns.map((col) => (
                 <TableHead key={col}>{fields.find((f) => f.key === col)?.label || col}</TableHead>
               ))}
@@ -345,7 +345,7 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
             {sortedItems.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={columns.length + 3} className="text-center py-8 text-muted-foreground">
-                  अजून entries नाहीत. &quot;नवीन जोडा&quot; वर click करा.
+                  No entries yet. Click &quot;Add New&quot; to get started.
                 </TableCell>
               </TableRow>
             ) : (
@@ -376,7 +376,7 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
                   {columns.map((col) => (
                     <TableCell key={col} className="max-w-[200px] truncate">
                       {typeof item[col] === "boolean" ? (
-                        item[col] ? <Badge variant="default">होय</Badge> : <Badge variant="secondary">नाही</Badge>
+                        item[col] ? <Badge variant="default">Yes</Badge> : <Badge variant="secondary">No</Badge>
                       ) : (
                         String(item[col] ?? "")
                       )}
@@ -399,14 +399,14 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>ही entry delete करायची?</AlertDialogTitle>
+                            <AlertDialogTitle>Delete this entry?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              हे action undo करता येणार नाही. ही entry कायमची delete होईल.
+                              This action cannot be undone. This entry will be permanently deleted.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel>रद्द करा</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(item.id)}>Delete करा</AlertDialogAction>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDelete(item.id)}>Delete</AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>

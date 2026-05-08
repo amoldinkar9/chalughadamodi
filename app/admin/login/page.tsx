@@ -37,8 +37,8 @@ export default function AdminLogin() {
     <div className="admin-layout min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">चालू घडामोडी Admin</CardTitle>
-          <CardDescription>Dashboard मध्ये login करा</CardDescription>
+          <CardTitle className="text-2xl">Chalu Ghadamodi Admin</CardTitle>
+          <CardDescription>Login to the dashboard</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">

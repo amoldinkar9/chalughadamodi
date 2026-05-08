@@ -37,7 +37,7 @@ export function AdminSidebar() {
     <>
       <div className="p-4">
         <Link href="/admin" className="text-lg font-bold" onClick={() => setMobileOpen(false)}>
-          चालू घडामोडी
+          Chalu Ghadamodi
         </Link>
         <p className="text-xs text-muted-foreground mt-1">Admin Dashboard</p>
       </div>
@@ -70,7 +70,7 @@ export function AdminSidebar() {
           className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
         >
           <ExternalLink size={18} />
-          Website पहा
+          View Website
         </Link>
         <Button variant="ghost" size="sm" className="w-full justify-start gap-3 text-muted-foreground" onClick={handleLogout}>
           <LogOut size={18} />
@@ -84,7 +84,7 @@ export function AdminSidebar() {
     <>
       {/* Mobile top bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-card border-b px-4 py-3 flex items-center justify-between">
-        <Link href="/admin" className="text-lg font-bold">चालू घडामोडी</Link>
+        <Link href="/admin" className="text-lg font-bold">Chalu Ghadamodi</Link>
         <Button variant="ghost" size="icon" onClick={() => setMobileOpen(!mobileOpen)}>
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </Button>

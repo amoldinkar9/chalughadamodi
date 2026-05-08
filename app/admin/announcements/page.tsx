@@ -4,9 +4,9 @@ import { getDb, mapRows } from "@/lib/db";
 import AdminCrudPage from "@/components/admin/AdminCrudPage";
 
 const fields = [
-  { key: "title", label: "शीर्षक (Title)", type: "text" as const, placeholder: "MPSC राज्यसेवा 2026 अधिसूचना" },
+  { key: "title", label: "Title", type: "text" as const, placeholder: "MPSC State Service 2026 Notification" },
   { key: "image_url", label: "Banner Image URL (32:9)", type: "text" as const, placeholder: "https://example.com/banner.jpg" },
-  { key: "backlink", label: "Backlink URL (क्लिक केल्यावर कुठे जायचे)", type: "text" as const, placeholder: "https://..." },
+  { key: "backlink", label: "Backlink URL (click destination)", type: "text" as const, placeholder: "https://..." },
   { key: "display_order", label: "Display Order", type: "number" as const },
 ];
 
@@ -19,7 +19,7 @@ export default async function AnnouncementsAdmin() {
 
   return (
     <AdminCrudPage
-      title="सूचना - Announcements"
+      title="Announcements"
       apiPath="/api/admin/announcements"
       fields={fields}
       columns={["title", "image_url", "backlink"]}
