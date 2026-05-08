@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { verifyAdmin } from "@/lib/auth";
-import { supabase } from "@/lib/supabase";
+import { getDb, mapRows } from "@/lib/db";
 import AdminCrudPage from "@/components/admin/AdminCrudPage";
 
 const fields = [
@@ -14,7 +14,8 @@ export default async function AnnouncementsAdmin() {
   const isAdmin = await verifyAdmin();
   if (!isAdmin) redirect("/admin/login");
 
-  const { data } = await supabase.from("announcements").select("*").order("display_order");
+  const db = await getDb();
+  const { results } = await db.prepare("SELECT * FROM announcements ORDER BY display_order").all();
 
   return (
     <AdminCrudPage
@@ -22,7 +23,7 @@ export default async function AnnouncementsAdmin() {
       apiPath="/api/admin/announcements"
       fields={fields}
       columns={["title", "image_url", "backlink"]}
-      initialData={data || []}
+      initialData={mapRows(results)}
     />
   );
 }

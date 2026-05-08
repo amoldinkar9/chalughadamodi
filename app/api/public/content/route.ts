@@ -1,26 +1,27 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getDb, mapRows } from "@/lib/db";
 import type { PublicContent } from "@/lib/types";
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+  const db = await getDb();
   const [announcements, gallery, magazines, tests, testimonials, faqs] = await Promise.all([
-    supabase.from("announcements").select("*").eq("published", true).order("display_order"),
-    supabase.from("gallery").select("*").eq("published", true).order("display_order"),
-    supabase.from("magazines").select("*").eq("published", true).order("display_order"),
-    supabase.from("tests").select("*").eq("published", true).order("display_order"),
-    supabase.from("testimonials").select("*").eq("published", true).order("display_order"),
-    supabase.from("faqs").select("*").eq("published", true).order("display_order"),
+    db.prepare("SELECT * FROM announcements WHERE published = 1 ORDER BY display_order").all(),
+    db.prepare("SELECT * FROM gallery WHERE published = 1 ORDER BY display_order").all(),
+    db.prepare("SELECT * FROM magazines WHERE published = 1 ORDER BY display_order").all(),
+    db.prepare("SELECT * FROM tests WHERE published = 1 ORDER BY display_order").all(),
+    db.prepare("SELECT * FROM testimonials WHERE published = 1 ORDER BY display_order").all(),
+    db.prepare("SELECT * FROM faqs WHERE published = 1 ORDER BY display_order").all(),
   ]);
 
   const content: PublicContent = {
-    announcements: announcements.data || [],
-    gallery: gallery.data || [],
-    magazines: magazines.data || [],
-    tests: tests.data || [],
-    testimonials: testimonials.data || [],
-    faqs: faqs.data || [],
+    announcements: mapRows(announcements.results),
+    gallery: mapRows(gallery.results),
+    magazines: mapRows(magazines.results),
+    tests: mapRows(tests.results),
+    testimonials: mapRows(testimonials.results),
+    faqs: mapRows(faqs.results),
   };
 
   return NextResponse.json(content);

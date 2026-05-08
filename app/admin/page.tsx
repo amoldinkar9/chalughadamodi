@@ -1,28 +1,22 @@
 import { redirect } from "next/navigation";
 import { verifyAdmin } from "@/lib/auth";
-import { supabase } from "@/lib/supabase";
+import { getDb } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Megaphone, Newspaper, BookOpen, ClipboardList, MessageSquareQuote, HelpCircle, ExternalLink } from "lucide-react";
 import Link from "next/link";
 
 async function getCounts() {
-  const [a, g, m, t, te, f] = await Promise.all([
-    supabase.from("announcements").select("id, published", { count: "exact" }),
-    supabase.from("gallery").select("id, published", { count: "exact" }),
-    supabase.from("magazines").select("id, published", { count: "exact" }),
-    supabase.from("tests").select("id, published", { count: "exact" }),
-    supabase.from("testimonials").select("id, published", { count: "exact" }),
-    supabase.from("faqs").select("id, published", { count: "exact" }),
-  ]);
-  return {
-    announcements: { total: a.count ?? 0, published: a.data?.filter((r) => r.published).length ?? 0 },
-    gallery: { total: g.count ?? 0, published: g.data?.filter((r) => r.published).length ?? 0 },
-    magazines: { total: m.count ?? 0, published: m.data?.filter((r) => r.published).length ?? 0 },
-    tests: { total: t.count ?? 0, published: t.data?.filter((r) => r.published).length ?? 0 },
-    testimonials: { total: te.count ?? 0, published: te.data?.filter((r) => r.published).length ?? 0 },
-    faqs: { total: f.count ?? 0, published: f.data?.filter((r) => r.published).length ?? 0 },
-  };
+  const db = await getDb();
+  const tables = ["announcements", "gallery", "magazines", "tests", "testimonials", "faqs"] as const;
+  const results = await Promise.all(
+    tables.map((t) =>
+      db.prepare(`SELECT COUNT(*) as total, SUM(CASE WHEN published = 1 THEN 1 ELSE 0 END) as published FROM ${t}`).first<{ total: number; published: number }>()
+    )
+  );
+  return Object.fromEntries(
+    tables.map((t, i) => [t, { total: results[i]?.total ?? 0, published: results[i]?.published ?? 0 }])
+  ) as Record<typeof tables[number], { total: number; published: number }>;
 }
 
 const sections = [

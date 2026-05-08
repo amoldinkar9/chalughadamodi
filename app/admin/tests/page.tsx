@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { verifyAdmin } from "@/lib/auth";
-import { supabase } from "@/lib/supabase";
+import { getDb, mapRows } from "@/lib/db";
 import AdminCrudPage from "@/components/admin/AdminCrudPage";
 
 const fields = [
@@ -16,7 +16,8 @@ export default async function TestsAdmin() {
   const isAdmin = await verifyAdmin();
   if (!isAdmin) redirect("/admin/login");
 
-  const { data } = await supabase.from("tests").select("*").order("display_order");
+  const db = await getDb();
+  const { results } = await db.prepare("SELECT * FROM tests ORDER BY display_order").all();
 
   return (
     <AdminCrudPage
@@ -24,7 +25,7 @@ export default async function TestsAdmin() {
       apiPath="/api/admin/tests"
       fields={fields}
       columns={["title", "image_url", "questions", "duration"]}
-      initialData={data || []}
+      initialData={mapRows(results)}
     />
   );
 }

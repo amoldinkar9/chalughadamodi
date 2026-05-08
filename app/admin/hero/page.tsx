@@ -18,8 +18,8 @@ export default function HeroAdmin() {
     try {
       const res = await fetch("/api/admin/settings");
       if (!res.ok) return;
-      const data = await res.json();
-      const setting = data.find((s: { key: string; value: string }) => s.key === "hero_image_url");
+      const data = await res.json() as { key: string; value: string }[];
+      const setting = data.find((s) => s.key === "hero_image_url");
       if (setting) setImageUrl(setting.value);
     } catch { /* ignore */ }
     setLoaded(true);
@@ -37,13 +37,13 @@ export default function HeroAdmin() {
       body.append("folder", "hero");
       const res = await fetch("/api/admin/upload", { method: "POST", body });
       if (!res.ok) {
-        const err = await res.json();
+        const err = await res.json() as Record<string, string>;
         throw new Error(err.error || "Upload failed");
       }
-      const { url } = await res.json();
+      const { url } = await res.json() as { url: string };
       setImageUrl(url);
       toast.success("Image uploaded!");
-    } catch (e) {
+    } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : "Upload failed");
     } finally {
       setUploading(false);

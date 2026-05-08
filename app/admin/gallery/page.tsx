@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { verifyAdmin } from "@/lib/auth";
-import { supabase } from "@/lib/supabase";
+import { getDb, mapRows } from "@/lib/db";
 import AdminCrudPage from "@/components/admin/AdminCrudPage";
 
 const fields = [
@@ -18,7 +18,8 @@ export default async function GalleryAdmin() {
   const isAdmin = await verifyAdmin();
   if (!isAdmin) redirect("/admin/login");
 
-  const { data } = await supabase.from("gallery").select("*").order("display_order");
+  const db = await getDb();
+  const { results } = await db.prepare("SELECT * FROM gallery ORDER BY display_order").all();
 
   return (
     <AdminCrudPage
@@ -26,7 +27,7 @@ export default async function GalleryAdmin() {
       apiPath="/api/admin/gallery"
       fields={fields}
       columns={["name", "start_date", "last_date", "is_new", "date_extended"]}
-      initialData={data || []}
+      initialData={mapRows(results)}
     />
   );
 }

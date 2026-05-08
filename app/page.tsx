@@ -3,7 +3,7 @@ import StickyHeader from "@/components/sections/StickyHeader";
 import Hero from "@/components/sections/Hero";
 import Announcements from "@/components/sections/Announcements";
 import Magazine from "@/components/sections/Magazine";
-import { supabase } from "@/lib/supabase";
+import { getDb, mapRows } from "@/lib/db";
 import type { PublicContent } from "@/lib/types";
 
 const StaticGS = nextDynamic(() => import("@/components/sections/StaticGS"));
@@ -14,7 +14,7 @@ const FAQ = nextDynamic(() => import("@/components/sections/FAQ"));
 const FinalCTA = nextDynamic(() => import("@/components/sections/FinalCTA"));
 const Footer = nextDynamic(() => import("@/components/sections/Footer"));
 
-// Fallback data in case Supabase is not configured yet
+// Fallback data in case D1 is not configured yet
 const fallbackContent: PublicContent = {
   announcements: [
     { id: "a1", title: "MPSC राज्यसेवा 2026 अधिसूचना", image_url: "https://placehold.co/1280x360/0A2540/D4A24C?text=MPSC+राज्यसेवा+2026", backlink: "#tests", published: true, display_order: 1, created_at: "", updated_at: "" },
@@ -60,11 +60,9 @@ const fallbackContent: PublicContent = {
 
 async function getHeroImageUrl(): Promise<string> {
   try {
-    if (!process.env.SUPABASE_URL || process.env.SUPABASE_URL === "https://your-project.supabase.co") {
-      return "";
-    }
-    const { data } = await supabase.from("site_settings").select("value").eq("key", "hero_image_url").single();
-    return data?.value || "";
+    const db = await getDb();
+    const row = await db.prepare("SELECT value FROM site_settings WHERE key = ?").bind("hero_image_url").first<{ value: string }>();
+    return row?.value || "";
   } catch {
     return "";
   }
@@ -72,26 +70,23 @@ async function getHeroImageUrl(): Promise<string> {
 
 async function getContent(): Promise<PublicContent> {
   try {
-    if (!process.env.SUPABASE_URL || process.env.SUPABASE_URL === "https://your-project.supabase.co") {
-      return fallbackContent;
-    }
-
+    const db = await getDb();
     const [announcements, gallery, magazines, tests, testimonials, faqs] = await Promise.all([
-      supabase.from("announcements").select("*").eq("published", true).order("display_order"),
-      supabase.from("gallery").select("*").eq("published", true).order("display_order"),
-      supabase.from("magazines").select("*").eq("published", true).order("display_order"),
-      supabase.from("tests").select("*").eq("published", true).order("display_order"),
-      supabase.from("testimonials").select("*").eq("published", true).order("display_order"),
-      supabase.from("faqs").select("*").eq("published", true).order("display_order"),
+      db.prepare("SELECT * FROM announcements WHERE published = 1 ORDER BY display_order").all(),
+      db.prepare("SELECT * FROM gallery WHERE published = 1 ORDER BY display_order").all(),
+      db.prepare("SELECT * FROM magazines WHERE published = 1 ORDER BY display_order").all(),
+      db.prepare("SELECT * FROM tests WHERE published = 1 ORDER BY display_order").all(),
+      db.prepare("SELECT * FROM testimonials WHERE published = 1 ORDER BY display_order").all(),
+      db.prepare("SELECT * FROM faqs WHERE published = 1 ORDER BY display_order").all(),
     ]);
 
     return {
-      announcements: announcements.data?.length ? announcements.data : fallbackContent.announcements,
-      gallery: gallery.data?.length ? gallery.data : fallbackContent.gallery,
-      magazines: magazines.data?.length ? magazines.data : fallbackContent.magazines,
-      tests: tests.data?.length ? tests.data : fallbackContent.tests,
-      testimonials: testimonials.data?.length ? testimonials.data : fallbackContent.testimonials,
-      faqs: faqs.data?.length ? faqs.data : fallbackContent.faqs,
+      announcements: announcements.results.length ? mapRows(announcements.results) : fallbackContent.announcements,
+      gallery: gallery.results.length ? mapRows(gallery.results) : fallbackContent.gallery,
+      magazines: magazines.results.length ? mapRows(magazines.results) : fallbackContent.magazines,
+      tests: tests.results.length ? mapRows(tests.results) : fallbackContent.tests,
+      testimonials: testimonials.results.length ? mapRows(testimonials.results) : fallbackContent.testimonials,
+      faqs: faqs.results.length ? mapRows(faqs.results) : fallbackContent.faqs,
     };
   } catch {
     return fallbackContent;

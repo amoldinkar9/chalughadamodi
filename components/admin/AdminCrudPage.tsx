@@ -50,10 +50,10 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
       body.append("folder", folder);
       const res = await fetch("/api/admin/upload", { method: "POST", body });
       if (!res.ok) {
-        const err = await res.json();
+        const err = await res.json() as Record<string, string>;
         throw new Error(err.error || "Upload failed");
       }
-      const { url } = await res.json();
+      const { url } = await res.json() as { url: string };
       setFormData((prev: Record<string, unknown>) => ({ ...prev, [fieldKey]: url }));
       toast.success("Image uploaded!");
     } catch (e) {
@@ -105,8 +105,8 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id: editItem.id, ...formData }),
         });
-        const result = await res.json();
-        if (!res.ok) throw new Error(result.error || "Update failed");
+        const result = await res.json() as Record<string, unknown>;
+        if (!res.ok) throw new Error((result.error as string) || "Update failed");
         setItems(items.map((i) => (i.id === result.id ? result : i)));
         toast.success("अपडेट यशस्वी!");
       } else {
@@ -116,8 +116,8 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
-        const result = await res.json();
-        if (!res.ok) throw new Error(result.error || "Create failed");
+        const result = await res.json() as Record<string, unknown>;
+        if (!res.ok) throw new Error((result.error as string) || "Create failed");
         setItems([...items, result]);
         toast.success("नवीन entry तयार झाली!");
       }
@@ -153,7 +153,7 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
         body: JSON.stringify({ id: item.id, published: !item.published }),
       });
       if (!res.ok) throw new Error("Toggle failed");
-      const updated = await res.json();
+      const updated = await res.json() as Record<string, unknown>;
       setItems(items.map((i) => (i.id === updated.id ? updated : i)));
       toast.success(updated.published ? "Published!" : "Unpublished!");
     } catch {

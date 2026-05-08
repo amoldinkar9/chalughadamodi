@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { verifyAdmin } from "@/lib/auth";
-import { supabase } from "@/lib/supabase";
+import { getDb, mapRows } from "@/lib/db";
 import AdminCrudPage from "@/components/admin/AdminCrudPage";
 
 const fields = [
@@ -13,7 +13,8 @@ export default async function FAQsAdmin() {
   const isAdmin = await verifyAdmin();
   if (!isAdmin) redirect("/admin/login");
 
-  const { data } = await supabase.from("faqs").select("*").order("display_order");
+  const db = await getDb();
+  const { results } = await db.prepare("SELECT * FROM faqs ORDER BY display_order").all();
 
   return (
     <AdminCrudPage
@@ -21,7 +22,7 @@ export default async function FAQsAdmin() {
       apiPath="/api/admin/faqs"
       fields={fields}
       columns={["question", "answer"]}
-      initialData={data || []}
+      initialData={mapRows(results)}
     />
   );
 }

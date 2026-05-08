@@ -1,23 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getDb } from "@/lib/db";
 import { verifyAdmin } from "@/lib/auth";
 
 export async function GET() {
   if (!(await verifyAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const { data, error } = await supabase.from("site_settings").select("*");
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data);
+  const db = await getDb();
+  const { results } = await db.prepare("SELECT * FROM site_settings").all();
+  return NextResponse.json(results);
 }
 
 export async function PUT(req: NextRequest) {
   if (!(await verifyAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const body = await req.json();
-  const { key, value } = body;
-  const { data, error } = await supabase
-    .from("site_settings")
-    .upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: "key" })
-    .select()
-    .single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data);
+  const { key, value } = await req.json() as Record<string, unknown>;
+  const db = await getDb();
+  const row = await db
+    .prepare("INSERT INTO site_settings (key, value, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at RETURNING *")
+    .bind(key, value, new Date().toISOString())
+    .first();
+  if (!row) return NextResponse.json({ error: "Upsert failed" }, { status: 500 });
+  return NextResponse.json(row);
 }
