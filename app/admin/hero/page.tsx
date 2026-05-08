@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,23 +11,20 @@ export default function HeroAdmin() {
   const [imageUrl, setImageUrl] = useState("");
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [loaded, setLoaded] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const loadCurrent = async () => {
-    try {
-      const res = await fetch("/api/admin/settings");
-      if (!res.ok) return;
-      const data = await res.json() as { key: string; value: string }[];
-      const setting = data.find((s) => s.key === "hero_image_url");
-      if (setting) setImageUrl(setting.value);
-    } catch { /* ignore */ }
-    setLoaded(true);
-  };
-
-  if (!loaded) {
+  useEffect(() => {
+    async function loadCurrent() {
+      try {
+        const res = await fetch("/api/admin/settings");
+        if (!res.ok) return;
+        const data = await res.json() as { key: string; value: string }[];
+        const setting = data.find((s) => s.key === "hero_image_url");
+        if (setting) setImageUrl(setting.value);
+      } catch { /* ignore */ }
+    }
     loadCurrent();
-  }
+  }, []);
 
   const uploadFile = async (file: File) => {
     setUploading(true);
