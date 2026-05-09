@@ -24,7 +24,7 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
     <section ref={sectionRef} id="testimonials" className="bg-cream py-16 md:py-24">
       <div className="max-w-[1200px] mx-auto px-6 md:px-12">
         <div className={`text-center mb-12 ${visible ? "animate-fade-in" : "opacity-0"}`}>
-          <h2 className="text-navy font-bold text-2xl md:text-[32px]">Testimonials</h2>
+          <h2 className="text-navy font-bold text-2xl md:text-[32px] font-english">Testimonials</h2>
           <span className="section-underline" />
         </div>
 

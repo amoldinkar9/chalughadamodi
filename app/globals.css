@@ -17,8 +17,9 @@
   --color-success: #2D7A4F;
   --color-urgent: #C73E3E;
   --color-whatsapp: #25D366;
-  --font-sans: "Helvetica Neue", var(--font-anek-devanagari);
-  --font-heading: "Helvetica Neue", var(--font-anek-devanagari);
+  --font-sans: var(--font-anek-devanagari), sans-serif;
+  --font-heading: var(--font-anek-devanagari), sans-serif;
+  --font-english: "Helvetica Neue", Arial, Helvetica, sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -77,6 +78,10 @@ body {
   background-color: var(--color-cream);
   color: var(--color-navy);
   font-family: var(--font-sans), sans-serif;
+}
+
+.font-english {
+  font-family: var(--font-english);
 }
 
 /* ===== FOCUS ===== */

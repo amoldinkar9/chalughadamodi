@@ -12,6 +12,10 @@
     {
       "pattern": "chalughadamodi.in",
       "custom_domain": true
+    },
+    {
+      "pattern": "veronica.chalughadamodi.in",
+      "custom_domain": true
     }
   ],
   "r2_buckets": [

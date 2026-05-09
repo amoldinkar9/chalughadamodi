@@ -50,7 +50,7 @@ export default function Tests({ tests }: TestsProps) {
                   <span className="text-gold">•</span>
                   <span>{test.duration}</span>
                 </div>
-                <a href={test.href} target="_blank" rel="noopener noreferrer" className="btn-primary inline-block px-6 py-3 rounded-md font-semibold text-sm" aria-label={`Start Test — ${test.title}`}>Start Test</a>
+                <a href={test.href} target="_blank" rel="noopener noreferrer" className="btn-primary inline-block px-6 py-3 rounded-md font-semibold text-sm font-english" aria-label={`Start Test — ${test.title}`}>Start Test</a>
               </div>
             </div>
           ))}

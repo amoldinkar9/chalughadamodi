@@ -92,13 +92,13 @@ export default function Gallery({ posts }: GalleryProps) {
                   )}
                   <div className="absolute top-2 right-2 flex flex-col gap-1 items-end">
                     {post.is_new && (
-                      <span className="bg-success text-white text-[11px] font-semibold px-2 py-0.5 rounded">New</span>
+                      <span className="bg-success text-white text-[11px] font-semibold px-2 py-0.5 rounded font-english">New</span>
                     )}
                     {post.date_extended && (
-                      <span className="bg-orange-500 text-white text-[11px] font-semibold px-2 py-0.5 rounded">Date Extended</span>
+                      <span className="bg-orange-500 text-white text-[11px] font-semibold px-2 py-0.5 rounded font-english">Date Extended</span>
                     )}
                     {isUrgent && (
-                      <span className="bg-red-600 text-white text-[11px] font-semibold px-2 py-0.5 rounded">Last Date</span>
+                      <span className="bg-red-600 text-white text-[11px] font-semibold px-2 py-0.5 rounded font-english">Last Date</span>
                     )}
                   </div>
                 </div>

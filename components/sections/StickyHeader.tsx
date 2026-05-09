@@ -57,7 +57,7 @@ export default function StickyHeader() {
               <a
                 key={link.href}
                 href={link.href}
-                className="nav-link text-navy font-medium text-[15px]"
+                className="nav-link text-navy font-medium text-[15px] font-english"
               >
                 {link.label}
               </a>
@@ -68,7 +68,7 @@ export default function StickyHeader() {
           <div className="flex items-center gap-3">
             <a
               href="#tests"
-              className="btn-primary px-4 py-2 rounded-md font-semibold text-sm"
+              className="btn-primary px-4 py-2 rounded-md font-semibold text-sm font-english"
               aria-label="Start Test — मोफत टेस्ट सुरू करा"
             >
               Start Test
@@ -106,7 +106,7 @@ export default function StickyHeader() {
             <a
               key={link.href}
               href={link.href}
-              className="text-navy font-semibold text-2xl"
+              className="text-navy font-semibold text-2xl font-english"
               onClick={() => setMenuOpen(false)}
               tabIndex={menuOpen ? 0 : -1}
             >
@@ -115,7 +115,7 @@ export default function StickyHeader() {
           ))}
           <a
             href="#tests"
-            className="btn-primary px-8 py-3 rounded-md font-semibold text-lg mt-4"
+            className="btn-primary px-8 py-3 rounded-md font-semibold text-lg mt-4 font-english"
             tabIndex={menuOpen ? 0 : -1}
             aria-label="Start Test — मोफत टेस्ट सुरू करा"
           >
