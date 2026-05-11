@@ -42,8 +42,12 @@ export default function Gallery({ posts }: GalleryProps) {
     return [...posts].sort((a, b) => {
       const aDays = a.last_date ? daysUntil(a.last_date) : Infinity;
       const bDays = b.last_date ? daysUntil(b.last_date) : Infinity;
-      const aUrgent = aDays >= 0 && aDays <= 5;
-      const bUrgent = bDays >= 0 && bDays <= 5;
+      const aExpired = aDays < 0;
+      const bExpired = bDays < 0;
+      const aUrgent = !aExpired && aDays >= 0 && aDays <= 5;
+      const bUrgent = !bExpired && bDays >= 0 && bDays <= 5;
+      if (aExpired && !bExpired) return 1;
+      if (!aExpired && bExpired) return -1;
       if (aUrgent && !bUrgent) return -1;
       if (!aUrgent && bUrgent) return 1;
       return (a.display_order || 0) - (b.display_order || 0);
@@ -62,20 +66,26 @@ export default function Gallery({ posts }: GalleryProps) {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
           {sortedPosts.map((post, i) => {
             const remaining = post.last_date ? daysUntil(post.last_date) : Infinity;
-            const isUrgent = remaining >= 0 && remaining <= 5;
+            const isExpired = remaining < 0;
+            const isUrgent = !isExpired && remaining >= 0 && remaining <= 5;
+
+            const borderClass = isExpired
+              ? "border-red-600 border-2 opacity-75"
+              : isUrgent
+                ? "border-red-500 border-2 shadow-lg shadow-red-100"
+                : "border-border";
 
             return (
               <div
                 key={post.id}
-                className={`card-hover bg-surface border rounded-md overflow-hidden ${isUrgent ? "border-red-500 border-2 shadow-lg shadow-red-100" : "border-border"
-                  } ${visible ? `animate-fade-in animate-delay-${(i % 4 + 1) * 100}` : "opacity-0"}`}
+                className={`card-hover bg-surface border rounded-md overflow-hidden ${borderClass} ${visible ? `animate-fade-in animate-delay-${(i % 4 + 1) * 100}` : "opacity-0"}`}
               >
                 <div className="relative">
                   {post.image_url ? (
                     <img
                       src={post.image_url}
                       alt={`${post.name} जाहिरात प्रतिमा`}
-                      className="w-full bg-cream border-b border-navy/20 object-cover"
+                      className={`w-full bg-cream border-b border-navy/20 object-cover ${isExpired ? "grayscale" : ""}`}
                       style={{ aspectRatio: "4/3" }}
                       sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                       loading="lazy"
@@ -91,10 +101,13 @@ export default function Gallery({ posts }: GalleryProps) {
                     </div>
                   )}
                   <div className="absolute top-2 right-2 flex flex-col gap-1 items-end">
-                    {post.is_new && (
+                    {isExpired && (
+                      <span className="bg-red-700 text-white text-[11px] font-semibold px-2 py-0.5 rounded font-english">Expired</span>
+                    )}
+                    {!isExpired && post.is_new && (
                       <span className="bg-success text-white text-[11px] font-semibold px-2 py-0.5 rounded font-english">New</span>
                     )}
-                    {post.date_extended && (
+                    {!isExpired && post.date_extended && (
                       <span className="bg-orange-500 text-white text-[11px] font-semibold px-2 py-0.5 rounded font-english">Date Extended</span>
                     )}
                     {isUrgent && (
@@ -103,14 +116,18 @@ export default function Gallery({ posts }: GalleryProps) {
                   </div>
                 </div>
                 <div className="p-3 md:p-4">
-                  <h3 className="text-navy font-bold text-[14px] md:text-base leading-snug mb-1">{post.name}</h3>
+                  <h3 className={`font-bold text-[14px] md:text-base leading-snug mb-1 ${isExpired ? "text-red-700" : "text-navy"}`}>{post.name}</h3>
                   {post.start_date && (
                     <p className="text-muted font-medium text-[13px]">सुरुवात: {formatDate(post.start_date)}</p>
                   )}
-                  <p className={`font-medium text-[13px] mb-3 ${isUrgent ? "text-red-600 font-bold" : "text-muted"}`}>
+                  <p className={`font-medium text-[13px] mb-3 ${isExpired ? "text-red-700 font-bold" : isUrgent ? "text-red-600 font-bold" : "text-muted"}`}>
                     अंतिम तारीख: {formatDate(post.last_date)}
                   </p>
-                  <a href={post.link || "#"} className="text-navy font-medium text-[13px] hover:text-gold transition-colors duration-200">अधिक माहिती →</a>
+                  {isExpired ? (
+                    <span className="text-red-600 font-semibold text-[13px] font-english">Expired</span>
+                  ) : (
+                    <a href={post.link || "#"} className="text-navy font-medium text-[13px] hover:text-gold transition-colors duration-200">अधिक माहिती →</a>
+                  )}
                 </div>
               </div>
             );
