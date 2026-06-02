@@ -21,7 +21,8 @@
   "r2_buckets": [
     {
       "binding": "IMAGES_BUCKET",
-      "bucket_name": "chalughadamodi-images"
+      "bucket_name": "chalughadamodi-images",
+      "experimental_remote": true
     }
   ],
   "d1_databases": [
@@ -29,7 +30,8 @@
       "binding": "DB",
       "database_name": "chalughadamodi-db",
       "database_id": "a4e6f551-c242-4eef-82ab-5ef7428e1da2",
-      "migrations_dir": "migrations"
+      "migrations_dir": "migrations",
+      "experimental_remote": true
     }
   ]
 }

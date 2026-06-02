@@ -2,7 +2,11 @@ import type { NextConfig } from "next";
 import { resolve } from "path";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
-initOpenNextCloudflareForDev();
+initOpenNextCloudflareForDev({
+  experimental: {
+    remoteBindings: true,
+  },
+});
 
 const securityHeaders = [
   {

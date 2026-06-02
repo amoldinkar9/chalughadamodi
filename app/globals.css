@@ -131,6 +131,26 @@ body {
   scrollbar-width: none;  /* Firefox */
 }
 
+/* ===== MARQUEE ANIMATION ===== */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-50% - 0.75rem)); /* Shift by 50% of parent width minus half of gap-6 (0.75rem) */
+  }
+}
+
+.animate-marquee-slow {
+  display: flex;
+  width: max-content;
+  animation: marquee 50s linear infinite;
+}
+
+.animate-marquee-slow:hover {
+  animation-play-state: paused;
+}
+
 /* ===== CARD HOVER ===== */
 .card-hover {
   transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
