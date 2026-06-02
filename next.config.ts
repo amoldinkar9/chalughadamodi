@@ -6,7 +6,7 @@ initOpenNextCloudflareForDev({
   experimental: {
     remoteBindings: true,
   },
-});
+} as any);
 
 const securityHeaders = [
   {
