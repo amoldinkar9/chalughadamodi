@@ -67,6 +67,7 @@ html {
   html {
     scroll-behavior: auto;
   }
+
   .animate-fade-in {
     animation: none !important;
     opacity: 1 !important;
@@ -105,6 +106,7 @@ body {
     opacity: 0;
     transform: translateY(12px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -116,19 +118,36 @@ body {
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
-.animate-delay-100 { animation-delay: 100ms; }
-.animate-delay-200 { animation-delay: 200ms; }
-.animate-delay-300 { animation-delay: 300ms; }
-.animate-delay-400 { animation-delay: 400ms; }
-.animate-delay-500 { animation-delay: 500ms; }
+.animate-delay-100 {
+  animation-delay: 100ms;
+}
+
+.animate-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animate-delay-300 {
+  animation-delay: 300ms;
+}
+
+.animate-delay-400 {
+  animation-delay: 400ms;
+}
+
+.animate-delay-500 {
+  animation-delay: 500ms;
+}
 
 /* ===== HIDE SCROLLBAR ===== */
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
+
 .scrollbar-none {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 /* ===== MARQUEE ANIMATION ===== */
@@ -136,15 +155,17 @@ body {
   0% {
     transform: translateX(0);
   }
+
   100% {
-    transform: translateX(calc(-50% - 0.75rem)); /* Shift by 50% of parent width minus half of gap-6 (0.75rem) */
+    transform: translateX(calc(-50% - 0.75rem));
+    /* Shift by 50% of parent width minus half of gap-6 (0.75rem) */
   }
 }
 
 .animate-marquee-slow {
   display: flex;
   width: max-content;
-  animation: marquee 120s linear infinite;
+  animation: marquee 150s linear infinite;
 }
 
 .animate-marquee-slow:hover {
@@ -155,6 +176,7 @@ body {
 .card-hover {
   transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
 }
+
 .card-hover:hover {
   transform: translateY(-2px);
   border-color: var(--color-gold);
@@ -167,6 +189,7 @@ body {
   color: var(--color-navy);
   transition: background-color 200ms ease;
 }
+
 .btn-primary:hover {
   background-color: #C4922C;
 }
@@ -177,6 +200,7 @@ body {
   background: transparent;
   transition: background-color 200ms ease, color 200ms ease;
 }
+
 .btn-outline:hover {
   background-color: var(--color-navy);
   color: var(--color-cream);
@@ -234,6 +258,7 @@ body {
   position: relative;
   transition: color 200ms ease;
 }
+
 .nav-link::after {
   content: '';
   position: absolute;
@@ -244,9 +269,11 @@ body {
   background-color: var(--color-gold);
   transition: width 200ms ease;
 }
+
 .nav-link:hover::after {
   width: 100%;
 }
+
 .nav-link:hover {
   color: var(--color-gold);
 }
@@ -265,6 +292,7 @@ body {
   pointer-events: none;
   transition: opacity 300ms ease;
 }
+
 .mobile-menu.open {
   opacity: 1;
   pointer-events: auto;
@@ -277,6 +305,7 @@ body {
   background: linear-gradient(90deg, var(--color-gold-soft), var(--color-gold), var(--color-gold-soft));
   position: relative;
 }
+
 .step-connector-h::after {
   content: '▶';
   position: absolute;
@@ -294,6 +323,7 @@ body {
   margin: 0 auto;
   position: relative;
 }
+
 .step-connector-v::after {
   content: '▼';
   position: absolute;
@@ -377,6 +407,7 @@ body {
   * {
     @apply border-border outline-ring/50;
   }
+
   html {
     @apply font-sans;
   }
