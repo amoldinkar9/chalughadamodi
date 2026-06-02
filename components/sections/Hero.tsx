@@ -2,9 +2,13 @@ import Image from "next/image";
 
 interface HeroProps {
   imageUrl?: string;
+  mobileImageUrl?: string;
 }
 
-export default function Hero({ imageUrl }: HeroProps) {
+export default function Hero({ imageUrl, mobileImageUrl }: HeroProps) {
+  const mobileImg = mobileImageUrl || imageUrl;
+  const desktopImg = imageUrl || mobileImageUrl;
+
   return (
     <section
       id="hero"
@@ -69,28 +73,56 @@ export default function Hero({ imageUrl }: HeroProps) {
           </div>
 
           {/* Hero Image */}
-          <div className="animate-fade-in animate-delay-200 flex justify-center md:justify-end">
-            {imageUrl ? (
-              <div className="relative w-full max-w-[400px]" style={{ aspectRatio: "5/6" }}>
-                <Image
-                  src={imageUrl}
-                  alt="चालू घडामोडी हिरो प्रतिमा"
-                  fill
-                  className="rounded-lg object-cover"
-                  sizes="(max-width: 768px) 80vw, 400px"
-                  priority
-                />
-              </div>
-            ) : (
-              <div
-                className="w-full max-w-[400px] border border-navy rounded-lg bg-cream flex items-center justify-center text-navy font-medium text-lg"
-                style={{ aspectRatio: "5/6" }}
-                role="img"
-                aria-label="चालू घडामोडी हिरो प्रतिमा"
-              >
-                हिरो प्रतिमा
-              </div>
-            )}
+          <div className="animate-fade-in animate-delay-200 flex flex-col items-center md:items-end w-full">
+            {/* Mobile View Image (16:9) */}
+            <div className="w-full flex justify-center md:hidden">
+              {mobileImg ? (
+                <div className="relative w-full max-w-[500px]" style={{ aspectRatio: "16/9" }}>
+                  <Image
+                    src={mobileImg}
+                    alt="चालू घडामोडी हिरो प्रतिमा"
+                    fill
+                    className="rounded-lg object-cover"
+                    sizes="(max-width: 768px) 90vw, 500px"
+                    priority
+                  />
+                </div>
+              ) : (
+                <div
+                  className="w-full max-w-[500px] border border-navy rounded-lg bg-cream flex items-center justify-center text-navy font-medium text-lg"
+                  style={{ aspectRatio: "16/9" }}
+                  role="img"
+                  aria-label="चालू घडामोडी हिरो प्रतिमा"
+                >
+                  हिरो प्रतिमा
+                </div>
+              )}
+            </div>
+
+            {/* Desktop View Image (5:6) */}
+            <div className="w-full hidden md:flex md:justify-end">
+              {desktopImg ? (
+                <div className="relative w-full max-w-[400px]" style={{ aspectRatio: "5/6" }}>
+                  <Image
+                    src={desktopImg}
+                    alt="चालू घडामोडी हिरो प्रतिमा"
+                    fill
+                    className="rounded-lg object-cover"
+                    sizes="400px"
+                    priority
+                  />
+                </div>
+              ) : (
+                <div
+                  className="w-full max-w-[400px] border border-navy rounded-lg bg-cream flex items-center justify-center text-navy font-medium text-lg"
+                  style={{ aspectRatio: "5/6" }}
+                  role="img"
+                  aria-label="चालू घडामोडी हिरो प्रतिमा"
+                >
+                  हिरो प्रतिमा
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

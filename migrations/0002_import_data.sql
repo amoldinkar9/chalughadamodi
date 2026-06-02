@@ -51,6 +51,7 @@ INSERT INTO faqs (id, question, answer, published, display_order, created_at, up
 INSERT INTO faqs (id, question, answer, published, display_order, created_at, updated_at) VALUES ('573194d0-c19f-4b28-90c7-e0fd36af67e5', 'अजून प्रश्न असतील तर?', 'खाली WhatsApp बटणावर click करा. आम्हाला थेट संपर्क करा.', 1, 7, '2026-04-29T13:21:30.763837+00:00', '2026-04-29T13:21:30.763837+00:00');
 INSERT INTO faqs (id, question, answer, published, display_order, created_at, updated_at) VALUES ('2a5ddaae-5bdc-4978-bcef-fe7865d091cf', 'का फ्री आहे चालू घडामोडी?', 'For Society', 1, 8, '2026-04-30T01:47:27.390159+00:00', '2026-04-30T01:47:27.390159+00:00');
 
--- site_settings (1 rows)
+-- site_settings (2 rows)
 INSERT INTO site_settings (key, value, updated_at) VALUES ('hero_image_url', 'https://dw44bia1z0v5t.cloudfront.net/current_affairs_images/Untitled-2_1777709399762.png', '2026-05-02T08:10:48.309+00:00');
+INSERT INTO site_settings (key, value, updated_at) VALUES ('hero_mobile_image_url', '', '2026-05-02T08:10:48.309+00:00');
 

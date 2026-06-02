@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS site_settings (
 
 -- Seed: site_settings
 INSERT OR IGNORE INTO site_settings (key, value) VALUES ('hero_image_url', '');
+INSERT OR IGNORE INTO site_settings (key, value) VALUES ('hero_mobile_image_url', '');
 
 -- Seed: announcements
 INSERT INTO announcements (id, title, image_url, backlink, display_order) VALUES

@@ -58,13 +58,18 @@ const fallbackContent: PublicContent = {
   ],
 };
 
-async function getHeroImageUrl(): Promise<string> {
+async function getHeroImageUrls(): Promise<{ imageUrl: string; mobileImageUrl: string }> {
   try {
     const db = await getDb();
-    const row = await db.prepare("SELECT value FROM site_settings WHERE key = ?").bind("hero_image_url").first<{ value: string }>();
-    return row?.value || "";
+    const rows = await db.prepare("SELECT key, value FROM site_settings WHERE key IN (?, ?)")
+      .bind("hero_image_url", "hero_mobile_image_url")
+      .all<{ key: string; value: string }>();
+    
+    const desktop = rows.results.find(r => r.key === "hero_image_url")?.value || "";
+    const mobile = rows.results.find(r => r.key === "hero_mobile_image_url")?.value || "";
+    return { imageUrl: desktop, mobileImageUrl: mobile };
   } catch {
-    return "";
+    return { imageUrl: "", mobileImageUrl: "" };
   }
 }
 
@@ -96,13 +101,13 @@ async function getContent(): Promise<PublicContent> {
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [content, heroImageUrl] = await Promise.all([getContent(), getHeroImageUrl()]);
+  const [content, heroImages] = await Promise.all([getContent(), getHeroImageUrls()]);
 
   return (
     <>
       <StickyHeader />
       <main>
-        <Hero imageUrl={heroImageUrl} />
+        <Hero imageUrl={heroImages.imageUrl} mobileImageUrl={heroImages.mobileImageUrl} />
         <Announcements announcements={content.announcements} />
         <Magazine magazines={content.magazines} />
         <StaticGS />
