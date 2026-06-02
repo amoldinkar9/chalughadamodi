@@ -26,7 +26,7 @@ export default function Tests({ tests }: TestsProps) {
         <div className={`text-center mb-12 ${visible ? "animate-fade-in" : "opacity-0"}`}>
           <h2 className="text-white font-bold text-2xl md:text-[32px]">टेस्ट - Test</h2>
           <span className="section-underline" />
-          <p className="text-cream font-medium text-base mt-4">रोजची टेस्ट. 10 प्रश्न. 5 मिनिट. लगेच निकाल.</p>
+          <p className="text-cream font-medium text-base mt-4">Weekly Test. 30 प्रश्न. 30 मिनिट. लगेच निकाल, सविस्तर विश्लेषण आणि स्पष्टीकरण.</p>
         </div>
 
         <div className="flex flex-col md:flex-row md:flex-wrap justify-center gap-6">
