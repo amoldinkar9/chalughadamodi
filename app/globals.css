@@ -122,6 +122,15 @@ body {
 .animate-delay-400 { animation-delay: 400ms; }
 .animate-delay-500 { animation-delay: 500ms; }
 
+/* ===== HIDE SCROLLBAR ===== */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 /* ===== CARD HOVER ===== */
 .card-hover {
   transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
