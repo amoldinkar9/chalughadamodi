@@ -144,7 +144,7 @@ body {
 .animate-marquee-slow {
   display: flex;
   width: max-content;
-  animation: marquee 70s linear infinite;
+  animation: marquee 120s linear infinite;
 }
 
 .animate-marquee-slow:hover {
