@@ -403,11 +403,11 @@ export default function StickyHeader() {
             />
           )}
 
-          {/* Floating close button — top-right corner */}
+          {/* Floating close button — bottom-center */}
           <button
             onClick={() => closeModal(false)}
             aria-label="बंद करा"
-            className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-navy/80 hover:bg-navy flex items-center justify-center shadow-lg transition-colors cursor-pointer"
+            className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 w-10 h-10 rounded-full bg-navy/85 hover:bg-navy flex items-center justify-center shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer"
           >
             <X size={18} className="text-white" strokeWidth={2.5} />
           </button>
