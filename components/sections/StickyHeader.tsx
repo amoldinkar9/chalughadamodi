@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import Link from "next/link";
 
 const navLinks = [
@@ -13,6 +13,7 @@ const navLinks = [
 export default function StickyHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,6 +33,62 @@ export default function StickyHeader() {
       document.body.style.overflow = "";
     };
   }, [menuOpen]);
+
+  // Read login state and parse URL query parameters
+  useEffect(() => {
+    const getCookie = (name: string) => {
+      if (typeof document === "undefined") return "";
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return decodeURIComponent(parts.pop()?.split(';').shift() || "");
+      return "";
+    };
+
+    const storedUser = getCookie("tcs9_username") || localStorage.getItem("tcs9_username") || "";
+    if (storedUser) {
+      setUsername(storedUser);
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const nameParam = params.get("username") || params.get("name");
+    if (nameParam) {
+      document.cookie = `tcs9_username=${encodeURIComponent(nameParam)}; path=/; max-age=31536000; SameSite=Lax; Secure`;
+      localStorage.setItem("tcs9_username", nameParam);
+      setUsername(nameParam);
+
+      // Clean query parameters from URL
+      const newUrl = window.location.pathname + window.location.hash;
+      window.history.replaceState({}, document.title, newUrl);
+    }
+  }, []);
+
+  const handleLoginClick = () => {
+    const getCookie = (name: string) => {
+      if (typeof document === "undefined") return "";
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop()?.split(';').shift() || "";
+      return "";
+    };
+
+    const hasSignedUp = getCookie("tcs9_has_signed_up") || localStorage.getItem("tcs9_has_signed_up");
+    const currentUrl = window.location.origin + window.location.pathname;
+    const redirectParam = encodeURIComponent(currentUrl);
+
+    if (hasSignedUp) {
+      window.location.href = `https://www.tcs9.in/mr/login?redirect=${redirectParam}`;
+    } else {
+      document.cookie = "tcs9_has_signed_up=true; path=/; max-age=31536000; SameSite=Lax; Secure";
+      localStorage.setItem("tcs9_has_signed_up", "true");
+      window.location.href = `https://www.tcs9.in/mr/sign-up?redirect=${redirectParam}`;
+    }
+  };
+
+  const handleLogout = () => {
+    document.cookie = "tcs9_username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    localStorage.removeItem("tcs9_username");
+    setUsername("");
+  };
 
   return (
     <>
@@ -74,6 +131,29 @@ export default function StickyHeader() {
               Start Test
             </Link>
 
+            {/* Login / Profile Button */}
+            {username ? (
+              <div className="hidden md:flex items-center gap-2">
+                <span className="text-navy font-semibold text-sm bg-gold/10 border border-gold/30 px-3 py-2 rounded-md flex items-center gap-1.5 max-w-[150px] truncate" title={username}>
+                  <User size={14} className="text-gold" />
+                  <span className="truncate">{username}</span>
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="text-xs text-muted hover:text-urgent font-medium underline cursor-pointer"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={handleLoginClick}
+                className="hidden md:block btn-outline px-4 py-2 rounded-md font-semibold text-sm font-english cursor-pointer"
+              >
+                Login
+              </button>
+            )}
+
             {/* Hamburger */}
             <button
               className="md:hidden p-2 text-navy"
@@ -115,15 +195,39 @@ export default function StickyHeader() {
           ))}
           <Link
             href="/#tests"
-            className="btn-primary px-8 py-3 rounded-md font-semibold text-lg mt-4 font-english"
+            className="btn-primary px-8 py-3 rounded-md font-semibold text-lg mt-4 font-english text-center"
             tabIndex={menuOpen ? 0 : -1}
             aria-label="Start Test — मोफत टेस्ट सुरू करा"
+            onClick={() => setMenuOpen(false)}
           >
             Start Test
           </Link>
+
+          {/* Mobile Login / Profile */}
+          {username ? (
+            <div className="flex flex-col gap-2 mt-4" tabIndex={menuOpen ? 0 : -1}>
+              <span className="text-navy font-semibold text-xl bg-gold/10 border border-gold/30 px-4 py-3 rounded-md flex items-center gap-2 max-w-[280px] truncate" title={username}>
+                <User size={18} className="text-gold" />
+                <span className="truncate">{username}</span>
+              </span>
+              <button
+                onClick={() => { handleLogout(); setMenuOpen(false); }}
+                className="text-left text-sm text-urgent font-semibold underline px-2 cursor-pointer"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => { handleLoginClick(); setMenuOpen(false); }}
+              className="btn-outline px-8 py-3 rounded-md font-semibold text-lg mt-4 font-english text-center cursor-pointer"
+              tabIndex={menuOpen ? 0 : -1}
+            >
+              Login
+            </button>
+          )}
         </nav>
       </div>
     </>
   );
 }
-

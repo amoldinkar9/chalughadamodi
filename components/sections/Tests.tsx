@@ -21,7 +21,7 @@ export default function Tests({ tests }: TestsProps) {
   }, []);
 
   return (
-    <section ref={sectionRef} id="tests" className="bg-navy py-16 md:py-24">
+    <section ref={sectionRef} id="tests" className="bg-brown py-16 md:py-24">
       <div className="max-w-[1200px] mx-auto px-6 md:px-12">
         <div className={`text-center mb-12 ${visible ? "animate-fade-in" : "opacity-0"}`}>
           <h2 className="text-white font-bold text-2xl md:text-[32px]">टेस्ट - Test</h2>
