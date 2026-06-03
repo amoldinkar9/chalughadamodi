@@ -68,18 +68,18 @@ async function fetchTcs9Name(): Promise<string> {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function StickyHeader() {
-  const [scrolled, setScrolled]   = useState(false);
-  const [menuOpen, setMenuOpen]   = useState(false);
-  const [username, setUsername]   = useState("");   // actual name when known
-  const [loggedIn, setLoggedIn]   = useState(false); // true as soon as modal closes after login
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [username, setUsername] = useState("");   // actual name when known
+  const [loggedIn, setLoggedIn] = useState(false); // true as soon as modal closes after login
   const [modalOpen, setModalOpen] = useState(false);
-  const [loginSrc, setLoginSrc]   = useState("");
+  const [loginSrc, setLoginSrc] = useState("");
 
-  const iframeRef       = useRef<HTMLIFrameElement>(null);
-  const hasLoadedOnce   = useRef(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const hasLoadedOnce = useRef(false);
   const profileTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const modalOpenRef    = useRef(false);
-  const isProfileView   = useRef(false); // true when modal shows profile (not login)
+  const modalOpenRef = useRef(false);
+  const isProfileView = useRef(false); // true when modal shows profile (not login)
 
   useEffect(() => { modalOpenRef.current = modalOpen; }, [modalOpen]);
 
@@ -99,7 +99,7 @@ export default function StickyHeader() {
   // ── restore session on mount ──────────────────────────────────────────────
   useEffect(() => {
     // 1. username in URL (tcs9 redirect with ?username=)
-    const params    = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(window.location.search);
     const nameParam = params.get("username") || params.get("name");
     if (nameParam) {
       setCookie("tcs9_username", nameParam);
@@ -112,11 +112,11 @@ export default function StickyHeader() {
 
     // 2. Stored in cookie / localStorage
     const fromCookie = getCookie("tcs9_username");
-    const fromLS     = localStorage.getItem("tcs9_username") || "";
-    const stored     = fromCookie || fromLS;
+    const fromLS = localStorage.getItem("tcs9_username") || "";
+    const stored = fromCookie || fromLS;
     if (stored) {
       if (!fromCookie) setCookie("tcs9_username", stored);
-      if (!fromLS)     localStorage.setItem("tcs9_username", stored);
+      if (!fromLS) localStorage.setItem("tcs9_username", stored);
       setUsername(stored);
       setLoggedIn(true);
       return;
@@ -163,7 +163,7 @@ export default function StickyHeader() {
 
   // ── build login URL ───────────────────────────────────────────────────────
   const buildLoginUrl = useCallback(() => {
-    const hasSignedUp   = getCookie("tcs9_has_signed_up") || localStorage.getItem("tcs9_has_signed_up");
+    const hasSignedUp = getCookie("tcs9_has_signed_up") || localStorage.getItem("tcs9_has_signed_up");
     const redirectParam = encodeURIComponent(window.location.origin);
     const url = hasSignedUp
       ? `https://www.tcs9.in/mr/login?redirect=${redirectParam}`
@@ -230,9 +230,9 @@ export default function StickyHeader() {
     if (!iframeRef.current) return;
     try {
       // ── SAME-ORIGIN: tcs9 redirected iframe back to our domain ───────────
-      const iframeUrl    = iframeRef.current.contentWindow?.location.href || "";
+      const iframeUrl = iframeRef.current.contentWindow?.location.href || "";
       const iframeParams = new URLSearchParams(iframeRef.current.contentWindow?.location.search || "");
-      const nameParam    = iframeParams.get("username") || iframeParams.get("name");
+      const nameParam = iframeParams.get("username") || iframeParams.get("name");
 
       if (nameParam) {
         if (profileTimerRef.current) { clearTimeout(profileTimerRef.current); profileTimerRef.current = null; }
@@ -281,9 +281,8 @@ export default function StickyHeader() {
       {/* ── Header bar ──────────────────────────────────────────────────── */}
       <header
         id="site-header"
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-          scrolled ? "bg-surface shadow-sm border-b border-transparent" : "bg-cream border-b border-border"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${scrolled ? "bg-surface shadow-sm border-b border-transparent" : "bg-cream border-b border-border"
+          }`}
       >
         <div className="max-w-[1200px] mx-auto px-6 md:px-12 flex items-center justify-between h-16 md:h-[72px]">
           <Link href="/#hero" className="text-navy font-bold text-[22px] md:text-[26px] leading-tight">
@@ -403,11 +402,11 @@ export default function StickyHeader() {
             />
           )}
 
-          {/* Floating close button — bottom-center */}
+          {/* Floating close button — top-center */}
           <button
             onClick={() => closeModal(false)}
             aria-label="बंद करा"
-            className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 w-10 h-10 rounded-full bg-navy/85 hover:bg-navy flex items-center justify-center shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            className="absolute top-6 left-1/2 -translate-x-1/2 z-30 w-10 h-10 rounded-full bg-navy/85 hover:bg-navy flex items-center justify-center shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer"
           >
             <X size={18} className="text-white" strokeWidth={2.5} />
           </button>
