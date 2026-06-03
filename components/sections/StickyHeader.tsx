@@ -72,8 +72,10 @@ export default function StickyHeader() {
     };
 
     const hasSignedUp = getCookie("tcs9_has_signed_up") || localStorage.getItem("tcs9_has_signed_up");
-    const currentUrl = window.location.origin + window.location.pathname;
-    const redirectParam = encodeURIComponent(currentUrl);
+    const targetUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
+      ? window.location.origin 
+      : "https://chalughadamodi.in";
+    const redirectParam = encodeURIComponent(targetUrl);
 
     if (hasSignedUp) {
       window.location.href = `https://www.tcs9.in/mr/login?redirect=${redirectParam}`;
