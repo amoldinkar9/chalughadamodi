@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, User } from "lucide-react";
 import Link from "next/link";
 
@@ -14,10 +14,6 @@ export default function StickyHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [username, setUsername] = useState("");
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [iframeUrl, setIframeUrl] = useState("");
-  const [iframeLoading, setIframeLoading] = useState(false);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -66,38 +62,6 @@ export default function StickyHeader() {
     }
   }, []);
 
-  // Polling iframe location for redirect
-  useEffect(() => {
-    if (!showLoginModal) return;
-
-    setIframeLoading(true);
-
-    const timer = setInterval(() => {
-      const iframe = iframeRef.current;
-      if (!iframe) return;
-
-      try {
-        const iframeLocation = iframe.contentWindow?.location;
-        if (iframeLocation && iframeLocation.origin === window.location.origin) {
-          const params = new URLSearchParams(iframeLocation.search);
-          const nameParam = params.get("username") || params.get("name");
-          if (nameParam) {
-            document.cookie = `tcs9_username=${encodeURIComponent(nameParam)}; path=/; max-age=31536000; SameSite=Lax; Secure`;
-            localStorage.setItem("tcs9_username", nameParam);
-            setUsername(nameParam);
-          }
-          setShowLoginModal(false);
-          setIframeUrl("");
-          clearInterval(timer);
-        }
-      } catch (e) {
-        // Ignore cross-origin error until it redirects back to our domain
-      }
-    }, 500);
-
-    return () => clearInterval(timer);
-  }, [showLoginModal]);
-
   const handleLoginClick = () => {
     const getCookie = (name: string) => {
       if (typeof document === "undefined") return "";
@@ -122,8 +86,8 @@ export default function StickyHeader() {
       localStorage.setItem("tcs9_has_signed_up", "true");
     }
 
-    setIframeUrl(loginUrl);
-    setShowLoginModal(true);
+    // Direct browser redirect (no popups, no iframes)
+    window.location.href = loginUrl;
   };
 
   const handleLogout = () => {
@@ -271,40 +235,7 @@ export default function StickyHeader() {
         </nav>
       </div>
 
-      {/* Login Modal Overlay (Full Screen) */}
-      {showLoginModal && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-white animate-fade-in">
-          
-          {/* Modal Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-cream flex-shrink-0">
-            <span className="text-navy font-semibold text-base font-english">TCS9 Secure Login</span>
-            <button
-              onClick={() => { setShowLoginModal(false); setIframeUrl(""); }}
-              className="text-navy hover:text-gold p-1.5 rounded-full transition-colors cursor-pointer bg-white border border-border flex items-center justify-center hover:shadow-sm"
-              aria-label="Close login"
-            >
-              <X size={20} />
-            </button>
-          </div>
 
-          {/* Iframe container (Full Width/Height) */}
-          <div className="flex-1 relative bg-white">
-            {iframeLoading && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white z-10">
-                <div className="w-8 h-8 border-3 border-gold border-t-transparent rounded-full animate-spin"></div>
-                <p className="text-xs text-muted mt-3">Connecting to TCS9...</p>
-              </div>
-            )}
-            
-            <iframe
-              ref={iframeRef}
-              src={iframeUrl}
-              className="w-full h-full border-0"
-              onLoad={() => setIframeLoading(false)}
-            />
-          </div>
-        </div>
-      )}
     </>
   );
 }
