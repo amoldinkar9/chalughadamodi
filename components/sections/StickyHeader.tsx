@@ -34,6 +34,7 @@ export default function StickyHeader() {
   const [username, setUsername]       = useState("");
   const [modalOpen, setModalOpen]     = useState(false);
   const [loginSrc, setLoginSrc]       = useState("");
+  const [loggedIn, setLoggedIn]       = useState(false); // true even when name is unknown
   const iframeRef                     = useRef<HTMLIFrameElement>(null);
   // tracks whether the FIRST onLoad (login page) has already fired
   const hasLoadedOnce                  = useRef(false);
@@ -75,7 +76,24 @@ export default function StickyHeader() {
       if (!fromCookie) setCookie("tcs9_username", stored);
       if (!fromLS)     localStorage.setItem("tcs9_username", stored);
       setUsername(stored);
+      setLoggedIn(true);
     }
+  }, []);
+
+  // ── storage event: fired when the iframe (on our domain) writes tcs9_username ─
+  // localStorage writes by a same-origin iframe dispatch a storage event on the
+  // parent window — this is how we capture the username after tcs9 redirects back.
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "tcs9_username" && e.newValue) {
+        const name = decodeURIComponent(e.newValue);
+        setCookie("tcs9_username", name);
+        setUsername(name);
+        setLoggedIn(true);
+      }
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, []);
 
   // ── Escape key closes modal ────────────────────────────────────────────────
@@ -113,6 +131,12 @@ export default function StickyHeader() {
   const closeModal = () => {
     setModalOpen(false);
     setLoginSrc("");
+    // Mark as logged in — even if we couldn't capture the name yet,
+    // the Login button should not show again
+    setLoggedIn(true);
+    // Re-read storage in case username arrived just before close
+    const stored = getCookie("tcs9_username") || localStorage.getItem("tcs9_username") || "";
+    if (stored) setUsername(stored);
   };
 
   // ── iframe load handler ────────────────────────────────────────────────────
@@ -170,6 +194,7 @@ export default function StickyHeader() {
     localStorage.removeItem("tcs9_username");
     localStorage.removeItem("tcs9_has_signed_up");
     setUsername("");
+    setLoggedIn(false);
   };
 
   // ──────────────────────────────────────────────────────────────────────────
@@ -207,14 +232,14 @@ export default function StickyHeader() {
               Start Test
             </Link>
 
-            {username ? (
+            {username || loggedIn ? (
               <div className="hidden md:flex items-center gap-2">
                 <span
-                  className="text-navy font-semibold text-sm bg-gold/10 border border-gold/30 px-3 py-2 rounded-md flex items-center gap-1.5 max-w-[150px] truncate"
-                  title={username}
+                  className="text-navy font-semibold text-sm bg-gold/10 border border-gold/30 px-3 py-2 rounded-md flex items-center gap-1.5 max-w-[160px] truncate"
+                  title={username || "Logged In"}
                 >
                   <User size={14} className="text-gold" />
-                  <span className="truncate">{username}</span>
+                  <span className="truncate">{username || "Logged In ✓"}</span>
                 </span>
                 <button
                   onClick={handleLogout}
@@ -281,14 +306,14 @@ export default function StickyHeader() {
             Start Test
           </Link>
 
-          {username ? (
+          {username || loggedIn ? (
             <div className="flex flex-col gap-2 mt-4" tabIndex={menuOpen ? 0 : -1}>
               <span
                 className="text-navy font-semibold text-xl bg-gold/10 border border-gold/30 px-4 py-3 rounded-md flex items-center gap-2 max-w-[280px] truncate"
-                title={username}
+                title={username || "Logged In"}
               >
                 <User size={18} className="text-gold" />
-                <span className="truncate">{username}</span>
+                <span className="truncate">{username || "Logged In ✓"}</span>
               </span>
               <button
                 onClick={() => { handleLogout(); setMenuOpen(false); }}
