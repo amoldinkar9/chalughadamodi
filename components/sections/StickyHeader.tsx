@@ -298,10 +298,10 @@ export default function StickyHeader() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
             <Link
               href="/#tests"
-              className="btn-primary px-4 py-2 rounded-md font-semibold text-sm font-english"
+              className="btn-primary px-3 py-1.5 md:px-4 md:py-2 rounded-md font-semibold text-xs md:text-sm font-english"
               aria-label="Start Test — मोफत टेस्ट सुरू करा"
             >
               Start Test
@@ -310,17 +310,17 @@ export default function StickyHeader() {
             {displayName ? (
               <button
                 onClick={openProfileModal}
-                className="hidden md:flex text-navy font-semibold text-sm bg-gold/10 border border-gold/30 px-3 py-2 rounded-md items-center gap-1.5 max-w-[160px] truncate hover:bg-gold/20 transition-colors cursor-pointer"
+                className="flex text-navy font-semibold text-xs md:text-sm bg-gold/10 border border-gold/30 px-2.5 py-1.5 md:px-3 md:py-2 rounded-md items-center gap-1 md:gap-1.5 max-w-[90px] sm:max-w-[120px] md:max-w-[160px] truncate hover:bg-gold/20 transition-colors cursor-pointer"
                 title={`${displayName} — tcs9.in प्रोफाइल पहा`}
                 aria-label="tcs9.in प्रोफाइल उघडा"
               >
-                <User size={14} className="text-gold shrink-0" />
+                <User size={12} className="text-gold shrink-0 md:w-3.5 md:h-3.5" />
                 <span className="truncate" style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>{displayName}</span>
               </button>
             ) : (
               <button
                 onClick={openModal}
-                className="hidden md:block btn-outline px-4 py-2 rounded-md font-semibold text-sm font-english cursor-pointer"
+                className="block btn-outline px-3 py-1.5 md:px-4 md:py-2 rounded-md font-semibold text-xs md:text-sm font-english cursor-pointer"
               >
                 Login
               </button>
