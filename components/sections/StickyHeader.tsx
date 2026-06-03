@@ -19,7 +19,12 @@ function getCookie(name: string): string {
   return "";
 }
 function setCookie(name: string, val: string, maxAge = 31536000) {
-  document.cookie = `${name}=${encodeURIComponent(val)}; path=/; max-age=${maxAge}; SameSite=Lax`;
+  // Include Secure flag on HTTPS (required for persistence in production)
+  const secure = typeof window !== "undefined" && window.location.protocol === "https:" ? "; Secure" : "";
+  document.cookie = `${name}=${encodeURIComponent(val)}; path=/; max-age=${maxAge}; SameSite=Lax${secure}`;
+}
+function deleteCookie(name: string) {
+  document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
 }
 // ────────────────────────────────────────────────────────────────────────────
 
@@ -30,6 +35,8 @@ export default function StickyHeader() {
   const [modalOpen, setModalOpen]     = useState(false);
   const [loginSrc, setLoginSrc]       = useState("");
   const iframeRef                     = useRef<HTMLIFrameElement>(null);
+  // tracks whether the FIRST onLoad (login page) has already fired
+  const hasLoadedOnce                  = useRef(false);
 
   // ── scroll shadow ──────────────────────────────────────────────────────────
   useEffect(() => {
@@ -46,7 +53,7 @@ export default function StickyHeader() {
 
   // ── restore username from cookie / localStorage on mount ─────────────────
   useEffect(() => {
-    // username returned as query param after tcs9 redirect
+    // 1. username returned as query param after tcs9 redirect back to our domain
     const params = new URLSearchParams(window.location.search);
     const nameParam = params.get("username") || params.get("name");
     if (nameParam) {
@@ -56,8 +63,19 @@ export default function StickyHeader() {
       window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
       return;
     }
-    const stored = getCookie("tcs9_username") || localStorage.getItem("tcs9_username") || "";
-    if (stored) setUsername(stored);
+
+    // 2. Cross-sync: restore from whichever storage still has the value
+    //    (covers the case where one store was cleared but the other wasn't)
+    const fromCookie = getCookie("tcs9_username");
+    const fromLS     = localStorage.getItem("tcs9_username") || "";
+    const stored     = fromCookie || fromLS;
+
+    if (stored) {
+      // Re-write both so they stay in sync
+      if (!fromCookie) setCookie("tcs9_username", stored);
+      if (!fromLS)     localStorage.setItem("tcs9_username", stored);
+      setUsername(stored);
+    }
   }, []);
 
   // ── Escape key closes modal ────────────────────────────────────────────────
@@ -85,6 +103,7 @@ export default function StickyHeader() {
 
   // ── open modal ─────────────────────────────────────────────────────────────
   const openModal = () => {
+    hasLoadedOnce.current = false; // reset for each new modal open
     setLoginSrc(buildLoginUrl());
     setModalOpen(true);
     setMenuOpen(false);
@@ -96,12 +115,22 @@ export default function StickyHeader() {
     setLoginSrc("");
   };
 
-  // ── iframe load handler: detect when tcs9 redirects back to our domain ─────
+  // ── iframe load handler ────────────────────────────────────────────────────
+  //
+  //  onLoad fires every time the iframe navigates to a new page.
+  //  Because tcs9.in is cross-origin we cannot read its URL directly, but:
+  //
+  //  • 1st onLoad  → login page just loaded      → mark hasLoadedOnce = true
+  //  • 2nd+ onLoad (still cross-origin) → user navigated (login → profile)
+  //                                        → close the modal
+  //  • onLoad that is SAME-origin       → tcs9 redirected back to chalughadamodi
+  //                                        → read username, close the modal
+  // ──────────────────────────────────────────────────────────────────────────
   const handleIframeLoad = () => {
     if (!iframeRef.current) return;
     try {
-      // This will succeed only when the iframe is on the SAME origin (our domain)
-      const iframeUrl = iframeRef.current.contentWindow?.location.href || "";
+      // ── SAME-ORIGIN path (tcs9 redirected back to chalughadamodi.in) ──────
+      const iframeUrl    = iframeRef.current.contentWindow?.location.href || "";
       const iframeParams = new URLSearchParams(
         iframeRef.current.contentWindow?.location.search || ""
       );
@@ -115,20 +144,31 @@ export default function StickyHeader() {
         return;
       }
 
-      // If iframe landed on our origin but no name param, check if profile was fetched
-      if (iframeUrl.startsWith(window.location.origin) && iframeUrl !== window.location.origin + "/") {
+      // Landed on our origin but no param in URL — still close
+      if (iframeUrl.startsWith(window.location.origin)) {
         const stored = getCookie("tcs9_username") || localStorage.getItem("tcs9_username") || "";
-        if (stored) { setUsername(stored); closeModal(); }
+        if (stored) setUsername(stored);
+        closeModal();
       }
     } catch {
-      // still cross-origin (tcs9.in) — normal, do nothing
+      // ── CROSS-ORIGIN path (still on tcs9.in) ─────────────────────────────
+      if (!hasLoadedOnce.current) {
+        // First load = login page rendered — just mark and wait
+        hasLoadedOnce.current = true;
+      } else {
+        // Second+ load cross-origin = user navigated to profile page after login
+        // → close the modal right away
+        closeModal();
+      }
     }
   };
 
   // ── logout ─────────────────────────────────────────────────────────────────
   const handleLogout = () => {
-    document.cookie = "tcs9_username=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    deleteCookie("tcs9_username");
+    deleteCookie("tcs9_has_signed_up");
     localStorage.removeItem("tcs9_username");
+    localStorage.removeItem("tcs9_has_signed_up");
     setUsername("");
   };
 
