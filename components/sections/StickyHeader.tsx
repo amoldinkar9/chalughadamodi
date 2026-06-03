@@ -274,7 +274,7 @@ export default function StickyHeader() {
 
   // ─────────────────────────────────────────────────────────────────────────
   // Display helpers
-  const displayName = username || (loggedIn ? "Logged In ✓" : "");
+  const displayName = username || (loggedIn ? "Profile" : "");
 
   return (
     <>
