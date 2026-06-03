@@ -397,7 +397,7 @@ export default function StickyHeader() {
               src={loginSrc}
               onLoad={handleIframeLoad}
               title="TCS9 Login"
-              className="absolute inset-0 w-full h-full border-0"
+              className="absolute inset-0 w-full h-full border-0 z-10"
               allow="forms"
               sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation-by-user-activation"
             />
@@ -407,7 +407,7 @@ export default function StickyHeader() {
           <button
             onClick={() => closeModal(false)}
             aria-label="बंद करा"
-            className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-navy/80 hover:bg-navy flex items-center justify-center shadow-lg transition-colors cursor-pointer"
+            className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-navy/80 hover:bg-navy flex items-center justify-center shadow-lg transition-colors cursor-pointer"
           >
             <X size={18} className="text-white" strokeWidth={2.5} />
           </button>
