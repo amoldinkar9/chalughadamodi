@@ -315,7 +315,7 @@ export default function StickyHeader() {
                 aria-label="tcs9.in प्रोफाइल उघडा"
               >
                 <User size={14} className="text-gold shrink-0" />
-                <span className="truncate">{displayName}</span>
+                <span className="truncate" style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>{displayName}</span>
               </button>
             ) : (
               <button
@@ -365,7 +365,7 @@ export default function StickyHeader() {
               tabIndex={menuOpen ? 0 : -1}
             >
               <User size={18} className="text-gold shrink-0" />
-              <span className="truncate">{displayName}</span>
+              <span className="truncate" style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>{displayName}</span>
             </button>
           ) : (
             <button onClick={openModal} className="btn-outline px-8 py-3 rounded-md font-semibold text-lg mt-4 font-english text-center cursor-pointer" tabIndex={menuOpen ? 0 : -1}>
