@@ -10,7 +10,7 @@ const navLinks = [
   { label: "Contact", href: "/#faq" },
 ];
 
-// ── cookie helpers ───────────────────────────────────────────────────────────
+// ── cookie helpers ────────────────────────────────────────────────────────────
 function getCookie(name: string): string {
   if (typeof document === "undefined") return "";
   const value = `; ${document.cookie}`;
@@ -19,43 +19,44 @@ function getCookie(name: string): string {
   return "";
 }
 function setCookie(name: string, val: string, maxAge = 31536000) {
-  // Include Secure flag on HTTPS (required for persistence in production)
+  // Secure flag required on HTTPS for the cookie to persist in production
   const secure = typeof window !== "undefined" && window.location.protocol === "https:" ? "; Secure" : "";
   document.cookie = `${name}=${encodeURIComponent(val)}; path=/; max-age=${maxAge}; SameSite=Lax${secure}`;
 }
-function deleteCookie(name: string) {
-  document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
-}
-// ────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 
 export default function StickyHeader() {
-  const [scrolled, setScrolled]       = useState(false);
-  const [menuOpen, setMenuOpen]       = useState(false);
-  const [username, setUsername]       = useState("");
-  const [modalOpen, setModalOpen]     = useState(false);
-  const [loginSrc, setLoginSrc]       = useState("");
-  const [loggedIn, setLoggedIn]       = useState(false); // true even when name is unknown
-  const iframeRef                     = useRef<HTMLIFrameElement>(null);
-  // tracks whether the FIRST onLoad (login page) has already fired
-  const hasLoadedOnce                  = useRef(false);
+  const [scrolled, setScrolled]   = useState(false);
+  const [menuOpen, setMenuOpen]   = useState(false);
+  const [username, setUsername]   = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [loginSrc, setLoginSrc]   = useState("");
 
-  // ── scroll shadow ──────────────────────────────────────────────────────────
+  const iframeRef       = useRef<HTMLIFrameElement>(null);
+  const hasLoadedOnce   = useRef(false);   // tracks first onLoad (login page)
+  const profileTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const modalOpenRef    = useRef(false);   // mirror of modalOpen for use inside timers
+
+  // keep modalOpenRef in sync
+  useEffect(() => { modalOpenRef.current = modalOpen; }, [modalOpen]);
+
+  // ── scroll shadow ─────────────────────────────────────────────────────────
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 100);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // ── scroll lock while modal / menu is open ────────────────────────────────
+  // ── scroll lock ───────────────────────────────────────────────────────────
   useEffect(() => {
     document.body.style.overflow = menuOpen || modalOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen, modalOpen]);
 
-  // ── restore username from cookie / localStorage on mount ─────────────────
+  // ── restore username on mount ─────────────────────────────────────────────
   useEffect(() => {
-    // 1. username returned as query param after tcs9 redirect back to our domain
-    const params = new URLSearchParams(window.location.search);
+    // 1. username returned as query param when tcs9 redirects back to our domain
+    const params    = new URLSearchParams(window.location.search);
     const nameParam = params.get("username") || params.get("name");
     if (nameParam) {
       setCookie("tcs9_username", nameParam);
@@ -66,48 +67,42 @@ export default function StickyHeader() {
     }
 
     // 2. Cross-sync: restore from whichever storage still has the value
-    //    (covers the case where one store was cleared but the other wasn't)
     const fromCookie = getCookie("tcs9_username");
     const fromLS     = localStorage.getItem("tcs9_username") || "";
     const stored     = fromCookie || fromLS;
-
     if (stored) {
-      // Re-write both so they stay in sync
       if (!fromCookie) setCookie("tcs9_username", stored);
       if (!fromLS)     localStorage.setItem("tcs9_username", stored);
       setUsername(stored);
-      setLoggedIn(true);
     }
   }, []);
 
-  // ── storage event: fired when the iframe (on our domain) writes tcs9_username ─
-  // localStorage writes by a same-origin iframe dispatch a storage event on the
-  // parent window — this is how we capture the username after tcs9 redirects back.
+  // ── storage event: catches username written by our page running inside the iframe ─
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
       if (e.key === "tcs9_username" && e.newValue) {
         const name = decodeURIComponent(e.newValue);
         setCookie("tcs9_username", name);
         setUsername(name);
-        setLoggedIn(true);
       }
     };
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
   }, []);
 
-  // ── Escape key closes modal ────────────────────────────────────────────────
+  // ── Escape key closes modal ───────────────────────────────────────────────
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && modalOpen) closeModal();
-    };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape" && modalOpen) closeModal(); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [modalOpen]);
 
-  // ── build tcs9 login URL ───────────────────────────────────────────────────
+  // ── cleanup timer on unmount ──────────────────────────────────────────────
+  useEffect(() => () => { if (profileTimerRef.current) clearTimeout(profileTimerRef.current); }, []);
+
+  // ── build login URL ───────────────────────────────────────────────────────
   const buildLoginUrl = useCallback(() => {
-    const hasSignedUp = getCookie("tcs9_has_signed_up") || localStorage.getItem("tcs9_has_signed_up");
+    const hasSignedUp  = getCookie("tcs9_has_signed_up") || localStorage.getItem("tcs9_has_signed_up");
     const redirectParam = encodeURIComponent(window.location.origin);
     const url = hasSignedUp
       ? `https://www.tcs9.in/mr/login?redirect=${redirectParam}`
@@ -119,48 +114,43 @@ export default function StickyHeader() {
     return url;
   }, []);
 
-  // ── open modal ─────────────────────────────────────────────────────────────
+  // ── open / close modal ────────────────────────────────────────────────────
   const openModal = () => {
-    hasLoadedOnce.current = false; // reset for each new modal open
+    hasLoadedOnce.current = false;
+    if (profileTimerRef.current) { clearTimeout(profileTimerRef.current); profileTimerRef.current = null; }
     setLoginSrc(buildLoginUrl());
     setModalOpen(true);
     setMenuOpen(false);
   };
 
-  // ── close modal ────────────────────────────────────────────────────────────
   const closeModal = () => {
+    if (profileTimerRef.current) { clearTimeout(profileTimerRef.current); profileTimerRef.current = null; }
     setModalOpen(false);
     setLoginSrc("");
-    // Mark as logged in — even if we couldn't capture the name yet,
-    // the Login button should not show again
-    setLoggedIn(true);
-    // Re-read storage in case username arrived just before close
+    // Grab any name that arrived in storage just before closing
     const stored = getCookie("tcs9_username") || localStorage.getItem("tcs9_username") || "";
     if (stored) setUsername(stored);
   };
 
-  // ── iframe load handler ────────────────────────────────────────────────────
+  // ── iframe load handler ───────────────────────────────────────────────────
   //
-  //  onLoad fires every time the iframe navigates to a new page.
-  //  Because tcs9.in is cross-origin we cannot read its URL directly, but:
+  //  1st onLoad  → login page loaded (cross-origin)       → mark & wait
+  //  2nd onLoad  → profile page loaded (cross-origin)     → start 3-second timer
+  //               The timer gives tcs9.in time to complete its redirect back to
+  //               our domain with ?username= before we close the modal.
+  //  Same-origin → tcs9 redirected iframe back to our URL  → capture name, close
   //
-  //  • 1st onLoad  → login page just loaded      → mark hasLoadedOnce = true
-  //  • 2nd+ onLoad (still cross-origin) → user navigated (login → profile)
-  //                                        → close the modal
-  //  • onLoad that is SAME-origin       → tcs9 redirected back to chalughadamodi
-  //                                        → read username, close the modal
-  // ──────────────────────────────────────────────────────────────────────────
   const handleIframeLoad = () => {
     if (!iframeRef.current) return;
     try {
-      // ── SAME-ORIGIN path (tcs9 redirected back to chalughadamodi.in) ──────
+      // ── SAME-ORIGIN: tcs9 redirected back to chalughadamodi.in ──────────
       const iframeUrl    = iframeRef.current.contentWindow?.location.href || "";
-      const iframeParams = new URLSearchParams(
-        iframeRef.current.contentWindow?.location.search || ""
-      );
-      const nameParam = iframeParams.get("username") || iframeParams.get("name");
+      const iframeParams = new URLSearchParams(iframeRef.current.contentWindow?.location.search || "");
+      const nameParam    = iframeParams.get("username") || iframeParams.get("name");
 
       if (nameParam) {
+        // Cancel any pending profile timer
+        if (profileTimerRef.current) { clearTimeout(profileTimerRef.current); profileTimerRef.current = null; }
         setCookie("tcs9_username", nameParam);
         localStorage.setItem("tcs9_username", nameParam);
         setUsername(nameParam);
@@ -168,39 +158,34 @@ export default function StickyHeader() {
         return;
       }
 
-      // Landed on our origin but no param in URL — still close
+      // Landed on our origin but without a name param — close anyway
       if (iframeUrl.startsWith(window.location.origin)) {
+        if (profileTimerRef.current) { clearTimeout(profileTimerRef.current); profileTimerRef.current = null; }
         const stored = getCookie("tcs9_username") || localStorage.getItem("tcs9_username") || "";
         if (stored) setUsername(stored);
         closeModal();
       }
     } catch {
-      // ── CROSS-ORIGIN path (still on tcs9.in) ─────────────────────────────
+      // ── CROSS-ORIGIN: still on tcs9.in ──────────────────────────────────
       if (!hasLoadedOnce.current) {
-        // First load = login page rendered — just mark and wait
+        // 1st load = login page — just mark and wait for the user to log in
         hasLoadedOnce.current = true;
       } else {
-        // Second+ load cross-origin = user navigated to profile page after login
-        // → close the modal right away
-        closeModal();
+        // 2nd+ load = profile page after login
+        // Wait 3 seconds for tcs9 to complete its redirect back to our domain.
+        // If no same-origin load arrives in that window, close the modal.
+        if (profileTimerRef.current) clearTimeout(profileTimerRef.current);
+        profileTimerRef.current = setTimeout(() => {
+          if (modalOpenRef.current) closeModal();
+        }, 3000);
       }
     }
   };
 
-  // ── logout ─────────────────────────────────────────────────────────────────
-  const handleLogout = () => {
-    deleteCookie("tcs9_username");
-    deleteCookie("tcs9_has_signed_up");
-    localStorage.removeItem("tcs9_username");
-    localStorage.removeItem("tcs9_has_signed_up");
-    setUsername("");
-    setLoggedIn(false);
-  };
-
-  // ──────────────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
   return (
     <>
-      {/* ── Header bar ────────────────────────────────────────────────────── */}
+      {/* ── Header bar ──────────────────────────────────────────────────── */}
       <header
         id="site-header"
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
@@ -232,22 +217,15 @@ export default function StickyHeader() {
               Start Test
             </Link>
 
-            {username || loggedIn ? (
-              <div className="hidden md:flex items-center gap-2">
-                <span
-                  className="text-navy font-semibold text-sm bg-gold/10 border border-gold/30 px-3 py-2 rounded-md flex items-center gap-1.5 max-w-[160px] truncate"
-                  title={username || "Logged In"}
-                >
-                  <User size={14} className="text-gold" />
-                  <span className="truncate">{username || "Logged In ✓"}</span>
-                </span>
-                <button
-                  onClick={handleLogout}
-                  className="text-xs text-muted hover:text-urgent font-medium underline cursor-pointer"
-                >
-                  Logout
-                </button>
-              </div>
+            {/* Show username chip OR Login button */}
+            {username ? (
+              <span
+                className="hidden md:flex text-navy font-semibold text-sm bg-gold/10 border border-gold/30 px-3 py-2 rounded-md items-center gap-1.5 max-w-[160px] truncate"
+                title={username}
+              >
+                <User size={14} className="text-gold shrink-0" />
+                <span className="truncate">{username}</span>
+              </span>
             ) : (
               <button
                 onClick={openModal}
@@ -270,7 +248,7 @@ export default function StickyHeader() {
         </div>
       </header>
 
-      {/* ── Mobile Menu ────────────────────────────────────────────────────── */}
+      {/* ── Mobile Menu ──────────────────────────────────────────────────── */}
       <div
         className={`mobile-menu ${menuOpen ? "open" : ""}`}
         aria-hidden={!menuOpen}
@@ -306,22 +284,15 @@ export default function StickyHeader() {
             Start Test
           </Link>
 
-          {username || loggedIn ? (
-            <div className="flex flex-col gap-2 mt-4" tabIndex={menuOpen ? 0 : -1}>
-              <span
-                className="text-navy font-semibold text-xl bg-gold/10 border border-gold/30 px-4 py-3 rounded-md flex items-center gap-2 max-w-[280px] truncate"
-                title={username || "Logged In"}
-              >
-                <User size={18} className="text-gold" />
-                <span className="truncate">{username || "Logged In ✓"}</span>
-              </span>
-              <button
-                onClick={() => { handleLogout(); setMenuOpen(false); }}
-                className="text-left text-sm text-urgent font-semibold underline px-2 cursor-pointer"
-              >
-                Logout
-              </button>
-            </div>
+          {/* Mobile: username chip OR Login button */}
+          {username ? (
+            <span
+              className="text-navy font-semibold text-xl bg-gold/10 border border-gold/30 px-4 py-3 rounded-md flex items-center gap-2 max-w-[280px] truncate mt-4"
+              title={username}
+            >
+              <User size={18} className="text-gold shrink-0" />
+              <span className="truncate">{username}</span>
+            </span>
           ) : (
             <button
               onClick={openModal}
@@ -334,7 +305,7 @@ export default function StickyHeader() {
         </nav>
       </div>
 
-      {/* ── Login Modal Dialog ─────────────────────────────────────────────── */}
+      {/* ── Login Modal Dialog ───────────────────────────────────────────── */}
       {modalOpen && (
         <div
           role="dialog"
@@ -350,16 +321,13 @@ export default function StickyHeader() {
             aria-hidden="true"
           />
 
-          {/* Modal container — centered, responsive */}
+          {/* Modal container */}
           <div
             className="relative m-auto w-full max-w-2xl flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-border"
-            style={{
-              height: "min(88vh, 780px)",
-              animation: "cgModalSlideUp 0.28s cubic-bezier(0.34,1.5,0.64,1)",
-            }}
+            style={{ height: "min(88vh, 780px)", animation: "cgModalSlideUp 0.28s cubic-bezier(0.34,1.5,0.64,1)" }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* ── Modal header bar ── */}
+            {/* Header bar */}
             <div className="flex items-center justify-between px-5 py-3 bg-navy shrink-0">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-gold/20 flex items-center justify-center">
@@ -369,8 +337,6 @@ export default function StickyHeader() {
                   चालू घडामोडी &mdash; Login
                 </span>
               </div>
-
-              {/* Traffic-light style dots + close */}
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full bg-white/20" />
                 <span className="w-3 h-3 rounded-full bg-white/20" />
@@ -384,12 +350,12 @@ export default function StickyHeader() {
               </div>
             </div>
 
-            {/* ── Gold accent line ── */}
+            {/* Gold accent line */}
             <div className="h-0.5 w-full bg-gradient-to-r from-navy via-gold to-navy shrink-0" />
 
-            {/* ── iframe fills remaining space ── */}
+            {/* iframe area */}
             <div className="flex-1 bg-white relative overflow-hidden">
-              {/* Loading shimmer shown behind iframe */}
+              {/* Loading shimmer behind iframe */}
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-cream">
                 <div className="w-10 h-10 rounded-full border-4 border-gold/30 border-t-gold animate-spin" />
                 <p className="text-navy text-sm font-english">Loading tcs9.in…</p>
