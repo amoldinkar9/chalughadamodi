@@ -79,6 +79,7 @@ export default function StickyHeader() {
   const hasLoadedOnce   = useRef(false);
   const profileTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const modalOpenRef    = useRef(false);
+  const isProfileView   = useRef(false); // true when modal shows profile (not login)
 
   useEffect(() => { modalOpenRef.current = modalOpen; }, [modalOpen]);
 
@@ -174,11 +175,22 @@ export default function StickyHeader() {
     return url;
   }, []);
 
-  // ── open modal ────────────────────────────────────────────────────────────
+  // ── open login modal ─────────────────────────────────────────────────────
   const openModal = () => {
     hasLoadedOnce.current = false;
+    isProfileView.current = false;
     if (profileTimerRef.current) { clearTimeout(profileTimerRef.current); profileTimerRef.current = null; }
     setLoginSrc(buildLoginUrl());
+    setModalOpen(true);
+    setMenuOpen(false);
+  };
+
+  // ── open profile modal (for already-logged-in users) ──────────────────────
+  const openProfileModal = () => {
+    hasLoadedOnce.current = false;
+    isProfileView.current = true;
+    if (profileTimerRef.current) { clearTimeout(profileTimerRef.current); profileTimerRef.current = null; }
+    setLoginSrc("https://www.tcs9.in/mr/profile");
     setModalOpen(true);
     setMenuOpen(false);
   };
@@ -237,6 +249,11 @@ export default function StickyHeader() {
       }
     } catch {
       // ── CROSS-ORIGIN: still on tcs9.in ──────────────────────────────────
+      if (isProfileView.current) {
+        // User is browsing their profile — first onLoad = page ready, nothing to do
+        // Let them navigate; X button closes the modal
+        return;
+      }
       if (!hasLoadedOnce.current) {
         // 1st load = login page rendered — mark and wait
         hasLoadedOnce.current = true;
@@ -250,6 +267,10 @@ export default function StickyHeader() {
       }
     }
   }, [closeModal]);
+
+  // When user is on tcs9.in in profile-view mode, just close the modal cleanly
+  // without triggering login side-effects (no afterLogin=true)
+  // This is handled inside handleIframeLoad by checking isProfileView.current.
 
   // ─────────────────────────────────────────────────────────────────────────
   // Display helpers
@@ -287,13 +308,15 @@ export default function StickyHeader() {
             </Link>
 
             {displayName ? (
-              <span
-                className="hidden md:flex text-navy font-semibold text-sm bg-gold/10 border border-gold/30 px-3 py-2 rounded-md items-center gap-1.5 max-w-[160px] truncate"
-                title={displayName}
+              <button
+                onClick={openProfileModal}
+                className="hidden md:flex text-navy font-semibold text-sm bg-gold/10 border border-gold/30 px-3 py-2 rounded-md items-center gap-1.5 max-w-[160px] truncate hover:bg-gold/20 transition-colors cursor-pointer"
+                title={`${displayName} — tcs9.in प्रोफाइल पहा`}
+                aria-label="tcs9.in प्रोफाइल उघडा"
               >
                 <User size={14} className="text-gold shrink-0" />
                 <span className="truncate">{displayName}</span>
-              </span>
+              </button>
             ) : (
               <button
                 onClick={openModal}
@@ -335,10 +358,15 @@ export default function StickyHeader() {
           </Link>
 
           {displayName ? (
-            <span className="text-navy font-semibold text-xl bg-gold/10 border border-gold/30 px-4 py-3 rounded-md flex items-center gap-2 max-w-[280px] truncate mt-4" title={displayName}>
+            <button
+              onClick={() => { openProfileModal(); setMenuOpen(false); }}
+              className="text-navy font-semibold text-xl bg-gold/10 border border-gold/30 px-4 py-3 rounded-md flex items-center gap-2 max-w-[280px] truncate mt-4 hover:bg-gold/20 transition-colors cursor-pointer"
+              title={`${displayName} — tcs9.in प्रोफाइल पहा`}
+              tabIndex={menuOpen ? 0 : -1}
+            >
               <User size={18} className="text-gold shrink-0" />
               <span className="truncate">{displayName}</span>
-            </span>
+            </button>
           ) : (
             <button onClick={openModal} className="btn-outline px-8 py-3 rounded-md font-semibold text-lg mt-4 font-english text-center cursor-pointer" tabIndex={menuOpen ? 0 : -1}>
               Login
