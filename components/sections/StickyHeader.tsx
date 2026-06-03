@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Menu, X, User, BookOpen } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import Link from "next/link";
 
 const navLinks = [
@@ -347,65 +347,47 @@ export default function StickyHeader() {
         </nav>
       </div>
 
-      {/* ── Login Modal ──────────────────────────────────────────────────── */}
+      {/* ── Login Modal — full-screen ────────────────────────────────────── */}
       {modalOpen && (
-        <div role="dialog" aria-modal="true" aria-label="TCS9 Login" className="fixed inset-0 z-50 flex flex-col" style={{ animation: "cgModalFadeIn 0.2s ease" }}>
-          <div className="absolute inset-0 bg-navy/60 backdrop-blur-md" onClick={() => closeModal(false)} aria-hidden="true" />
-
-          <div
-            className="relative m-auto w-full max-w-2xl flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-border"
-            style={{ height: "min(88vh, 780px)", animation: "cgModalSlideUp 0.28s cubic-bezier(0.34,1.5,0.64,1)" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between px-5 py-3 bg-navy shrink-0">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-gold/20 flex items-center justify-center">
-                  <BookOpen size={16} className="text-gold" />
-                </div>
-                <span className="text-white font-bold text-base font-english tracking-wide">
-                  चालू घडामोडी &mdash; Login
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-white/20" />
-                <span className="w-3 h-3 rounded-full bg-white/20" />
-                <button onClick={() => closeModal(false)} aria-label="बंद करा" className="w-7 h-7 rounded-full bg-urgent/80 hover:bg-urgent flex items-center justify-center transition-colors cursor-pointer ml-1">
-                  <X size={13} className="text-white" strokeWidth={3} />
-                </button>
-              </div>
-            </div>
-
-            <div className="h-0.5 w-full bg-gradient-to-r from-navy via-gold to-navy shrink-0" />
-
-            {/* iframe area */}
-            <div className="flex-1 bg-white relative overflow-hidden">
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-cream">
-                <div className="w-10 h-10 rounded-full border-4 border-gold/30 border-t-gold animate-spin" />
-                <p className="text-navy text-sm font-english">Loading tcs9.in…</p>
-              </div>
-              {loginSrc && (
-                <iframe
-                  ref={iframeRef}
-                  src={loginSrc}
-                  onLoad={handleIframeLoad}
-                  title="TCS9 Login"
-                  className="absolute inset-0 w-full h-full border-0 bg-white"
-                  allow="forms"
-                  sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation-by-user-activation"
-                />
-              )}
-            </div>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="TCS9 Login"
+          className="fixed inset-0 z-50 bg-white"
+          style={{ animation: "cgModalFadeIn 0.18s ease" }}
+        >
+          {/* Loading shimmer shown while iframe initialises */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-cream pointer-events-none">
+            <div className="w-10 h-10 rounded-full border-4 border-gold/30 border-t-gold animate-spin" />
+            <p className="text-navy text-sm font-english">Loading…</p>
           </div>
+
+          {/* Full-screen iframe */}
+          {loginSrc && (
+            <iframe
+              ref={iframeRef}
+              src={loginSrc}
+              onLoad={handleIframeLoad}
+              title="TCS9 Login"
+              className="absolute inset-0 w-full h-full border-0"
+              allow="forms"
+              sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation-by-user-activation"
+            />
+          )}
+
+          {/* Floating close button — top-right corner */}
+          <button
+            onClick={() => closeModal(false)}
+            aria-label="बंद करा"
+            className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-navy/80 hover:bg-navy flex items-center justify-center shadow-lg transition-colors cursor-pointer"
+          >
+            <X size={18} className="text-white" strokeWidth={2.5} />
+          </button>
         </div>
       )}
 
       <style>{`
         @keyframes cgModalFadeIn { from { opacity:0 } to { opacity:1 } }
-        @keyframes cgModalSlideUp {
-          from { opacity:0; transform:translateY(28px) scale(0.96) }
-          to   { opacity:1; transform:translateY(0) scale(1) }
-        }
       `}</style>
     </>
   );
