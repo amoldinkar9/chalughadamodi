@@ -77,12 +77,55 @@ export default function StickyHeader() {
       : "https://chalughadamodi.in";
     const redirectParam = encodeURIComponent(targetUrl);
 
-    if (hasSignedUp) {
-      window.location.href = `https://www.tcs9.in/mr/login?redirect=${redirectParam}`;
-    } else {
+    const loginUrl = hasSignedUp
+      ? `https://www.tcs9.in/mr/login?redirect=${redirectParam}`
+      : `https://www.tcs9.in/mr/sign-up?redirect=${redirectParam}`;
+
+    if (!hasSignedUp) {
       document.cookie = "tcs9_has_signed_up=true; path=/; max-age=31536000; SameSite=Lax; Secure";
       localStorage.setItem("tcs9_has_signed_up", "true");
-      window.location.href = `https://www.tcs9.in/mr/sign-up?redirect=${redirectParam}`;
+    }
+
+    // Dynamic centered window size calculation
+    const width = Math.min(550, window.innerWidth * 0.9);
+    const height = Math.min(650, window.innerHeight * 0.9);
+    const left = window.screenX + (window.innerWidth - width) / 2;
+    const top = window.screenY + (window.innerHeight - height) / 2;
+
+    const popup = window.open(
+      loginUrl,
+      "TCS9 Login",
+      `width=${width},height=${height},left=${left},top=${top},status=no,resizable=yes,scrollbars=yes`
+    );
+
+    if (popup) {
+      const timer = setInterval(() => {
+        try {
+          if (popup.closed) {
+            clearInterval(timer);
+            return;
+          }
+
+          // Check if popup has redirected back to our origin
+          if (popup.location.origin === window.location.origin) {
+            const params = new URLSearchParams(popup.location.search);
+            const nameParam = params.get("username") || params.get("name");
+            if (nameParam) {
+              document.cookie = `tcs9_username=${encodeURIComponent(nameParam)}; path=/; max-age=31536000; SameSite=Lax; Secure`;
+              localStorage.setItem("tcs9_username", nameParam);
+              setUsername(nameParam);
+            }
+            popup.close();
+            clearInterval(timer);
+          }
+        } catch (e) {
+          // Cross-origin errors will be thrown until it redirects back to our site.
+          // We catch and ignore them.
+        }
+      }, 500);
+    } else {
+      // Fallback if popup blocker is active
+      window.location.href = loginUrl;
     }
   };
 
