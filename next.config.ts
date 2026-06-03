@@ -42,7 +42,7 @@ const securityHeaders = [
       "img-src 'self' data: blob: https: http:",
       "font-src 'self' https://fonts.gstatic.com",
       "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://*.supabase.co",
-      "frame-src 'self' https://www.googletagmanager.com https://docs.google.com",
+      "frame-src 'self' https://www.googletagmanager.com https://docs.google.com https://*.tcs9.in https://tcs9.in",
       "object-src 'none'",
       "base-uri 'self'",
     ].join("; "),

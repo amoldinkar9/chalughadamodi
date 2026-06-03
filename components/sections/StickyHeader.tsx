@@ -271,39 +271,37 @@ export default function StickyHeader() {
         </nav>
       </div>
 
-      {/* Login Modal Overlay */}
+      {/* Login Modal Overlay (Full Screen) */}
       {showLoginModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy/60 backdrop-blur-md p-4 animate-fade-in">
-          <div className="relative bg-white w-full max-w-[500px] h-[80vh] md:h-[650px] rounded-2xl shadow-2xl border border-border overflow-hidden flex flex-col">
-            
-            {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-cream">
-              <span className="text-navy font-semibold text-base font-english">TCS9 Secure Login</span>
-              <button
-                onClick={() => { setShowLoginModal(false); setIframeUrl(""); }}
-                className="text-navy hover:text-gold p-1 rounded-full transition-colors cursor-pointer"
-                aria-label="Close modal"
-              >
-                <X size={20} />
-              </button>
-            </div>
+        <div className="fixed inset-0 z-50 flex flex-col bg-white animate-fade-in">
+          
+          {/* Modal Header */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-cream flex-shrink-0">
+            <span className="text-navy font-semibold text-base font-english">TCS9 Secure Login</span>
+            <button
+              onClick={() => { setShowLoginModal(false); setIframeUrl(""); }}
+              className="text-navy hover:text-gold p-1.5 rounded-full transition-colors cursor-pointer bg-white border border-border flex items-center justify-center hover:shadow-sm"
+              aria-label="Close login"
+            >
+              <X size={20} />
+            </button>
+          </div>
 
-            {/* Iframe container */}
-            <div className="flex-1 relative bg-white">
-              {iframeLoading && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-white z-10">
-                  <div className="w-8 h-8 border-3 border-gold border-t-transparent rounded-full animate-spin"></div>
-                  <p className="text-xs text-muted mt-3">Connecting to TCS9...</p>
-                </div>
-              )}
-              
-              <iframe
-                ref={iframeRef}
-                src={iframeUrl}
-                className="w-full h-full border-0"
-                onLoad={() => setIframeLoading(false)}
-              />
-            </div>
+          {/* Iframe container (Full Width/Height) */}
+          <div className="flex-1 relative bg-white">
+            {iframeLoading && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white z-10">
+                <div className="w-8 h-8 border-3 border-gold border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-xs text-muted mt-3">Connecting to TCS9...</p>
+              </div>
+            )}
+            
+            <iframe
+              ref={iframeRef}
+              src={iframeUrl}
+              className="w-full h-full border-0"
+              onLoad={() => setIframeLoading(false)}
+            />
           </div>
         </div>
       )}
