@@ -1,11 +1,12 @@
 import { Send, MessageCircle } from "lucide-react";
+import Link from "next/link";
 
 const footerLinks = [
-  { label: "मुख्यपान", href: "#hero" },
-  { label: "मासिके", href: "#magazine" },
-  { label: "टेस्ट", href: "#tests" },
+  { label: "मुख्यपान", href: "/#hero" },
+  { label: "मासिके", href: "/#magazine" },
+  { label: "टेस्ट", href: "/#tests" },
   { label: "About", href: "#" },
-  { label: "Contact", href: "#faq" },
+  { label: "Contact", href: "/#faq" },
   { label: "Privacy Policy", href: "#" },
 ];
 
@@ -68,9 +69,9 @@ export default function Footer() {
             <ul className="space-y-2">
               {footerLinks.map((link, i) => (
                 <li key={i}>
-                  <a href={link.href} className="text-muted font-medium text-sm hover:text-gold transition-colors duration-200">
+                  <Link href={link.href} className="text-muted font-medium text-sm hover:text-gold transition-colors duration-200">
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

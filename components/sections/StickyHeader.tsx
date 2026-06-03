@@ -1,13 +1,13 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
 
 const navLinks = [
-  { label: "Home", href: "#hero" },
-  { label: "Current Affairs Magazine", href: "#magazine" },
-  { label: "Tests", href: "#tests" },
-  { label: "Contact", href: "#faq" },
+  { label: "Home", href: "/#hero" },
+  { label: "Current Affairs Magazine", href: "/#magazine" },
+  { label: "Tests", href: "/#tests" },
+  { label: "Contact", href: "/#faq" },
 ];
 
 export default function StickyHeader() {
@@ -44,35 +44,35 @@ export default function StickyHeader() {
       >
         <div className="max-w-[1200px] mx-auto px-6 md:px-12 flex items-center justify-between h-16 md:h-[72px]">
           {/* Logo */}
-          <a
-            href="#hero"
+          <Link
+            href="/#hero"
             className="text-navy font-bold text-[22px] md:text-[26px] leading-tight"
           >
             चालू घडामोडी
-          </a>
+          </Link>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8" aria-label="मुख्य नेव्हिगेशन">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
                 className="nav-link text-navy font-medium text-[15px] font-english"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
           {/* Right side */}
           <div className="flex items-center gap-3">
-            <a
-              href="#tests"
+            <Link
+              href="/#tests"
               className="btn-primary px-4 py-2 rounded-md font-semibold text-sm font-english"
               aria-label="Start Test — मोफत टेस्ट सुरू करा"
             >
               Start Test
-            </a>
+            </Link>
 
             {/* Hamburger */}
             <button
@@ -103,7 +103,7 @@ export default function StickyHeader() {
         </button>
         <nav className="flex flex-col items-left gap-8" aria-label="मोबाईल नेव्हिगेशन">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="text-navy font-semibold text-2xl font-english"
@@ -111,18 +111,19 @@ export default function StickyHeader() {
               tabIndex={menuOpen ? 0 : -1}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
-          <a
-            href="#tests"
+          <Link
+            href="/#tests"
             className="btn-primary px-8 py-3 rounded-md font-semibold text-lg mt-4 font-english"
             tabIndex={menuOpen ? 0 : -1}
             aria-label="Start Test — मोफत टेस्ट सुरू करा"
           >
             Start Test
-          </a>
+          </Link>
         </nav>
       </div>
     </>
   );
 }
+
