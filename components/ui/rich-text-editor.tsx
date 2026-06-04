@@ -70,6 +70,25 @@ export default function RichTextEditor({
   const textColorInputRef = useRef<HTMLInputElement>(null);
   const bgColorInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const savedRangeRef = useRef<Range | null>(null);
+
+  const saveSelection = () => {
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      savedRangeRef.current = selection.getRangeAt(0);
+    }
+  };
+
+  const restoreSelection = () => {
+    if (savedRangeRef.current) {
+      const selection = window.getSelection();
+      if (selection) {
+        selection.removeAllRanges();
+        selection.addRange(savedRangeRef.current);
+      }
+    }
+  };
+
   const [activeStyles, setActiveStyles] = useState({
     bold: false,
     italic: false,
@@ -136,41 +155,13 @@ export default function RichTextEditor({
   };
 
   const handleCustomTextColor = () => {
-    const hex = prompt("Enter custom Hex color code (e.g. #D4A24C) or leave empty for color picker:");
-    if (hex !== null) {
-      if (hex.trim() === "") {
-        textColorInputRef.current?.click();
-      } else {
-        let formattedHex = hex.trim();
-        if (!formattedHex.startsWith("#")) {
-          formattedHex = "#" + formattedHex;
-        }
-        if (/^#[0-9A-F]{6}$/i.test(formattedHex) || /^#[0-9A-F]{3}$/i.test(formattedHex)) {
-          executeCommand("foreColor", formattedHex);
-        } else {
-          alert("Invalid Hex color format. Please enter a format like #3b82f6.");
-        }
-      }
-    }
+    saveSelection();
+    textColorInputRef.current?.click();
   };
 
   const handleCustomBgColor = () => {
-    const hex = prompt("Enter custom Hex highlight color (e.g. #EDD9A8) or leave empty for color picker:");
-    if (hex !== null) {
-      if (hex.trim() === "") {
-        bgColorInputRef.current?.click();
-      } else {
-        let formattedHex = hex.trim();
-        if (!formattedHex.startsWith("#")) {
-          formattedHex = "#" + formattedHex;
-        }
-        if (/^#[0-9A-F]{6}$/i.test(formattedHex) || /^#[0-9A-F]{3}$/i.test(formattedHex)) {
-          executeCommand("backColor", formattedHex);
-        } else {
-          alert("Invalid Hex color format. Please enter a format like #EDD9A8.");
-        }
-      }
-    }
+    saveSelection();
+    bgColorInputRef.current?.click();
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -421,13 +412,19 @@ export default function RichTextEditor({
           ref={textColorInputRef}
           type="color"
           className="hidden w-0 h-0 p-0 border-0"
-          onChange={(e) => executeCommand("foreColor", e.target.value)}
+          onChange={(e) => {
+            restoreSelection();
+            executeCommand("foreColor", e.target.value);
+          }}
         />
         <input
           ref={bgColorInputRef}
           type="color"
           className="hidden w-0 h-0 p-0 border-0"
-          onChange={(e) => executeCommand("backColor", e.target.value)}
+          onChange={(e) => {
+            restoreSelection();
+            executeCommand("backColor", e.target.value);
+          }}
         />
 
         <span className="w-[1px] h-6 bg-border mx-1" />
