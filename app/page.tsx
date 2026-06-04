@@ -22,12 +22,12 @@ const fallbackContent: PublicContent = {
     { id: "a3", title: "मोफत मासिक PDF डाउनलोड करा", image_url: "https://placehold.co/1280x360/D4A24C/0A2540?text=मोफत+मासिक+PDF", backlink: "#magazine", published: true, display_order: 3, created_at: "", updated_at: "" },
   ],
   gallery: [
-    { id: "1", name: "महाराष्ट्र पोलीस भरती 2026", image_url: "", start_date: "2026-04-01", last_date: "2026-05-05", link: "#", is_new: true, date_extended: false, published: true, display_order: 1, created_at: "", updated_at: "" },
-    { id: "2", name: "तलाठी भरती 2026", image_url: "", start_date: "2026-04-10", last_date: "2026-05-20", link: "#", is_new: true, date_extended: false, published: true, display_order: 2, created_at: "", updated_at: "" },
-    { id: "3", name: "रेल्वे RRB Group D", image_url: "", start_date: "2026-04-15", last_date: "2026-06-01", link: "#", is_new: false, date_extended: false, published: true, display_order: 3, created_at: "", updated_at: "" },
-    { id: "4", name: "SSC GD भरती", image_url: "", start_date: "2026-05-01", last_date: "2026-06-10", link: "#", is_new: false, date_extended: true, published: true, display_order: 4, created_at: "", updated_at: "" },
-    { id: "5", name: "वनरक्षक भरती", image_url: "", start_date: "2026-05-05", last_date: "2026-06-25", link: "#", is_new: false, date_extended: false, published: true, display_order: 5, created_at: "", updated_at: "" },
-    { id: "6", name: "सरळसेवा भरती", image_url: "", start_date: "2026-05-10", last_date: "2026-06-30", link: "#", is_new: false, date_extended: false, published: true, display_order: 6, created_at: "", updated_at: "" },
+    { id: "1", name: "महाराष्ट्र पोलीस भरती 2026", image_url: "", start_date: "2026-04-01", last_date: "2026-05-05", link: "", apply_link: "", is_new: true, date_extended: false, published: true, display_order: 1, created_at: "", updated_at: "" },
+    { id: "2", name: "तलाठी भरती 2026", image_url: "", start_date: "2026-04-10", last_date: "2026-05-20", link: "", apply_link: "", is_new: true, date_extended: false, published: true, display_order: 2, created_at: "", updated_at: "" },
+    { id: "3", name: "रेल्वे RRB Group D", image_url: "", start_date: "2026-04-15", last_date: "2026-06-01", link: "", apply_link: "", is_new: false, date_extended: false, published: true, display_order: 3, created_at: "", updated_at: "" },
+    { id: "4", name: "SSC GD भरती", image_url: "", start_date: "2026-05-01", last_date: "2026-06-10", link: "", apply_link: "", is_new: false, date_extended: true, published: true, display_order: 4, created_at: "", updated_at: "" },
+    { id: "5", name: "वनरक्षक भरती", image_url: "", start_date: "2026-05-05", last_date: "2026-06-25", link: "", apply_link: "", is_new: false, date_extended: false, published: true, display_order: 5, created_at: "", updated_at: "" },
+    { id: "6", name: "सरळसेवा भरती", image_url: "", start_date: "2026-05-10", last_date: "2026-06-30", link: "", apply_link: "", is_new: false, date_extended: false, published: true, display_order: 6, created_at: "", updated_at: "" },
   ],
   magazines: [
     { id: "1", month: "एप्रिल 2026", image_url: "", pdf_url: "", published: true, display_order: 1, created_at: "", updated_at: "" },
