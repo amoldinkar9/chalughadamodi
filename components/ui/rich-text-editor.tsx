@@ -15,6 +15,7 @@ import {
   Loader2,
   Undo,
   Redo,
+  Palette,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -27,18 +28,34 @@ interface RichTextEditorProps {
 }
 
 const TEXT_COLORS = [
-  { label: "Default", value: "#000000" },
-  { label: "Navy", value: "#0A2540" },
-  { label: "Gold", value: "#9A7B2E" },
-  { label: "Red", value: "#C73E3E" },
-  { label: "Green", value: "#2D7A4F" },
+  { label: "Default (Black)", value: "#000000" },
+  { label: "Dark Gray", value: "#374151" },
+  { label: "Medium Gray", value: "#6B7280" },
+  { label: "Navy Blue", value: "#0A2540" },
+  { label: "Royal Blue", value: "#1D4ED8" },
+  { label: "Teal Blue", value: "#0F766E" },
+  { label: "Emerald Green", value: "#15803D" },
+  { label: "Forest Green", value: "#2D7A4F" },
+  { label: "Gold / Ochre", value: "#9A7B2E" },
+  { label: "Orange", value: "#C2410C" },
+  { label: "Coral / Red", value: "#C73E3E" },
+  { label: "Crimson Red", value: "#B91C1C" },
+  { label: "Deep Purple", value: "#6D28D9" },
+  { label: "Fuchsia Pink", value: "#A21CAF" },
 ];
 
 const HIGHLIGHT_COLORS = [
-  { label: "None", value: "initial" },
+  { label: "None (Transparent)", value: "initial" },
+  { label: "Light Gray Highlight", value: "#F3F4F6" },
   { label: "Yellow Highlight", value: "#FEF08A" },
-  { label: "Green Highlight", value: "#BBF7D0" },
-  { label: "Orange Highlight", value: "#FED7AA" },
+  { label: "Soft Gold Highlight", value: "#EDD9A8" },
+  { label: "Orange Highlight", value: "#FFEDD5" },
+  { label: "Red Highlight", value: "#FEE2E2" },
+  { label: "Pink Highlight", value: "#FCE7F3" },
+  { label: "Purple Highlight", value: "#F3E8FF" },
+  { label: "Blue Highlight", value: "#DBEAFE" },
+  { label: "Teal Highlight", value: "#CCFBF1" },
+  { label: "Green Highlight", value: "#DCFCE7" },
 ];
 
 export default function RichTextEditor({
@@ -50,6 +67,8 @@ export default function RichTextEditor({
 }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textColorInputRef = useRef<HTMLInputElement>(null);
+  const bgColorInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [activeStyles, setActiveStyles] = useState({
     bold: false,
@@ -75,6 +94,9 @@ export default function RichTextEditor({
   };
 
   const executeCommand = (command: string, arg: string = "") => {
+    try {
+      document.execCommand("styleWithCSS", false, "true");
+    } catch (e) {}
     document.execCommand(command, false, arg);
     if (editorRef.current) {
       editorRef.current.focus();
@@ -109,6 +131,44 @@ export default function RichTextEditor({
         executeCommand("unlink");
       } else {
         executeCommand("createLink", url);
+      }
+    }
+  };
+
+  const handleCustomTextColor = () => {
+    const hex = prompt("Enter custom Hex color code (e.g. #D4A24C) or leave empty for color picker:");
+    if (hex !== null) {
+      if (hex.trim() === "") {
+        textColorInputRef.current?.click();
+      } else {
+        let formattedHex = hex.trim();
+        if (!formattedHex.startsWith("#")) {
+          formattedHex = "#" + formattedHex;
+        }
+        if (/^#[0-9A-F]{6}$/i.test(formattedHex) || /^#[0-9A-F]{3}$/i.test(formattedHex)) {
+          executeCommand("foreColor", formattedHex);
+        } else {
+          alert("Invalid Hex color format. Please enter a format like #3b82f6.");
+        }
+      }
+    }
+  };
+
+  const handleCustomBgColor = () => {
+    const hex = prompt("Enter custom Hex highlight color (e.g. #EDD9A8) or leave empty for color picker:");
+    if (hex !== null) {
+      if (hex.trim() === "") {
+        bgColorInputRef.current?.click();
+      } else {
+        let formattedHex = hex.trim();
+        if (!formattedHex.startsWith("#")) {
+          formattedHex = "#" + formattedHex;
+        }
+        if (/^#[0-9A-F]{6}$/i.test(formattedHex) || /^#[0-9A-F]{3}$/i.test(formattedHex)) {
+          executeCommand("backColor", formattedHex);
+        } else {
+          alert("Invalid Hex color format. Please enter a format like #EDD9A8.");
+        }
       }
     }
   };
@@ -201,34 +261,60 @@ export default function RichTextEditor({
         </select>
 
         {/* Text Color Dropdown */}
-        <select
-          className="h-8 rounded-md border border-input bg-background px-2 text-xs font-semibold focus:outline-none"
-          onMouseDown={(e) => e.stopPropagation()}
-          onChange={(e) => executeCommand("foreColor", e.target.value)}
-          defaultValue="#000000"
-          title="Text Color"
-        >
-          {TEXT_COLORS.map((col) => (
-            <option key={col.value} value={col.value}>
-              {col.label}
-            </option>
-          ))}
-        </select>
+        <div className="flex items-center gap-0.5">
+          <select
+            className="h-8 rounded-md border border-input bg-background px-2 text-xs font-semibold focus:outline-none"
+            onMouseDown={(e) => e.stopPropagation()}
+            onChange={(e) => executeCommand("foreColor", e.target.value)}
+            defaultValue="#000000"
+            title="Text Color"
+          >
+            {TEXT_COLORS.map((col) => (
+              <option key={col.value} value={col.value}>
+                {col.label}
+              </option>
+            ))}
+          </select>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={handleCustomTextColor}
+            title="Custom Hex / Color Picker"
+          >
+            <Palette size={15} />
+          </Button>
+        </div>
 
         {/* Text Highlight Background */}
-        <select
-          className="h-8 rounded-md border border-input bg-background px-2 text-xs font-semibold focus:outline-none"
-          onMouseDown={(e) => e.stopPropagation()}
-          onChange={(e) => executeCommand("backColor", e.target.value)}
-          defaultValue="initial"
-          title="Highlight Color"
-        >
-          {HIGHLIGHT_COLORS.map((col) => (
-            <option key={col.value} value={col.value}>
-              {col.label}
-            </option>
-          ))}
-        </select>
+        <div className="flex items-center gap-0.5">
+          <select
+            className="h-8 rounded-md border border-input bg-background px-2 text-xs font-semibold focus:outline-none"
+            onMouseDown={(e) => e.stopPropagation()}
+            onChange={(e) => executeCommand("backColor", e.target.value)}
+            defaultValue="initial"
+            title="Highlight Color"
+          >
+            {HIGHLIGHT_COLORS.map((col) => (
+              <option key={col.value} value={col.value}>
+                {col.label}
+              </option>
+            ))}
+          </select>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={handleCustomBgColor}
+            title="Custom Highlight Hex / Picker"
+          >
+            <Palette size={15} />
+          </Button>
+        </div>
 
         <span className="w-[1px] h-6 bg-border mx-1" />
 
@@ -330,6 +416,18 @@ export default function RichTextEditor({
           accept="image/*"
           className="hidden"
           onChange={handleImageUpload}
+        />
+        <input
+          ref={textColorInputRef}
+          type="color"
+          className="hidden w-0 h-0 p-0 border-0"
+          onChange={(e) => executeCommand("foreColor", e.target.value)}
+        />
+        <input
+          ref={bgColorInputRef}
+          type="color"
+          className="hidden w-0 h-0 p-0 border-0"
+          onChange={(e) => executeCommand("backColor", e.target.value)}
         />
 
         <span className="w-[1px] h-6 bg-border mx-1" />

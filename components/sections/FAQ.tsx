@@ -11,13 +11,36 @@ interface FAQProps {
 function formatAnswerHtml(htmlAnswer: string) {
   if (!htmlAnswer) return "";
 
-  // 1. Ensure any existing <a> tags open in new tab
-  let processed = htmlAnswer.replace(/<a(\s[^>]*)?>/gi, (match) => {
+  // 1. Convert `<font color="xxx">` to inline styles so it isn't overridden by class rules
+  let processed = htmlAnswer.replace(/<font\s+([^>]*color=["']([^"']+)["'][^>]*)>/gi, (match, attrs, color) => {
+    return `<span style="color: ${color};" ${attrs}>`;
+  });
+  
+  // 2. Convert `<font size="xxx">` to CSS font-size spans
+  const sizeMap: Record<string, string> = {
+    "1": "12px",
+    "2": "14px",
+    "3": "16px",
+    "4": "18px",
+    "5": "20px",
+    "6": "24px",
+    "7": "30px",
+  };
+  processed = processed.replace(/<font\s+([^>]*size=["']([^"']+)["'][^>]*)>/gi, (match, attrs, size) => {
+    const pxSize = sizeMap[size] || "16px";
+    return `<span style="font-size: ${pxSize};" ${attrs}>`;
+  });
+
+  // 3. Replace closing </font> tags with </span>
+  processed = processed.replace(/<\/font>/gi, "</span>");
+
+  // 4. Ensure any existing <a> tags open in new tab
+  processed = processed.replace(/<a(\s[^>]*)?>/gi, (match) => {
     if (match.includes("target=")) return match;
     return match.replace("<a", '<a target="_blank" rel="noopener noreferrer"');
   });
 
-  // 2. Autolink Detection: convert raw URLs to links if they aren't inside an anchor tag
+  // 5. Autolink Detection: convert raw URLs to links if they aren't inside an anchor tag
   const tagOrUrlRegex = /(<\/?[a-z][^>]*>)/gi;
   const urlRegex = /(https?:\/\/[^\s<"']+)/gi;
   
