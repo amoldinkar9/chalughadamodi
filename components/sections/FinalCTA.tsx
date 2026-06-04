@@ -1,6 +1,6 @@
 export default function FinalCTA() {
   return (
-    <section id="final-cta" className="bg-navy py-20 md:py-28">
+    <section id="final-cta" className="bg-brown py-20 md:py-28">
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 text-center">
         <h2 className="text-cream font-extrabold text-[28px] md:text-[48px] leading-tight mb-4">
           आजच सुरू करा. उद्या उशीर.
