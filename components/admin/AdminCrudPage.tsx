@@ -12,11 +12,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, Upload, X, ImageIcon } from "lucide-react";
+import RichTextEditor from "@/components/ui/rich-text-editor";
 
 interface FieldConfig {
   key: string;
   label: string;
-  type: "text" | "textarea" | "switch" | "number" | "image" | "date";
+  type: "text" | "textarea" | "switch" | "number" | "image" | "date" | "richtext";
   placeholder?: string;
   uploadFolder?: string;
 }
@@ -219,6 +220,14 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
                       onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
                       placeholder={field.placeholder}
                       rows={3}
+                    />
+                  ) : field.type === "richtext" ? (
+                    <RichTextEditor
+                      id={field.key}
+                      value={formData[field.key] || ""}
+                      onChange={(html) => setFormData({ ...formData, [field.key]: html })}
+                      placeholder={field.placeholder}
+                      uploadFolder={field.uploadFolder || "general"}
                     />
                   ) : field.type === "switch" ? (
                     <div className="flex items-center gap-2">

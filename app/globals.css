@@ -206,52 +206,6 @@ body {
   color: var(--color-cream);
 }
 
-/* ===== ACCORDION ===== */
-.accordion-item {
-  border-bottom: 1px solid var(--color-border);
-}
-
-.accordion-trigger {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 20px 0;
-  text-align: left;
-  font-weight: 600;
-  font-size: 16px;
-  color: var(--color-navy);
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: color 200ms ease;
-}
-
-.accordion-trigger:hover {
-  color: var(--color-gold);
-}
-
-.accordion-content {
-  overflow: hidden;
-  transition: max-height 300ms ease, opacity 300ms ease;
-  max-height: 0;
-  opacity: 0;
-}
-
-.accordion-content.open {
-  max-height: 200px;
-  opacity: 1;
-}
-
-.accordion-icon {
-  color: var(--color-gold);
-  font-size: 24px;
-  font-weight: 300;
-  transition: transform 200ms ease;
-  flex-shrink: 0;
-  width: 24px;
-  text-align: center;
-}
 
 /* ===== NAV LINK HOVER ===== */
 .nav-link {
@@ -418,4 +372,90 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-english);
+}
+
+/* ===== FAQ RICH TEXT RENDERING ===== */
+.faq-answer-content p {
+  margin-bottom: 0.75rem;
+}
+.faq-answer-content p:last-child {
+  margin-bottom: 0;
+}
+.faq-answer-content strong,
+.faq-answer-content b {
+  font-weight: 700;
+  color: var(--color-navy);
+}
+.faq-answer-content em,
+.faq-answer-content i {
+  font-style: italic;
+}
+.faq-answer-content u {
+  text-decoration: underline;
+}
+.faq-answer-content ul {
+  list-style-type: disc !important;
+  padding-left: 1.5rem !important;
+  margin-bottom: 0.75rem !important;
+}
+.faq-answer-content ol {
+  list-style-type: decimal !important;
+  padding-left: 1.5rem !important;
+  margin-bottom: 0.75rem !important;
+}
+.faq-answer-content li {
+  margin-bottom: 0.25rem;
+}
+.faq-answer-content a {
+  color: var(--color-gold-text);
+  font-weight: 600;
+  text-decoration: underline;
+  transition: color 200ms ease;
+}
+.faq-answer-content a:hover {
+  color: var(--color-gold);
+}
+.faq-answer-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+/* Map font size inputs in HTML */
+.faq-answer-content font[size="1"], .rich-editor-content font[size="1"] { font-size: 12px; }
+.faq-answer-content font[size="2"], .rich-editor-content font[size="2"] { font-size: 14px; }
+.faq-answer-content font[size="3"], .rich-editor-content font[size="3"] { font-size: 16px; }
+.faq-answer-content font[size="4"], .rich-editor-content font[size="4"] { font-size: 18px; }
+.faq-answer-content font[size="5"], .rich-editor-content font[size="5"] { font-size: 20px; }
+.faq-answer-content font[size="6"], .rich-editor-content font[size="6"] { font-size: 24px; }
+.faq-answer-content font[size="7"], .rich-editor-content font[size="7"] { font-size: 30px; }
+
+/* ===== RICH TEXT EDITOR CANVAS STYLING ===== */
+.rich-editor-content {
+  outline: none;
+}
+.rich-editor-content ul {
+  list-style-type: disc !important;
+  padding-left: 1.5rem !important;
+  margin-bottom: 0.75rem !important;
+}
+.rich-editor-content ol {
+  list-style-type: decimal !important;
+  padding-left: 1.5rem !important;
+  margin-bottom: 0.75rem !important;
+}
+.rich-editor-content li {
+  margin-bottom: 0.25rem;
+}
+.rich-editor-content a {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+.rich-editor-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.375rem;
+  margin: 0.75rem 0;
+  display: inline-block;
 }
