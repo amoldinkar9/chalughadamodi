@@ -1,0 +1,1 @@
+ALTER TABLE gallery ADD COLUMN apply_link TEXT DEFAULT '';

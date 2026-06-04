@@ -126,7 +126,14 @@ export default function Gallery({ posts }: GalleryProps) {
                   {isExpired ? (
                     <span className="text-red-600 font-semibold text-[13px] font-english">Expired</span>
                   ) : (
-                    <a href={post.link || "#"} className="text-navy font-medium text-[13px] hover:text-gold transition-colors duration-200">अधिक माहिती →</a>
+                    <div className="flex flex-wrap gap-2">
+                      {post.link && (
+                        <a href={post.link} target="_blank" rel="noopener noreferrer" className="inline-block text-navy border border-navy font-medium text-[12px] px-3 py-1 rounded hover:bg-navy hover:text-white transition-colors duration-200">अधिक माहिती</a>
+                      )}
+                      {post.apply_link && (
+                        <a href={post.apply_link} target="_blank" rel="noopener noreferrer" className="inline-block bg-gold text-navy font-semibold text-[12px] px-3 py-1 rounded hover:opacity-90 transition-opacity duration-200 font-english">Apply Now</a>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>

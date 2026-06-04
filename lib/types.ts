@@ -7,6 +7,7 @@ export interface GalleryPost {
   start_date: string;
   last_date: string;
   link: string;
+  apply_link: string;
   is_new: boolean;
   date_extended?: boolean;
   published: boolean;

@@ -16,8 +16,8 @@ export async function POST(req: NextRequest) {
   const id = crypto.randomUUID();
   const now = new Date().toISOString();
   const row = await db
-    .prepare("INSERT INTO gallery (id, name, image_url, start_date, last_date, link, is_new, date_extended, published, display_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING *")
-    .bind(id, body.name, body.image_url ?? "", body.start_date ?? null, body.last_date ?? null, body.link ?? "", body.is_new ? 1 : 0, body.date_extended ? 1 : 0, body.published ?? 1, body.display_order ?? 0, now, now)
+    .prepare("INSERT INTO gallery (id, name, image_url, start_date, last_date, link, apply_link, is_new, date_extended, published, display_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING *")
+    .bind(id, body.name, body.image_url ?? "", body.start_date ?? null, body.last_date ?? null, body.link ?? "", body.apply_link ?? "", body.is_new ? 1 : 0, body.date_extended ? 1 : 0, body.published ?? 1, body.display_order ?? 0, now, now)
     .first();
   if (!row) return NextResponse.json({ error: "Insert failed" }, { status: 500 });
   return NextResponse.json(mapRow(row as Record<string, unknown>));
