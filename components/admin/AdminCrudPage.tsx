@@ -20,6 +20,7 @@ interface FieldConfig {
   type: "text" | "textarea" | "switch" | "number" | "image" | "date" | "richtext";
   placeholder?: string;
   uploadFolder?: string;
+  aspectRatio?: string;
 }
 
 interface AdminCrudPageProps {
@@ -243,12 +244,13 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
                   ) : field.type === "image" ? (
                     <div className="space-y-3">
                       {formData[field.key] && (
-                        <div className="relative rounded-md overflow-hidden border">
+                        <div className="relative rounded-md overflow-hidden border" style={{ maxWidth: "280px" }}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={formData[field.key]}
                             alt="Preview"
-                            className="w-full h-auto max-h-48 object-cover"
+                            className="w-full object-cover"
+                            style={field.aspectRatio ? { aspectRatio: field.aspectRatio } : { maxHeight: "12rem" }}
                           />
                           <Button
                             type="button"

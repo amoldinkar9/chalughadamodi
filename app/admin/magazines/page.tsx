@@ -5,7 +5,7 @@ import AdminCrudPage from "@/components/admin/AdminCrudPage";
 
 const fields = [
   { key: "month", label: "Month", type: "text" as const, placeholder: "April 2026" },
-  { key: "image_url", label: "Magazine Cover (Cover Image 4:5)", type: "image" as const, placeholder: "https://example.com/cover.jpg", uploadFolder: "magazines" },
+  { key: "image_url", label: "Magazine Cover (Cover Image 4:3)", type: "image" as const, placeholder: "https://example.com/cover.jpg", uploadFolder: "magazines", aspectRatio: "4/3" },
   { key: "pdf_url", label: "PDF URL", type: "text" as const, placeholder: "https://..." },
   { key: "display_order", label: "Display Order", type: "number" as const },
 ];

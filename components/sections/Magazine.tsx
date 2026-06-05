@@ -48,7 +48,7 @@ export default function Magazine({ magazines }: MagazineProps) {
                   loading="lazy"
                 />
               ) : (
-                <div className="w-full bg-cream border-b border-navy/20 flex items-center justify-center text-navy/50 font-medium text-sm" style={{ aspectRatio: "4/5" }} role="img" aria-label={`${mag.month} मासिक मुखपृष्ठ`}>मासिक मुखपृष्ठ</div>
+                <div className="w-full bg-cream border-b border-navy/20 flex items-center justify-center text-navy/50 font-medium text-sm" style={{ aspectRatio: "4/3" }} role="img" aria-label={`${mag.month} मासिक मुखपृष्ठ`}>मासिक मुखपृष्ठ</div>
               )}
               <div className="p-4">
                 <h3 className="text-navy font-bold text-lg md:text-[25px] mb-3">{mag.month}</h3>
