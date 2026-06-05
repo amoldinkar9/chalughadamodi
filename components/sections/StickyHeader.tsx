@@ -284,23 +284,23 @@ export default function StickyHeader() {
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${scrolled ? "bg-surface shadow-sm border-b border-transparent" : "bg-cream border-b border-border"
           }`}
       >
-        <div className="max-w-[1200px] mx-auto px-6 md:px-12 flex items-center justify-between h-16 md:h-[72px]">
-          <Link href="/#hero" className="text-navy font-bold text-[22px] md:text-[26px] leading-tight">
+        <div className="max-w-[1200px] mx-auto px-4 md:px-8 lg:px-12 flex items-center justify-between h-16 md:h-[72px]">
+          <Link href="/#hero" className="text-navy font-bold text-[20px] md:text-[22px] lg:text-[26px] leading-tight shrink-0">
             चालू घडामोडी
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8" aria-label="मुख्य नेव्हिगेशन">
+          <nav className="hidden md:flex items-center gap-3 lg:gap-8 mx-2 lg:mx-0" aria-label="मुख्य नेव्हिगेशन">
             {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="nav-link text-navy font-medium text-[15px] font-english">
+              <Link key={link.href} href={link.href} className="nav-link text-navy font-medium text-[13px] lg:text-[15px] font-english whitespace-nowrap">
                 {link.label}
               </Link>
             ))}
           </nav>
 
-          <div className="flex items-center gap-2 md:gap-3">
+          <div className="flex items-center gap-1.5 md:gap-2 lg:gap-3 shrink-0">
             <Link
               href="/#tests"
-              className="btn-primary px-3 py-1.5 md:px-4 md:py-2 rounded-md font-semibold text-xs md:text-sm font-english"
+              className="btn-primary px-2.5 py-1.5 md:px-3 md:py-1.5 lg:px-4 lg:py-2 rounded-md font-semibold text-xs lg:text-sm font-english whitespace-nowrap"
               aria-label="Start Test — मोफत टेस्ट सुरू करा"
             >
               Start Test
@@ -309,19 +309,19 @@ export default function StickyHeader() {
             {displayName ? (
               <button
                 onClick={openProfileModal}
-                className="flex text-navy font-semibold text-xs md:text-sm bg-gold/10 border border-gold/30 px-2.5 py-1.5 md:px-3 md:py-2 rounded-md items-center gap-1 md:gap-1.5 max-w-[90px] sm:max-w-[120px] md:max-w-[160px] truncate hover:bg-gold/20 transition-colors cursor-pointer"
+                className="hidden md:flex text-navy font-semibold text-xs lg:text-sm bg-gold/10 border border-gold/30 px-2 py-1.5 lg:px-3 lg:py-2 rounded-md items-center gap-1 max-w-[100px] lg:max-w-[160px] truncate hover:bg-gold/20 transition-colors cursor-pointer"
                 title={`${displayName} — tcs9.in प्रोफाइल पहा`}
                 aria-label="tcs9.in प्रोफाइल उघडा"
               >
-                <User size={12} className="text-gold shrink-0 md:w-3.5 md:h-3.5" />
+                <User size={12} className="text-gold shrink-0" />
                 <span className="truncate" style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>{displayName}</span>
               </button>
             ) : (
               <button
                 onClick={openModal}
-                className="block btn-outline px-3 py-1.5 md:px-4 md:py-2 rounded-md font-semibold text-xs md:text-sm font-english cursor-pointer"
+                className="hidden md:block btn-outline px-2.5 py-1.5 lg:px-4 lg:py-2 rounded-md font-semibold text-xs lg:text-sm font-english cursor-pointer whitespace-nowrap"
               >
-                Login
+                Profile
               </button>
             )}
 
