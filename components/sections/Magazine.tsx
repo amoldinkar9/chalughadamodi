@@ -51,7 +51,7 @@ export default function Magazine({ magazines }: MagazineProps) {
                 <div className="w-full bg-cream border-b border-navy/20 flex items-center justify-center text-navy/50 font-medium text-sm" style={{ aspectRatio: "4/3.35" }} role="img" aria-label={`${mag.month} मासिक मुखपृष्ठ`}>मासिक मुखपृष्ठ</div>
               )}
               <div className="p-4 flex-1 flex flex-col justify-between">
-                <h3 className="text-navy font-bold text-lg md:text-[25px] mb-3">{mag.month}</h3>
+                <h3 className="text-navy font-bold text-center text-lg md:text-[25px] mb-3">{mag.month}</h3>
                 <span className="block text-center px-6 py-4 rounded-md font-semibold text-sm" style={{ backgroundColor: "#c20101ff", color: "#ffffff" }}> ▶︎  वाचा  ◀︎ </span>
               </div>
             </a>
