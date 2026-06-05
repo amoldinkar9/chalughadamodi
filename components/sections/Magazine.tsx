@@ -52,7 +52,7 @@ export default function Magazine({ magazines }: MagazineProps) {
               )}
               <div className="p-4 flex-1 flex flex-col justify-between">
                 <h3 className="text-navy font-bold text-lg md:text-[25px] mb-3">{mag.month}</h3>
-                <span className="block text-center px-6 py-4 rounded-md font-semibold text-sm" style={{ backgroundColor: "#c20101ff", color: "#ffffff" }}> ☛ वाचा ☚</span>
+                <span className="block text-center px-6 py-4 rounded-md font-semibold text-sm" style={{ backgroundColor: "#c20101ff", color: "#ffffff" }}> ▶︎  वाचा  ◀︎ </span>
               </div>
             </a>
           ))}
