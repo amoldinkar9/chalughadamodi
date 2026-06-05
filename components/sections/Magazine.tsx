@@ -43,7 +43,7 @@ export default function Magazine({ magazines }: MagazineProps) {
                   src={mag.image_url}
                   alt={`${mag.month} मासिक मुखपृष्ठ`}
                   className="w-full bg-cream border-b border-navy/20 object-cover"
-                  style={{ aspectRatio: "4/5" }}
+                  style={{ aspectRatio: "4/3" }}
                   sizes="(max-width: 768px) 50vw, 33vw"
                   loading="lazy"
                 />
