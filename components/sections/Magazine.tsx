@@ -37,7 +37,7 @@ export default function Magazine({ magazines }: MagazineProps) {
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
           {displayedMagazines.map((mag, i) => (
-            <a key={mag.id} href={mag.pdf_url || "#"} target="_blank" rel="noopener noreferrer" className={`card-hover bg-surface border border-border rounded-md overflow-hidden block ${visible ? `animate-fade-in animate-delay-${(i % 3 + 1) * 100}` : "opacity-0"}`}>
+            <a key={mag.id} href={mag.pdf_url || "#"} target="_blank" rel="noopener noreferrer" className={`card-hover bg-surface border border-border rounded-md overflow-hidden flex flex-col h-full ${visible ? `animate-fade-in animate-delay-${(i % 3 + 1) * 100}` : "opacity-0"}`}>
               {mag.image_url ? (
                 <img
                   src={mag.image_url}
@@ -50,7 +50,7 @@ export default function Magazine({ magazines }: MagazineProps) {
               ) : (
                 <div className="w-full bg-cream border-b border-navy/20 flex items-center justify-center text-navy/50 font-medium text-sm" style={{ aspectRatio: "4/3.35" }} role="img" aria-label={`${mag.month} मासिक मुखपृष्ठ`}>मासिक मुखपृष्ठ</div>
               )}
-              <div className="p-4">
+              <div className="p-4 flex-1 flex flex-col justify-between">
                 <h3 className="text-navy font-bold text-lg md:text-[25px] mb-3">{mag.month}</h3>
                 <span className="block text-center px-6 py-4 rounded-md font-semibold text-sm" style={{ backgroundColor: "#c20101ff", color: "#ffffff" }}>वाचा</span>
               </div>
