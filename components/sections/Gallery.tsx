@@ -78,7 +78,7 @@ export default function Gallery({ posts }: GalleryProps) {
             return (
               <div
                 key={post.id}
-                className={`card-hover bg-surface border rounded-md overflow-hidden ${borderClass} ${visible ? `animate-fade-in animate-delay-${(i % 4 + 1) * 100}` : "opacity-0"}`}
+                className={`card-hover bg-surface border rounded-md overflow-hidden flex flex-col h-full ${borderClass} ${visible ? `animate-fade-in animate-delay-${(i % 4 + 1) * 100}` : "opacity-0"}`}
               >
                 <div className="relative">
                   {post.image_url ? (
@@ -115,23 +115,25 @@ export default function Gallery({ posts }: GalleryProps) {
                     )}
                   </div>
                 </div>
-                <div className="p-3 md:p-4">
-                  <h3 className={`font-bold text-[14px] md:text-base leading-snug mb-1 ${isExpired ? "text-red-700" : "text-navy"}`}>{post.name}</h3>
-                  {post.start_date && (
-                    <p className="text-muted font-medium text-[13px]">सुरुवात: {formatDate(post.start_date)}</p>
-                  )}
-                  <p className={`font-medium text-[13px] mb-3 ${isExpired ? "text-red-700 font-bold" : isUrgent ? "text-red-600 font-bold" : "text-muted"}`}>
-                    अंतिम तारीख: {formatDate(post.last_date)}
-                  </p>
+                <div className="p-3 md:p-4 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className={`font-bold text-[14px] md:text-base leading-snug mb-1 ${isExpired ? "text-red-700" : "text-navy"}`}>{post.name}</h3>
+                    {post.start_date && (
+                      <p className="text-muted font-medium text-[13px]">सुरुवात: {formatDate(post.start_date)}</p>
+                    )}
+                    <p className={`font-medium text-[13px] mb-3 ${isExpired ? "text-red-700 font-bold" : isUrgent ? "text-red-600 font-bold" : "text-muted"}`}>
+                      अंतिम तारीख: {formatDate(post.last_date)}
+                    </p>
+                  </div>
                   {isExpired ? (
                     <span className="text-red-600 font-semibold text-[13px] font-english">Expired</span>
                   ) : (
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-col md:flex-row gap-2 w-full mt-auto">
                       {post.link && (
-                        <a href={post.link} target="_blank" rel="noopener noreferrer" className="inline-block text-navy border border-navy font-medium text-[12px] px-3 py-1 rounded hover:bg-navy hover:text-white transition-colors duration-200">अधिक माहिती</a>
+                        <a href={post.link} target="_blank" rel="noopener noreferrer" className="block text-center text-navy border border-navy font-semibold text-xs md:text-sm px-2 py-2 md:py-2.5 rounded hover:bg-navy hover:text-white transition-colors duration-200 md:flex-1">अधिक माहिती</a>
                       )}
                       {post.apply_link && (
-                        <a href={post.apply_link} target="_blank" rel="noopener noreferrer" className="inline-block bg-gold text-navy font-semibold text-[12px] px-3 py-1 rounded hover:opacity-90 transition-opacity duration-200 font-english">Apply Now</a>
+                        <a href={post.apply_link} target="_blank" rel="noopener noreferrer" className="block text-center bg-gold text-navy font-bold text-xs md:text-sm px-2 py-2 md:py-2.5 rounded hover:opacity-90 transition-opacity duration-200 font-english md:flex-1">Apply Now</a>
                       )}
                     </div>
                   )}
