@@ -100,14 +100,14 @@ async function getContent(): Promise<PublicContent> {
 
 export const dynamic = "force-dynamic";
 
-export default async function Home() {
+export default async function Home({ heroTitle }: { heroTitle?: string }) {
   const [content, heroImages] = await Promise.all([getContent(), getHeroImageUrls()]);
 
   return (
     <>
       <StickyHeader />
       <main>
-        <Hero imageUrl={heroImages.imageUrl} mobileImageUrl={heroImages.mobileImageUrl} />
+        <Hero imageUrl={heroImages.imageUrl} mobileImageUrl={heroImages.mobileImageUrl} customTitle={heroTitle} />
         <Announcements announcements={content.announcements} />
         <Magazine magazines={content.magazines} />
         <StaticGS />

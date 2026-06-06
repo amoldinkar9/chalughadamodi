@@ -3,9 +3,10 @@ import Image from "next/image";
 interface HeroProps {
   imageUrl?: string;
   mobileImageUrl?: string;
+  customTitle?: string;
 }
 
-export default function Hero({ imageUrl, mobileImageUrl }: HeroProps) {
+export default function Hero({ imageUrl, mobileImageUrl, customTitle }: HeroProps) {
   const mobileImg = mobileImageUrl || imageUrl;
   const desktopImg = imageUrl || mobileImageUrl;
 
@@ -20,7 +21,7 @@ export default function Hero({ imageUrl, mobileImageUrl }: HeroProps) {
           <div className="animate-fade-in">
             <p className="text-red-500 font-extrabold leading-[1.3] tracking-tight mb-6 w-full whitespace-nowrap"
               style={{ fontSize: 'clamp(36px, 10.5vw, 75px)' }}>
-              2026 ची मेगा भरती
+              {customTitle || "2026 ची मेगा भरती"}
             </p>
             <h1 className="text-navy font-bold text-[30px] md:text-[40px] leading-[1.3] tracking-tight mb-6">
               हजारो विद्यार्थी दररोज सराव करत आहेत.
