@@ -88,93 +88,68 @@ export const viewport: Viewport = {
   themeColor: "#0A2540",
 };
 
+// Module-level constants — defined outside the component to guarantee
+// a single instance and prevent any risk of duplicate injection.
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "https://chalughadamodi.in/#website",
+  name: "चालू घडामोडी",
+  url: "https://chalughadamodi.in",
+  description: "मराठी विद्यार्थ्यांसाठी मोफत चालू घडामोडी, मासिक PDF, आणि टेस्ट.",
+  inLanguage: "mr",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: "https://chalughadamodi.in/?q={search_term_string}",
+    "query-input": "required name=search_term_string",
+  },
+};
+
+const educationalOrgSchema = {
+  "@context": "https://schema.org",
+  "@type": ["EducationalOrganization", "Organization"],
+  "@id": "https://chalughadamodi.in/#organization",
+  name: "चालू घडामोडी",
+  alternateName: "Chalu Ghadamodi",
+  url: "https://chalughadamodi.in",
+  logo: "https://chalughadamodi.in/og-image.png",
+  description:
+    "महाराष्ट्रातील स्पर्धा परीक्षा विद्यार्थ्यांसाठी मोफत मराठी चालू घडामोडी, मासिक PDF, आणि सराव टेस्ट.",
+  inLanguage: "mr",
+  areaServed: {
+    "@type": "State",
+    name: "Maharashtra",
+    containedInPlace: { "@type": "Country", name: "India" },
+  },
+  knowsAbout: [
+    "MPSC Rajyaseva Pariksha",
+    "Talathi Bharti",
+    "Maharashtra Police Bharti",
+    "SSC GD",
+    "Railway RRB Group D",
+    "Vanrakshak Bharti",
+    "Current Affairs Marathi",
+    "Competitive Exam Preparation Maharashtra",
+  ],
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    url: "https://wa.me/919579616908",
+    availableLanguage: ["Marathi", "Hindi"],
+  },
+};
+
+// NOTE: ItemList (Carousel) removed — Google requires each ListItem to have
+// a UNIQUE url. Since all exams currently land on the same homepage, the
+// schema caused validation errors ("Identical property values given, but
+// unique values are required"). It will be re-added once dedicated pages
+// exist per exam category (e.g. /mpsc, /talathi, etc.).
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const educationalOrgSchema = {
-    "@context": "https://schema.org",
-    "@type": ["EducationalOrganization", "Organization"],
-    "@id": "https://chalughadamodi.in/#organization",
-    name: "चालू घडामोडी",
-    alternateName: "Chalu Ghadamodi",
-    url: "https://chalughadamodi.in",
-    logo: "https://chalughadamodi.in/og-image.png",
-    description:
-      "महाराष्ट्रातील स्पर्धा परीक्षा विद्यार्थ्यांसाठी मोफत मराठी चालू घडामोडी, मासिक PDF, आणि सराव टेस्ट.",
-    inLanguage: "mr",
-    areaServed: {
-      "@type": "State",
-      name: "Maharashtra",
-      containedInPlace: { "@type": "Country", name: "India" },
-    },
-    knowsAbout: [
-      "MPSC Rajyaseva Pariksha",
-      "Talathi Bharti",
-      "Maharashtra Police Bharti",
-      "SSC GD",
-      "Railway RRB Group D",
-      "Vanrakshak Bharti",
-      "Current Affairs Marathi",
-      "Competitive Exam Preparation Maharashtra",
-    ],
-    contactPoint: {
-      "@type": "ContactPoint",
-      contactType: "customer support",
-      url: "https://wa.me/919579616908",
-      availableLanguage: ["Marathi", "Hindi"],
-    },
-  };
-
-  const websiteSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "@id": "https://chalughadamodi.in/#website",
-    name: "चालू घडामोडी",
-    url: "https://chalughadamodi.in",
-    description: "मराठी विद्यार्थ्यांसाठी मोफत चालू घडामोडी, मासिक PDF, आणि टेस्ट.",
-    inLanguage: "mr",
-    publisher: { "@id": "https://chalughadamodi.in/#organization" },
-    potentialAction: {
-      "@type": "SearchAction",
-      target: "https://chalughadamodi.in/?q={search_term_string}",
-      "query-input": "required name=search_term_string",
-    },
-  };
-
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "मुख्यपान",
-        item: "https://chalughadamodi.in",
-      },
-    ],
-  };
-
-  const examItemListSchema = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: "महाराष्ट्र स्पर्धा परीक्षा — मोफत चालू घडामोडी",
-    description:
-      "MPSC, तलाठी, पोलीस भरती, SSC GD, रेल्वे परीक्षांसाठी मोफत मराठी चालू घडामोडी",
-    url: "https://chalughadamodi.in",
-    numberOfItems: 7,
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "MPSC राज्यसेवा चालू घडामोडी", url: "https://chalughadamodi.in" },
-      { "@type": "ListItem", position: 2, name: "तलाठी भरती चालू घडामोडी", url: "https://chalughadamodi.in" },
-      { "@type": "ListItem", position: 3, name: "पोलीस भरती चालू घडामोडी", url: "https://chalughadamodi.in" },
-      { "@type": "ListItem", position: 4, name: "SSC GD मराठी चालू घडामोडी", url: "https://chalughadamodi.in" },
-      { "@type": "ListItem", position: 5, name: "रेल्वे RRB Group D चालू घडामोडी", url: "https://chalughadamodi.in" },
-      { "@type": "ListItem", position: 6, name: "वनरक्षक भरती चालू घडामोडी", url: "https://chalughadamodi.in" },
-      { "@type": "ListItem", position: 7, name: "सरळसेवा भरती चालू घडामोडी", url: "https://chalughadamodi.in" },
-    ],
-  };
-
   return (
     <html lang="mr" className={cn("antialiased", anekDevanagari.variable, "font-sans")}>
       <head>
@@ -186,7 +161,7 @@ export default function RootLayout({
         <link rel="alternate" hrefLang="x-default" href="https://chalughadamodi.in" />
         {/* AI/LLM discovery */}
         <link rel="llms-txt" href="https://chalughadamodi.in/llms.txt" />
-        {/* Structured Data */}
+        {/* Structured Data — single injection, no duplicates */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
@@ -194,14 +169,6 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(educationalOrgSchema) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(examItemListSchema) }}
         />
       </head>
 
