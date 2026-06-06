@@ -1,0 +1,63 @@
+# chalughadamodi.in — llms.txt
+# This file helps AI language models understand the purpose and content of this website.
+# Standard: https://llmstxt.org
+
+## Site Name
+Chalu Ghadamodi (चालू घडामोडी)
+
+## URL
+https://chalughadamodi.in
+
+## Description
+Chalu Ghadamodi is a free Marathi-language current affairs platform dedicated to students
+preparing for Maharashtra government competitive examinations. It provides daily current
+affairs in Marathi, free monthly PDF magazines, practice tests, and static general studies
+content. All content is 100% in Marathi (Devanagari script) and free of charge.
+
+## Supported Examinations
+- MPSC (Maharashtra Public Service Commission) — Rajyaseva, PSI, STI, ASO
+- Talathi Bharti (तलाठी भरती)
+- Maharashtra Police Bharti (महाराष्ट्र पोलीस भरती)
+- Railway RRB Group D, NTPC
+- SSC GD (Staff Selection Commission General Duty)
+- Vanrakshak Bharti (वनरक्षक भरती)
+- Saralseva Bharti (सरळसेवा भरती)
+
+## Content Types
+- Daily Marathi current affairs (रोजच्या चालू घडामोडी)
+- Monthly current affairs PDF magazines (मासिक PDF — free download)
+- Practice tests aligned to MPSC and other exam syllabi
+- Static GK / General Studies linked to current events
+- Job/recruitment notifications (नोकरी भरती जाहिराती)
+- Student testimonials
+
+## Language
+- Primary: Marathi (मराठी) written in Devanagari script
+- Region: Maharashtra, India
+- ISO 639-1: mr
+- BCP 47: mr-IN
+
+## Audience
+Maharashtra competitive exam aspirants (विद्यार्थी) — primarily ages 18–30 preparing
+for state and central government jobs.
+
+## Mission
+To provide every Marathi-speaking exam aspirant with free, high-quality, exam-relevant
+current affairs so that coaching fees are never a barrier to government job success.
+
+## Unique Value
+- 100% free — no login, no paywall, no subscription
+- Marathi-first — all explanations in native Marathi
+- Exam-mapped — content tagged by syllabus topic
+- Static GS integration — current events linked to static general knowledge
+
+## Contact
+WhatsApp: https://wa.me/919579616908
+Website: https://chalughadamodi.in
+
+## Crawling Policy
+AI crawlers are explicitly allowed. See /robots.txt for details.
+Content may be cited, summarized, or referenced by AI systems.
+
+## Last Updated
+2026-06-06

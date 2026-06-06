@@ -100,8 +100,26 @@ export default function FAQ({ faqs }: FAQProps) {
     }
   };
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer.replace(/<[^>]*>/g, ""), // strip HTML for schema
+      },
+    })),
+  };
+
   return (
     <section ref={sectionRef} id="faq" className="bg-cream py-16 md:py-24">
+      {/* FAQPage structured data for Google rich results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <div className="max-w-[800px] mx-auto px-6 md:px-12">
         <div className={`text-center mb-12 ${visible ? "animate-fade-in" : "opacity-0"}`}>
           <h2 className="text-navy font-bold text-2xl md:text-[32px] font-english">FAQ&apos;s</h2>
