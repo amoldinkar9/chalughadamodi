@@ -16,23 +16,17 @@ export default function Hero({ imageUrl, mobileImageUrl }: HeroProps) {
     >
       <div className="max-w-[1200px] mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-          {/* Text */}
+          {/* LCP element — priority + fetchpriority for fastest paint */}
           <div className="animate-fade-in">
-            {/* <p className="text-gold font-semibold uppercase text-[15px] md:text-[17px] mb-4">
-              स्पर्धा परीक्षा विद्यार्थ्यांसाठी
-            </p> */}
-            <h1 className="text-red-500 font-extrabold leading-[1.3] tracking-tight mb-6 w-full whitespace-nowrap"
+            <p className="text-red-500 font-extrabold leading-[1.3] tracking-tight mb-6 w-full whitespace-nowrap"
               style={{ fontSize: 'clamp(36px, 10.5vw, 75px)' }}>
               2026 ची मेगा भरती
-            </h1>
+            </p>
             <h1 className="text-navy font-bold text-[30px] md:text-[40px] leading-[1.3] tracking-tight mb-6">
               हजारो विद्यार्थी दररोज सराव करत आहेत.
               <br />
               तुम्ही मागे तर राहत नाही आहात ना?
             </h1>
-            {/*<h2 className="text-navy font-extrabold text-[32px] md:text-[36px] leading-[1.3] tracking-tight mb-6">
-              चालू घडामोडी, आता मराठीत.
-            </h2>*/}
             <p>
 
             </p>
@@ -80,11 +74,12 @@ export default function Hero({ imageUrl, mobileImageUrl }: HeroProps) {
                 <div className="relative w-full max-w-[500px]" style={{ aspectRatio: "16/9" }}>
                   <Image
                     src={mobileImg}
-                    alt="चालू घडामोडी हिरो प्रतिमा"
+                    alt="चालू घडामोडी — MPSC, तलाठी, पोलीस भरती, RRB Group D मराठी current affairs"
                     fill
                     className="rounded-lg object-cover"
                     sizes="(max-width: 768px) 90vw, 500px"
                     priority
+                    fetchPriority="high"
                   />
                 </div>
               ) : (
@@ -105,11 +100,12 @@ export default function Hero({ imageUrl, mobileImageUrl }: HeroProps) {
                 <div className="relative w-full max-w-[400px]" style={{ aspectRatio: "5/6" }}>
                   <Image
                     src={desktopImg}
-                    alt="चालू घडामोडी हिरो प्रतिमा"
+                    alt="चालू घडामोडी — MPSC, तलाठी, पोलीस भरती, RRB Group D मराठी current affairs"
                     fill
                     className="rounded-lg object-cover"
                     sizes="400px"
                     priority
+                    fetchPriority="high"
                   />
                 </div>
               ) : (

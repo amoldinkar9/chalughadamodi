@@ -261,6 +261,7 @@ export default function RootLayout({
           />
         </noscript>
         {children}
+        {/* GA4 — loads after page is interactive */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-DDQPJQ7VLG"
           strategy="afterInteractive"
@@ -271,6 +272,7 @@ export default function RootLayout({
             gtag('js', new Date());
             gtag('config', 'G-DDQPJQ7VLG');`}
         </Script>
+        {/* GTM — deferred until after load */}
         <Script id="gtm" strategy="lazyOnload">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -278,7 +280,8 @@ export default function RootLayout({
             'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
             })(window,document,'script','dataLayer','GTM-PFFP2NSZ');`}
         </Script>
-        <Script id="microsoft-clarity" strategy="afterInteractive">
+        {/* Microsoft Clarity — lazy-loaded, lowest priority analytics */}
+        <Script id="microsoft-clarity" strategy="lazyOnload">
           {`(function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
             t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
