@@ -36,8 +36,7 @@ export async function POST(req: NextRequest) {
     httpMetadata: { contentType: file.type },
   });
 
-  const origin = new URL(req.url).origin;
-  const publicUrl = `${origin}/api/images?key=${encodeURIComponent(fileName)}`;
+  const publicUrl = `/api/images?key=${encodeURIComponent(fileName)}`;
 
   return NextResponse.json({ url: publicUrl });
 }

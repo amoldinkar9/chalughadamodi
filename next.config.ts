@@ -70,6 +70,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "**.cloudfront.net",
       },
+      {
+        protocol: "https",
+        hostname: "chalughadamodi.in",
+      },
+      {
+        protocol: "https",
+        hostname: "veronica.chalughadamodi.in",
+      },
     ],
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 86400,
@@ -81,6 +89,10 @@ const nextConfig: NextConfig = {
       {
         source: "/(.*)",
         headers: securityHeaders,
+      },
+      {
+        source: "/",
+        headers: [{ key: "Cache-Control", value: "no-store, no-cache, max-age=0, must-revalidate" }],
       },
       {
         source: "/(.*)\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)",
