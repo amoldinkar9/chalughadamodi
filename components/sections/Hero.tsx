@@ -26,7 +26,7 @@ export default function Hero({ imageUrl, mobileImageUrl, customTitle }: HeroProp
             <h1 className="text-navy font-bold text-[30px] md:text-[40px] leading-[1.3] tracking-tight mb-6">
               हजारो विद्यार्थी दररोज सराव करत आहेत.
               <br />
-              तुम्ही मागे तर राहत नाही आहात ना?
+              तुम्ही मागे तर राहत नाही ना?
             </h1>
             <p>
 
