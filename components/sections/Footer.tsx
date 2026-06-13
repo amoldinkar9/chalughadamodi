@@ -5,9 +5,19 @@ const footerLinks = [
   { label: "मुख्यपान", href: "/#hero" },
   { label: "मासिके", href: "/#magazine" },
   { label: "टेस्ट", href: "/#tests" },
-  { label: "About", href: "#" },
+  { label: "About", href: "/about" }, // Let's also fix the About link to point to /about!
   { label: "Contact", href: "/#faq" },
   { label: "Privacy Policy", href: "#" },
+];
+
+const popularKeywordLinks = [
+  { label: "चालू घडामोडी 2026", href: "/chalu-ghadamodi-2026" },
+  { label: "MPSC चालू घडामोडी", href: "/mpsc-chalu-ghadamodi" },
+  { label: "तलाठी भरती चालू घडामोडी", href: "/talathi-chalu-ghadamodi" },
+  { label: "पोलीस भरती चालू घडामोडी", href: "/police-bharti-chalu-ghadamodi" },
+  { label: "रेल्वे भरती मराठी", href: "/railway-bharti-marathi" },
+  { label: "मराठी Current Affairs", href: "/current-affairs-marathi" },
+  { label: "चालू घडामोडी PDF", href: "/chalu-ghadamodi-pdf" },
 ];
 
 function InstagramIcon({ size = 20 }: { size?: number }) {
@@ -55,7 +65,7 @@ export default function Footer() {
   return (
     <footer id="footer" className="bg-cream pt-16 pb-6">
       <div className="max-w-[1200px] mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-16 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 mb-12">
           {/* Col 1 */}
           <div>
             <p className="text-navy font-bold text-xl mb-2">चालू घडामोडी</p>
@@ -77,6 +87,19 @@ export default function Footer() {
             </ul>
           </div>
           {/* Col 3 */}
+          <div>
+            <p className="text-navy font-bold text-base mb-4">लोकप्रिय चालू घडामोडी</p>
+            <ul className="space-y-2">
+              {popularKeywordLinks.map((link, i) => (
+                <li key={i}>
+                  <Link href={link.href} className="text-muted font-medium text-sm hover:text-gold transition-colors duration-200">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* Col 4 */}
           <div>
             <p className="text-navy font-bold text-base mb-4">आमच्याशी जोडले रहा</p>
             <div className="flex items-center gap-4">

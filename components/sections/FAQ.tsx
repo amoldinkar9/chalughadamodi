@@ -6,6 +6,8 @@ import type { FAQ as FAQType } from "@/lib/types";
 
 interface FAQProps {
   faqs: FAQType[];
+  customTitle?: string;
+  customSubtitle?: string;
 }
 
 function formatAnswerHtml(htmlAnswer: string) {
@@ -68,7 +70,7 @@ function formatAnswerHtml(htmlAnswer: string) {
   return mappedParts.join("");
 }
 
-export default function FAQ({ faqs }: FAQProps) {
+export default function FAQ({ faqs, customTitle, customSubtitle }: FAQProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
@@ -122,9 +124,9 @@ export default function FAQ({ faqs }: FAQProps) {
       />
       <div className="max-w-[800px] mx-auto px-6 md:px-12">
         <div className={`text-center mb-12 ${visible ? "animate-fade-in" : "opacity-0"}`}>
-          <h2 className="text-navy font-bold text-2xl md:text-[32px] font-english">FAQ&apos;s</h2>
+          <h2 className="text-navy font-bold text-2xl md:text-[32px]">{customTitle || "FAQ's"}</h2>
           <span className="section-underline" />
-          <p className="text-muted font-medium text-base mt-4">तुमचे शंका — आमची उत्तरे</p>
+          <p className="text-muted font-medium text-base mt-4">{customSubtitle || "तुमचे शंका — आमची उत्तरे"}</p>
         </div>
 
         <div

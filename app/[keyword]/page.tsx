@@ -40,7 +40,34 @@ export default async function KeywordLandingPage({ params }: { params: Promise<{
     notFound();
   }
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "मुख्यपान",
+        "item": "https://chalughadamodi.in"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": keywordObj.title,
+        "item": `https://chalughadamodi.in/${keywordObj.slug}`
+      }
+    ]
+  };
+
   // Render the exact same Home page, but pass the specific keyword title 
-  // so the H1 changes dynamically for SEO
-  return <Home heroTitle={keywordObj.title} />;
+  // so the H1 changes dynamically for SEO, plus pass keywordSlug for sorting
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <Home heroTitle={keywordObj.title} keywordSlug={keywordObj.slug} />
+    </>
+  );
 }

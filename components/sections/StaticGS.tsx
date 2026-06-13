@@ -8,7 +8,11 @@ const steps = [
   { number: "3", label: "परीक्षेसाठी", heading: "वनरक्षक, MPSC, तलाठी साठी संभाव्य प्रश्न", sub: "" },
 ];
 
-export default function StaticGS() {
+interface StaticGSProps {
+  customTitle?: string;
+}
+
+export default function StaticGS({ customTitle }: StaticGSProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -25,7 +29,7 @@ export default function StaticGS() {
     <section ref={sectionRef} id="static-gs" className="bg-cream py-16 md:py-24">
       <div className="max-w-[1200px] mx-auto px-6 md:px-12">
         <div className={`text-center mb-12 ${visible ? "animate-fade-in" : "opacity-0"}`}>
-          <h2 className="text-navy font-bold text-2xl md:text-[32px]">चालू घडामोडी + Static GS एकत्र</h2>
+          <h2 className="text-navy font-bold text-2xl md:text-[32px]">{customTitle || "चालू घडामोडी + Static GS एकत्र"}</h2>
           <span className="section-underline" />
           <p className="text-muted font-medium text-base mt-4 max-w-[640px] mx-auto leading-relaxed">
             एखादी बातमी आली, तर ती कुठल्या syllabus topic ला जोडलेली आहे — हे आम्ही सांगतो. म्हणून तुम्हाला दोन्ही एकत्र समजते. एकाच वेळी revision.

@@ -19,17 +19,14 @@ export default function Hero({ imageUrl, mobileImageUrl, customTitle }: HeroProp
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
           {/* LCP element — priority + fetchpriority for fastest paint */}
           <div className="animate-fade-in">
-            <p className="text-red-500 font-extrabold leading-[1.3] tracking-tight mb-6 w-full whitespace-nowrap"
+            <h1 className="text-red-500 font-extrabold leading-[1.3] tracking-tight mb-6 w-full whitespace-nowrap"
               style={{ fontSize: 'clamp(36px, 10.5vw, 75px)' }}>
-              {customTitle || "2026 ची मेगा भरती"}
-            </p>
-            <h1 className="text-navy font-bold text-[30px] md:text-[40px] leading-[1.3] tracking-tight mb-6">
+              {customTitle || "चालू घडामोडी 2026"}
+            </h1>
+            <p className="text-navy font-bold text-[30px] md:text-[40px] leading-[1.3] tracking-tight mb-6">
               हजारो विद्यार्थी दररोज सराव करत आहेत.
               <br />
               तुम्ही मागे तर राहत नाही ना?
-            </h1>
-            <p>
-
             </p>
 
             <p className="text-navy-soft font-bold text-lg md:text-xl max-w-[520px] mb-8 leading-relaxed">

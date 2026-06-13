@@ -100,21 +100,106 @@ async function getContent(): Promise<PublicContent> {
 
 export const dynamic = "force-dynamic";
 
-export default async function Home({ heroTitle }: { heroTitle?: string }) {
+function getCategoryDetails(slug?: string) {
+  if (!slug) return { category: "general", label: "चालू घडामोडी", keywords: [] };
+  const s = slug.toLowerCase();
+  if (s.includes("mpsc") || s.includes("rajyaseva") || s.includes("combine")) {
+    return { category: "mpsc", label: "MPSC चालू घडामोडी", keywords: ["mpsc", "राज्यसेवा", "कंबाइन", "combine"] };
+  }
+  if (s.includes("talathi") || s.includes("tcs") || s.includes("ibps")) {
+    return { category: "talathi", label: "तलाठी भरती चालू घडामोडी", keywords: ["तलाठी", "talathi", "tcs", "ibps"] };
+  }
+  if (s.includes("police")) {
+    return { category: "police", label: "पोलीस भरती चालू घडामोडी", keywords: ["पोलीस", "police", "constable", "शिपाई"] };
+  }
+  if (s.includes("railway") || s.includes("rrb")) {
+    return { category: "railway", label: "रेल्वे भरती चालू घडामोडी", keywords: ["रेल्वे", "railway", "rrb", "group d"] };
+  }
+  if (s.includes("ssc")) {
+    return { category: "ssc", label: "SSC GD चालू घडामोडी", keywords: ["ssc", "gd"] };
+  }
+  if (s.includes("vanrakshak")) {
+    return { category: "vanrakshak", label: "वनरक्षक भरती चालू घडामोडी", keywords: ["वनरक्षक", "vanrakshak"] };
+  }
+  if (s.includes("saralseva")) {
+    return { category: "saralseva", label: "सरळसेवा भरती चालू घडामोडी", keywords: ["सरळसेवा", "saralseva"] };
+  }
+  if (s.includes("zilha") || s.includes("zp")) {
+    return { category: "zilha", label: "जिल्हा परिषद भरती चालू घडामोडी", keywords: ["जिल्हा परिषद", "zilha parishad", "zp"] };
+  }
+  if (s.includes("agniveer")) {
+    return { category: "agniveer", label: "अग्निवीर चालू घडामोडी", keywords: ["अग्निवीर", "agniveer"] };
+  }
+  return { category: "general", label: "चालू घडामोडी", keywords: [] };
+}
+
+export default async function Home({ heroTitle, keywordSlug }: { heroTitle?: string; keywordSlug?: string }) {
   const [content, heroImages] = await Promise.all([getContent(), getHeroImageUrls()]);
+
+  const catDetails = getCategoryDetails(keywordSlug);
+  const keywords = catDetails.keywords;
+
+  // 1. Sort/Filter Announcements
+  let announcements = [...content.announcements];
+  if (keywords.length > 0) {
+    announcements.sort((a, b) => {
+      const aMatch = keywords.some(k => a.title.toLowerCase().includes(k));
+      const bMatch = keywords.some(k => b.title.toLowerCase().includes(k));
+      if (aMatch && !bMatch) return -1;
+      if (!aMatch && bMatch) return 1;
+      return (a.display_order || 0) - (b.display_order || 0);
+    });
+  }
+
+  // 2. Sort/Filter Gallery (Jobs)
+  let gallery = content.gallery.map(post => {
+    const isMatch = keywords.some(k => post.name.toLowerCase().includes(k));
+    return {
+      ...post,
+      display_order: isMatch ? (post.display_order || 0) - 100 : (post.display_order || 0)
+    };
+  });
+
+  // 3. Sort/Filter Testimonials
+  let testimonials = [...content.testimonials];
+  if (keywords.length > 0) {
+    testimonials.sort((a, b) => {
+      const aMatch = keywords.some(k => a.exam.toLowerCase().includes(k) || a.quote.toLowerCase().includes(k));
+      const bMatch = keywords.some(k => b.exam.toLowerCase().includes(k) || b.quote.toLowerCase().includes(k));
+      if (aMatch && !bMatch) return -1;
+      if (!aMatch && bMatch) return 1;
+      return (a.display_order || 0) - (b.display_order || 0);
+    });
+  }
+
+  // 4. Sort/Filter FAQs
+  let faqs = [...content.faqs];
+  if (keywords.length > 0) {
+    faqs.sort((a, b) => {
+      const aMatch = keywords.some(k => a.question.toLowerCase().includes(k) || a.answer.toLowerCase().includes(k));
+      const bMatch = keywords.some(k => b.question.toLowerCase().includes(k) || b.answer.toLowerCase().includes(k));
+      if (aMatch && !bMatch) return -1;
+      if (!aMatch && bMatch) return 1;
+      return (a.display_order || 0) - (b.display_order || 0);
+    });
+  }
+
+  const staticGSTitle = keywordSlug ? `${catDetails.label} + Static GS एकत्र` : undefined;
+  const faqTitle = keywordSlug ? `${catDetails.label} FAQs` : undefined;
+  const faqSubtitle = keywordSlug ? `${catDetails.label} बद्दल वारंवार विचारले जाणारे प्रश्न` : undefined;
 
   return (
     <>
       <StickyHeader />
       <main>
         <Hero imageUrl={heroImages.imageUrl} mobileImageUrl={heroImages.mobileImageUrl} customTitle={heroTitle} />
-        <Announcements announcements={content.announcements} />
+        <Announcements announcements={announcements} />
         <Magazine magazines={content.magazines} />
-        <StaticGS />
+        <StaticGS customTitle={staticGSTitle} />
         <Tests tests={content.tests} />
-        <Gallery posts={content.gallery} />
-        <Testimonials testimonials={content.testimonials} />
-        <FAQ faqs={content.faqs} />
+        <Gallery posts={gallery} />
+        <Testimonials testimonials={testimonials} />
+        <FAQ faqs={faqs} customTitle={faqTitle} customSubtitle={faqSubtitle} />
         <FinalCTA />
       </main>
       <Footer />
