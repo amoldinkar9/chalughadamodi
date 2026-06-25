@@ -21,6 +21,8 @@ interface FieldConfig {
   placeholder?: string;
   uploadFolder?: string;
   aspectRatio?: string;
+  rows?: number;
+  maxLength?: number;
 }
 
 interface AdminCrudPageProps {
@@ -229,13 +231,21 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
                 <div key={field.key} className="space-y-2">
                   <Label htmlFor={field.key}>{field.label}</Label>
                   {field.type === "textarea" ? (
-                    <Textarea
-                      id={field.key}
-                      value={formData[field.key] || ""}
-                      onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
-                      placeholder={field.placeholder}
-                      rows={3}
-                    />
+                    <div className="space-y-1">
+                      <Textarea
+                        id={field.key}
+                        value={formData[field.key] || ""}
+                        onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
+                        placeholder={field.placeholder}
+                        rows={field.rows || 3}
+                        maxLength={field.maxLength}
+                      />
+                      {field.maxLength && (
+                        <div className="text-right text-xs text-muted-foreground mt-1">
+                          {(formData[field.key] || "").length} / {field.maxLength}
+                        </div>
+                      )}
+                    </div>
                   ) : field.type === "richtext" ? (
                     <RichTextEditor
                       id={field.key}

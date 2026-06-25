@@ -6,7 +6,7 @@ import AdminCrudPage from "@/components/admin/AdminCrudPage";
 const fields = [
   { key: "title", label: "Test Title", type: "text" as const, placeholder: "Today's Test" },
   { key: "image_url", label: "Image", type: "image" as const, placeholder: "https://example.com/image.jpg", uploadFolder: "tests" },
-  { key: "description", label: "Description", type: "text" as const, placeholder: "Brief description of the test" },
+  { key: "description", label: "Description", type: "textarea" as const, placeholder: "Brief description of the test", rows: 2, maxLength: 120 },
   { key: "href", label: "Test URL", type: "text" as const, placeholder: "https://chalughadamodi.in/test" },
   { key: "display_order", label: "Display Order", type: "number" as const },
 ];
