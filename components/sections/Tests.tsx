@@ -7,9 +7,12 @@ interface TestsProps {
   tests: Test[];
 }
 
+const ITEMS_PER_LOAD = 6;
+
 export default function Tests({ tests }: TestsProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_LOAD);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -19,6 +22,9 @@ export default function Tests({ tests }: TestsProps) {
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
+
+  const displayedTests = tests.slice(0, visibleCount);
+  const hasMore = visibleCount < tests.length;
 
   return (
     <section ref={sectionRef} id="tests" className="bg-brown py-16 md:py-24">
@@ -30,8 +36,8 @@ export default function Tests({ tests }: TestsProps) {
         </div>
 
         <div className="flex flex-col md:flex-row md:flex-wrap justify-center gap-6">
-          {tests.map((test, i) => (
-            <div key={test.id} className={`w-full md:w-[calc((100%-3rem)/3)] bg-surface rounded-md overflow-hidden text-center ${visible ? `animate-fade-in animate-delay-${(i + 1) * 100}` : "opacity-0"}`}>
+          {displayedTests.map((test, i) => (
+            <div key={test.id} className={`w-full md:w-[calc((100%-3rem)/3)] bg-surface rounded-md overflow-hidden text-center ${visible ? `animate-fade-in animate-delay-${(i % 3 + 1) * 100}` : "opacity-0"}`}>
               {test.image_url && (
                 <div className="w-full aspect-video overflow-hidden">
                   <img
@@ -55,6 +61,16 @@ export default function Tests({ tests }: TestsProps) {
             </div>
           ))}
         </div>
+
+        {hasMore && (
+          <div className="text-center mt-10">
+            <button
+              onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_LOAD)}
+              className="btn-primary px-6 py-4 rounded-md font-semibold text-sm" style={{ backgroundColor: "#1B7340", color: "#ffffff" }}>
+              अजून टेस्ट द्या
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
