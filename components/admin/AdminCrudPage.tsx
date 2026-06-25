@@ -107,8 +107,15 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id: editItem.id, ...formData }),
         });
+        if (!res.ok) {
+          let errMsg = "Update failed";
+          try {
+            const errResult = await res.json() as Record<string, unknown>;
+            if (errResult?.error) errMsg = String(errResult.error);
+          } catch {}
+          throw new Error(errMsg);
+        }
         const result = await res.json() as Record<string, unknown>;
-        if (!res.ok) throw new Error((result.error as string) || "Update failed");
         setItems(items.map((i) => (i.id === result.id ? result : i)));
         toast.success("Updated successfully!");
       } else {
@@ -118,8 +125,15 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
+        if (!res.ok) {
+          let errMsg = "Create failed";
+          try {
+            const errResult = await res.json() as Record<string, unknown>;
+            if (errResult?.error) errMsg = String(errResult.error);
+          } catch {}
+          throw new Error(errMsg);
+        }
         const result = await res.json() as Record<string, unknown>;
-        if (!res.ok) throw new Error((result.error as string) || "Create failed");
         setItems([...items, result]);
         toast.success("New entry created!");
       }
