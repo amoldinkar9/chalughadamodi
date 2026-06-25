@@ -1,0 +1,3 @@
+ALTER TABLE tests ADD COLUMN description TEXT DEFAULT '';
+ALTER TABLE tests DROP COLUMN questions;
+ALTER TABLE tests DROP COLUMN duration;

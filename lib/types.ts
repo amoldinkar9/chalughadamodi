@@ -30,10 +30,9 @@ export interface Magazine {
 export interface Test {
   id: string;
   title: string;
-  questions: string;
-  duration: string;
   href: string;
   image_url: string;
+  description?: string;
   published: boolean;
   display_order: number;
   created_at: string;

@@ -45,11 +45,11 @@ export default function Tests({ tests }: TestsProps) {
               )}
               <div className="p-6 md:p-8">
                 <h3 className="text-navy font-bold text-xl md:text-2xl mb-3">{test.title}</h3>
-                <div className="flex items-center justify-center gap-3 text-muted font-medium text-sm mb-6">
-                  <span>{test.questions} प्रश्न</span>
-                  <span className="text-gold">•</span>
-                  <span>{test.duration}</span>
-                </div>
+                {test.description && (
+                  <p className="text-muted font-medium text-sm mb-6">
+                    {test.description}
+                  </p>
+                )}
                 <a href={test.href} target="_blank" rel="noopener noreferrer" className="btn-primary inline-block px-6 py-3 rounded-md font-semibold text-sm font-english" aria-label={`Start Test — ${test.title}`}>Start Test</a>
               </div>
             </div>

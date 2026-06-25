@@ -38,9 +38,9 @@ const fallbackContent: PublicContent = {
     { id: "6", month: "नोव्हेंबर 2025", image_url: "", pdf_url: "", published: true, display_order: 6, created_at: "", updated_at: "" },
   ],
   tests: [
-    { id: "1", title: "आजची टेस्ट", questions: "10", duration: "5 मिनिट", href: "#tests", image_url: "", published: true, display_order: 1, created_at: "", updated_at: "" },
-    { id: "2", title: "या आठवड्याची टेस्ट", questions: "30", duration: "15 मिनिट", href: "#tests", image_url: "", published: true, display_order: 2, created_at: "", updated_at: "" },
-    { id: "3", title: "मागील महिना टेस्ट", questions: "50", duration: "30 मिनिट", href: "#tests", image_url: "", published: true, display_order: 3, created_at: "", updated_at: "" },
+    { id: "1", title: "आजची टेस्ट", href: "#tests", image_url: "", description: "आजची चालू घडामोडी टेस्ट सोडवा आणि स्वतःचे मूल्यमापन करा.", published: true, display_order: 1, created_at: "", updated_at: "" },
+    { id: "2", title: "या आठवड्याची टेस्ट", href: "#tests", image_url: "", description: "संपूर्ण आठवड्याच्या घडामोडींवर आधारित सराव परीक्षा.", published: true, display_order: 2, created_at: "", updated_at: "" },
+    { id: "3", title: "मागील महिना टेस्ट", href: "#tests", image_url: "", description: "मागील महिन्याच्या चालू घडामोडींवर आधारित विशेष टेस्ट.", published: true, display_order: 3, created_at: "", updated_at: "" },
   ],
   testimonials: [
     { id: "1", initials: "प्रि", name: "प्रिया देशमुख", exam: "तलाठी, 2025", quote: "Static GS शी प्रत्येक बातमीची जोडणी मला खूप आवडली. Revision सोपी झाली.", published: true, display_order: 1, created_at: "", updated_at: "" },

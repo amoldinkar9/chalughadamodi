@@ -6,8 +6,7 @@ import AdminCrudPage from "@/components/admin/AdminCrudPage";
 const fields = [
   { key: "title", label: "Test Title", type: "text" as const, placeholder: "Today's Test" },
   { key: "image_url", label: "Image", type: "image" as const, placeholder: "https://example.com/image.jpg", uploadFolder: "tests" },
-  { key: "questions", label: "Questions", type: "text" as const, placeholder: "10" },
-  { key: "duration", label: "Duration", type: "text" as const, placeholder: "5 minutes" },
+  { key: "description", label: "Description", type: "text" as const, placeholder: "Brief description of the test" },
   { key: "href", label: "Test URL", type: "text" as const, placeholder: "https://chalughadamodi.in/test" },
   { key: "display_order", label: "Display Order", type: "number" as const },
 ];
@@ -24,7 +23,7 @@ export default async function TestsAdmin() {
       title="Tests"
       apiPath="/api/admin/tests"
       fields={fields}
-      columns={["title", "image_url", "questions", "duration"]}
+      columns={["title", "image_url", "description"]}
       initialData={mapRows(results)}
     />
   );

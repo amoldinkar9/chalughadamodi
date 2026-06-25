@@ -16,8 +16,8 @@ export async function POST(req: NextRequest) {
   const id = crypto.randomUUID();
   const now = new Date().toISOString();
   const row = await db
-    .prepare("INSERT INTO tests (id, title, questions, duration, href, image_url, published, display_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING *")
-    .bind(id, body.title, body.questions, body.duration, body.href ?? "https://www.tcs9.in/mr/test-series", body.image_url ?? "", body.published ?? 1, body.display_order ?? 0, now, now)
+    .prepare("INSERT INTO tests (id, title, href, image_url, description, published, display_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING *")
+    .bind(id, body.title, body.href ?? "https://www.tcs9.in/mr/test-series", body.image_url ?? "", body.description ?? "", body.published ?? 1, body.display_order ?? 0, now, now)
     .first();
   if (!row) return NextResponse.json({ error: "Insert failed" }, { status: 500 });
   return NextResponse.json(mapRow(row as Record<string, unknown>));
