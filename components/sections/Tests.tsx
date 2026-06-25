@@ -46,7 +46,7 @@ export default function Tests({ tests }: TestsProps) {
               <div className="p-6 md:p-8">
                 <h3 className="text-navy font-bold text-xl md:text-2xl mb-3">{test.title}</h3>
                 {test.description && (
-                  <p className="text-muted font-medium text-sm mb-6">
+                  <p className="text-muted font-medium text-sm mb-6 whitespace-pre-wrap">
                     {test.description}
                   </p>
                 )}
