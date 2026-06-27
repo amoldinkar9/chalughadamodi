@@ -86,6 +86,14 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   async headers() {
+    const isDev = process.env.NODE_ENV === "development";
+    const staticCacheHeaders = isDev
+      ? [{ key: "Cache-Control", value: "no-store, no-cache, must-revalidate, proxy-revalidate" }]
+      : [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }];
+    const imageCacheHeaders = isDev
+      ? [{ key: "Cache-Control", value: "no-store, no-cache, must-revalidate" }]
+      : [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }];
+
     return [
       {
         source: "/(.*)",
@@ -97,21 +105,11 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/(.*)\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
+        headers: staticCacheHeaders,
       },
       {
         source: "/_next/image(.*)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=86400, stale-while-revalidate=604800",
-          },
-        ],
+        headers: imageCacheHeaders,
       },
     ];
   },

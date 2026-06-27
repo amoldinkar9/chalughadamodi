@@ -48,6 +48,12 @@ export default function Hero({ imageUrl, mobileImageUrl, customTitle }: HeroProp
               >
                 Read Magazine
               </a>
+              <a
+                href="#gallery"
+                className="btn-outline px-6 py-3 rounded-md font-semibold text-base"
+              >
+                Job Recruitment
+              </a>
             </div>
 
             {/* Trust strip */}
