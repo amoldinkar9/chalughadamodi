@@ -13,7 +13,7 @@ const navItems = [
   { href: "/admin/announcements", label: "Announcements", icon: Megaphone },
   { href: "/admin/gallery", label: "Job Recruitments", icon: Newspaper },
   { href: "/admin/magazines", label: "Magazines", icon: BookOpen },
-  { href: "/admin/tests", label: "Test", icon: ClipboardList },
+  { href: "/admin/tests", label: "Tests", icon: ClipboardList },
   { href: "/admin/testimonials", label: "Testimonials", icon: MessageSquareQuote },
   { href: "/admin/faqs", label: "FAQ's", icon: HelpCircle },
 ];

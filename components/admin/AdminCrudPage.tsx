@@ -11,8 +11,10 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, Upload, X, ImageIcon } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, X, ImageIcon, GripVertical } from "lucide-react";
 import RichTextEditor from "@/components/ui/rich-text-editor";
+import { useEffect } from "react";
+import Sortable from "sortablejs";
 
 interface FieldConfig {
   key: string;
@@ -33,6 +35,8 @@ interface AdminCrudPageProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialData: any[];
 }
+
+
 
 export default function AdminCrudPage({ title, apiPath, fields, columns, initialData }: AdminCrudPageProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -179,37 +183,63 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
     }
   };
 
-  const moveItem = async (item: { id: string; display_order: number }, direction: "up" | "down") => {
-    const sorted = [...items].sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
-    const idx = sorted.findIndex((i) => i.id === item.id);
-    const swapIdx = direction === "up" ? idx - 1 : idx + 1;
-    if (swapIdx < 0 || swapIdx >= sorted.length) return;
-
-    const other = sorted[swapIdx];
-    try {
-      await Promise.all([
-        fetch(apiPath, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: item.id, display_order: other.display_order }),
-        }),
-        fetch(apiPath, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: other.id, display_order: item.display_order }),
-        }),
-      ]);
-      setItems(items.map((i) => {
-        if (i.id === item.id) return { ...i, display_order: other.display_order };
-        if (i.id === other.id) return { ...i, display_order: item.display_order };
-        return i;
-      }));
-    } catch {
-      toast.error("Reorder failed.");
-    }
-  };
-
+  const tableBodyRef = useRef<HTMLTableSectionElement | null>(null);
   const sortedItems = [...items].sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+
+  useEffect(() => {
+    if (!tableBodyRef.current || sortedItems.length === 0) return;
+
+    const sortable = new Sortable(tableBodyRef.current, {
+      handle: ".drag-handle",
+      animation: 150,
+      ghostClass: "bg-accent/50",
+      onEnd: async (evt) => {
+        const { oldIndex, newIndex } = evt;
+        if (oldIndex === undefined || newIndex === undefined || oldIndex === newIndex) return;
+
+        // Revert SortableJS DOM move to keep React in control of rendering
+        const parent = evt.from;
+        const child = evt.item;
+        parent.removeChild(child);
+        const referenceNode = parent.children[oldIndex] || null;
+        parent.insertBefore(child, referenceNode);
+
+        // Compute new ordered array
+        const reordered = [...sortedItems];
+        const [movedItem] = reordered.splice(oldIndex, 1);
+        reordered.splice(newIndex, 0, movedItem);
+
+        const updated = reordered.map((item, idx) => ({
+          ...item,
+          display_order: idx + 1,
+        }));
+
+        setItems(updated);
+
+        const changedItems = updated.filter((item, idx) => {
+          const originalItem = sortedItems.find((orig) => orig.id === item.id);
+          return originalItem?.display_order !== (idx + 1);
+        });
+
+        try {
+          for (const item of changedItems) {
+            await fetch(apiPath, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ id: item.id, display_order: item.display_order }),
+            });
+          }
+          toast.success("Order saved successfully!");
+        } catch {
+          toast.error("Failed to save new order to database.");
+        }
+      },
+    });
+
+    return () => {
+      sortable.destroy();
+    };
+  }, [sortedItems, apiPath]);
 
   return (
     <div>
@@ -368,7 +398,7 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[60px]">Order</TableHead>
+              <TableHead className="w-[60px] text-center">Drag</TableHead>
               {columns.map((col) => (
                 <TableHead key={col}>{fields.find((f) => f.key === col)?.label || col}</TableHead>
               ))}
@@ -376,7 +406,7 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
               <TableHead className="w-[120px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody ref={tableBodyRef}>
             {sortedItems.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={columns.length + 3} className="text-center py-8 text-muted-foreground">
@@ -385,31 +415,12 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
               </TableRow>
             ) : (
               sortedItems.map((item, idx) => (
-                <TableRow key={item.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-0.5">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                        disabled={idx === 0}
-                        onClick={() => moveItem(item, "up")}
-                      >
-                        <ArrowUp size={12} />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                        disabled={idx === sortedItems.length - 1}
-                        onClick={() => moveItem(item, "down")}
-                      >
-                        <ArrowDown size={12} />
-                      </Button>
-                    </div>
+                <TableRow key={item.id} data-id={item.id}>
+                  <TableCell className="drag-handle cursor-grab active:cursor-grabbing text-muted-foreground w-[50px] text-center align-middle">
+                    <GripVertical size={16} className="mx-auto" />
                   </TableCell>
                   {columns.map((col) => (
-                    <TableCell key={col} className="max-w-[200px] truncate">
+                    <TableCell key={col} className="max-w-[200px] truncate align-middle">
                       {typeof item[col] === "boolean" ? (
                         item[col] ? <Badge variant="default">Yes</Badge> : <Badge variant="secondary">No</Badge>
                       ) : (
@@ -417,13 +428,13 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
                       )}
                     </TableCell>
                   ))}
-                  <TableCell>
+                  <TableCell className="align-middle">
                     <Switch
                       checked={item.published}
                       onCheckedChange={() => togglePublish(item)}
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="align-middle">
                     <div className="flex items-center gap-1">
                       <Button variant="ghost" size="icon" onClick={() => openEdit(item)}>
                         <Pencil size={14} />
