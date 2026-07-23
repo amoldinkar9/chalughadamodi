@@ -95,6 +95,35 @@ export const metadata: Metadata = {
     "Chalu Ghadamodi Test Series", "Chalu Ghadamodi Marathi Masik",
     "Darrojchya Chalu Ghadamodi", "Mahatvachya Chalu Ghadamodi",
     "Chalu Ghadamodi PDF Download",
+    // Free / year variants
+    "chalu ghadamodi free 2021", "chalu ghadamodi free 2022",
+    "chalu ghadamodi 2019 marathi", "chalu ghadamodi 2020 in marathi",
+    "chalu ghadamodi 2022", "chalu ghadamodi 2022 marathi pdf download",
+    "chalu ghadamodi feb 2023", "चालू घडामोडी 2023 पुस्तक",
+    "चालू घडामोडी 2022 प्रश्न उत्तर मराठी pdf",
+    // Free / PDF / Download
+    "chalu ghadamodi free", "chalu ghadamodi free pdf", "chalu ghadamodi free pdf download",
+    "chalu ghadamodi free download", "chalu ghadamodi marathi pdf download",
+    "chalu ghadamodi book pdf free download in marathi", "chalu ghadamodi 2026 pdf free download mpsc",
+    "chalu ghadamodi 2026 pdf", "chalu ghadamodi 2026 pdf download",
+    "chalu ghadamodi 2025 pdf", "current affairs in marathi pdf",
+    // Brand / Marathi variants
+    "chalu ghadamodi in marathi", "marathi chalu ghadamodi", "chalughadamodi", "ghadamodi",
+    "chalu ghadamodi marathi mahiti", "चालू घडामोडी पुस्तक",
+    // Year-specific
+    "chalu ghadamodi 2026 marathi pdf", "chalu ghadamodi 2026 in marathi",
+    "chalu ghadamodi 2024 marathi pdf",
+    // Q&A / GK
+    "चालू घडामोडी 2026 प्रश्न उत्तर मराठी pdf", "चालू घडामोडी 2025 pdf",
+    "चालू घडामोडी 2025 प्रश्न उत्तर मराठी pdf",
+    "चालू घडामोडी जनरल नॉलेज", "चालू घडामोडी जनरल नॉलेज 2025", "चालू घडामोडी जनरल नॉलेज 2026",
+    // Exam-specific
+    "chalu ghadamodi for combine", "mpsc chalu ghadamodi pdf",
+    "तलाठी भरती चालू घडामोडी मागील 1 वर्ष", "लक्ष्यवेध चालू घडामोडी",
+    // Regional / Daily
+    "maharashtra chalu ghadamodi", "chalu ghadamodi 2026 in marathi",
+    "महाराष्ट्रातील चालू घडामोडी", "आजचे चालू घडामोडी", "aajchya chalu ghadamodi",
+    "gk today marathi pdf", "marathi current affairs", "current affairs today in marathi",
   ],
   authors: [{ name: "चालू घडामोडी", url: "https://chalughadamodi.in" }],
   creator: "चालू घडामोडी",
@@ -232,6 +261,17 @@ export default function RootLayout({
   return (
     <html lang="mr" className={cn("antialiased", anekDevanagari.variable, "font-sans")}>
       <head>
+        {/* Google Tag Manager */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PFFP2NSZ');`,
+          }}
+        />
+        {/* End Google Tag Manager */}
         <link rel="preconnect" href="https://dw44bia1z0v5t.cloudfront.net" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.clarity.ms" />
@@ -271,14 +311,6 @@ export default function RootLayout({
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'G-DDQPJQ7VLG');`}
-        </Script>
-        {/* GTM — deferred until after load */}
-        <Script id="gtm" strategy="lazyOnload">
-          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-PFFP2NSZ');`}
         </Script>
         {/* Microsoft Clarity — lazy-loaded, lowest priority analytics */}
         <Script id="microsoft-clarity" strategy="lazyOnload">
