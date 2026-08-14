@@ -4,9 +4,11 @@ interface HeroProps {
   imageUrl?: string;
   mobileImageUrl?: string;
   customTitle?: string;
+  imageLink?: string;
+  mobileImageLink?: string;
 }
 
-export default function Hero({ imageUrl, mobileImageUrl, customTitle }: HeroProps) {
+export default function Hero({ imageUrl, mobileImageUrl, customTitle, imageLink, mobileImageLink }: HeroProps) {
   const mobileImg = mobileImageUrl || imageUrl;
   const desktopImg = imageUrl || mobileImageUrl;
 
@@ -76,15 +78,29 @@ export default function Hero({ imageUrl, mobileImageUrl, customTitle }: HeroProp
             <div className="w-full flex justify-center md:hidden">
               {mobileImg ? (
                 <div className="relative w-full max-w-[500px]" style={{ aspectRatio: "16/9" }}>
-                  <Image
-                    src={mobileImg}
-                    alt="चालू घडामोडी — MPSC, तलाठी, पोलीस भरती, RRB Group D मराठी current affairs"
-                    fill
-                    className="rounded-lg object-cover"
-                    sizes="(max-width: 768px) 90vw, 500px"
-                    priority
-                    fetchPriority="high"
-                  />
+                  {mobileImageLink ? (
+                    <a href={mobileImageLink} target="_blank" rel="noopener noreferrer">
+                      <Image
+                        src={mobileImg}
+                        alt="चालू घडामोडी — MPSC, तलाठी, पोलीस भरती, RRB Group D मराठी current affairs"
+                        fill
+                        className="rounded-lg object-cover"
+                        sizes="(max-width: 768px) 90vw, 500px"
+                        priority
+                        fetchPriority="high"
+                      />
+                    </a>
+                  ) : (
+                    <Image
+                      src={mobileImg}
+                      alt="चालू घडामोडी — MPSC, तलाठी, पोलीस भरती, RRB Group D मराठी current affairs"
+                      fill
+                      className="rounded-lg object-cover"
+                      sizes="(max-width: 768px) 90vw, 500px"
+                      priority
+                      fetchPriority="high"
+                    />
+                  )}
                 </div>
               ) : (
                 <div
@@ -102,15 +118,29 @@ export default function Hero({ imageUrl, mobileImageUrl, customTitle }: HeroProp
             <div className="w-full hidden md:flex md:justify-end">
               {desktopImg ? (
                 <div className="relative w-full max-w-[400px]" style={{ aspectRatio: "5/6" }}>
-                  <Image
-                    src={desktopImg}
-                    alt="चालू घडामोडी — MPSC, तलाठी, पोलीस भरती, RRB Group D मराठी current affairs"
-                    fill
-                    className="rounded-lg object-cover"
-                    sizes="400px"
-                    priority
-                    fetchPriority="high"
-                  />
+                  {imageLink ? (
+                    <a href={imageLink} target="_blank" rel="noopener noreferrer">
+                      <Image
+                        src={desktopImg}
+                        alt="चालू घडामोडी — MPSC, तलाठी, पोलीस भरती, RRB Group D मराठी current affairs"
+                        fill
+                        className="rounded-lg object-cover"
+                        sizes="400px"
+                        priority
+                        fetchPriority="high"
+                      />
+                    </a>
+                  ) : (
+                    <Image
+                      src={desktopImg}
+                      alt="चालू घडामोडी — MPSC, तलाठी, पोलीस भरती, RRB Group D मराठी current affairs"
+                      fill
+                      className="rounded-lg object-cover"
+                      sizes="400px"
+                      priority
+                      fetchPriority="high"
+                    />
+                  )}
                 </div>
               ) : (
                 <div

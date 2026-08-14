@@ -58,18 +58,20 @@ const fallbackContent: PublicContent = {
   ],
 };
 
-async function getHeroImageUrls(): Promise<{ imageUrl: string; mobileImageUrl: string }> {
+async function getHeroImageUrls(): Promise<{ imageUrl: string; mobileImageUrl: string; imageLink: string; mobileImageLink: string }> {
   try {
     const db = await getDb();
-    const rows = await db.prepare("SELECT key, value FROM site_settings WHERE key IN (?, ?)")
-      .bind("hero_image_url", "hero_mobile_image_url")
+    const rows = await db.prepare("SELECT key, value FROM site_settings WHERE key IN (?, ?, ?, ?)")
+      .bind("hero_image_url", "hero_mobile_image_url", "hero_image_link", "hero_mobile_image_link")
       .all<{ key: string; value: string }>();
     
     const desktop = rows.results.find(r => r.key === "hero_image_url")?.value || "";
     const mobile = rows.results.find(r => r.key === "hero_mobile_image_url")?.value || "";
-    return { imageUrl: desktop, mobileImageUrl: mobile };
+    const desktopLink = rows.results.find(r => r.key === "hero_image_link")?.value || "";
+    const mobileLink = rows.results.find(r => r.key === "hero_mobile_image_link")?.value || "";
+    return { imageUrl: desktop, mobileImageUrl: mobile, imageLink: desktopLink, mobileImageLink: mobileLink };
   } catch {
-    return { imageUrl: "", mobileImageUrl: "" };
+    return { imageUrl: "", mobileImageUrl: "", imageLink: "", mobileImageLink: "" };
   }
 }
 
@@ -192,7 +194,7 @@ export default async function Home({ heroTitle, keywordSlug }: { heroTitle?: str
     <>
       <StickyHeader />
       <main>
-        <Hero imageUrl={heroImages.imageUrl} mobileImageUrl={heroImages.mobileImageUrl} customTitle={heroTitle} />
+        <Hero imageUrl={heroImages.imageUrl} mobileImageUrl={heroImages.mobileImageUrl} customTitle={heroTitle} imageLink={heroImages.imageLink} mobileImageLink={heroImages.mobileImageLink} />
         <Announcements announcements={announcements} />
         <Magazine magazines={content.magazines} />
         <StaticGS customTitle={staticGSTitle} />
