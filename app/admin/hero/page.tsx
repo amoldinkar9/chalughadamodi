@@ -10,6 +10,8 @@ import { Upload, X, ImageIcon } from "lucide-react";
 export default function HeroAdmin() {
   const [imageUrl, setImageUrl] = useState("");
   const [mobileImageUrl, setMobileImageUrl] = useState("");
+  const [imageLink, setImageLink] = useState("");
+  const [mobileImageLink, setMobileImageLink] = useState("");
   const [uploadingDesktop, setUploadingDesktop] = useState(false);
   const [uploadingMobile, setUploadingMobile] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -26,9 +28,15 @@ export default function HeroAdmin() {
         
         const desktopSetting = data.find((s) => s.key === "hero_image_url");
         if (desktopSetting) setImageUrl(desktopSetting.value);
-        
+
         const mobileSetting = data.find((s) => s.key === "hero_mobile_image_url");
         if (mobileSetting) setMobileImageUrl(mobileSetting.value);
+
+        const desktopLinkSetting = data.find((s) => s.key === "hero_image_link");
+        if (desktopLinkSetting) setImageLink(desktopLinkSetting.value);
+
+        const mobileLinkSetting = data.find((s) => s.key === "hero_mobile_image_link");
+        if (mobileLinkSetting) setMobileImageLink(mobileLinkSetting.value);
       } catch { /* ignore */ }
     }
     loadCurrent();
@@ -80,6 +88,20 @@ export default function HeroAdmin() {
           body: JSON.stringify({ key: "hero_mobile_image_url", value: mobileImageUrl }),
         }).then((res) => {
           if (!res.ok) throw new Error("Save mobile failed");
+        }),
+        fetch("/api/admin/settings", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key: "hero_image_link", value: imageLink }),
+        }).then((res) => {
+          if (!res.ok) throw new Error("Save desktop link failed");
+        }),
+        fetch("/api/admin/settings", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key: "hero_mobile_image_link", value: mobileImageLink }),
+        }).then((res) => {
+          if (!res.ok) throw new Error("Save mobile link failed");
         })
       ]);
       toast.success("Hero settings saved!");
@@ -164,6 +186,13 @@ export default function HeroAdmin() {
               onChange={(e) => setImageUrl(e.target.value)}
               placeholder="https://example.com/hero-desktop.jpg"
             />
+
+            <Label className="font-semibold text-sm">Backlink URL (desktop image click target)</Label>
+            <Input
+              value={imageLink}
+              onChange={(e) => setImageLink(e.target.value)}
+              placeholder="https://example.com/sponsor"
+            />
           </div>
 
           {/* Mobile Image Card */}
@@ -230,6 +259,13 @@ export default function HeroAdmin() {
               value={mobileImageUrl}
               onChange={(e) => setMobileImageUrl(e.target.value)}
               placeholder="https://example.com/hero-mobile.jpg"
+            />
+
+            <Label className="font-semibold text-sm">Backlink URL (mobile image click target)</Label>
+            <Input
+              value={mobileImageLink}
+              onChange={(e) => setMobileImageLink(e.target.value)}
+              placeholder="https://example.com/sponsor"
             />
           </div>
         </div>
