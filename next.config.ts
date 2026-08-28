@@ -79,6 +79,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "veronica.chalughadamodi.in",
       },
+      {
+        protocol: "https",
+        hostname: "mpsccurrentaffairs.in",
+      },
+      {
+        protocol: "https",
+        hostname: "veronica.mpsccurrentaffairs.in",
+      },
     ],
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 86400,

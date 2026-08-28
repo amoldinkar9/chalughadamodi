@@ -4,11 +4,21 @@ interface HeroProps {
   imageUrl?: string;
   mobileImageUrl?: string;
   customTitle?: string;
+  customSubtitle?: string;
+  customDescription?: string;
   imageLink?: string;
   mobileImageLink?: string;
 }
 
-export default function Hero({ imageUrl, mobileImageUrl, customTitle, imageLink, mobileImageLink }: HeroProps) {
+export default function Hero({
+  imageUrl,
+  mobileImageUrl,
+  customTitle,
+  customSubtitle,
+  customDescription,
+  imageLink,
+  mobileImageLink,
+}: HeroProps) {
   const mobileImg = mobileImageUrl || imageUrl;
   const desktopImg = imageUrl || mobileImageUrl;
 
@@ -26,14 +36,22 @@ export default function Hero({ imageUrl, mobileImageUrl, customTitle, imageLink,
               {customTitle || "चालू घडामोडी 2026"}
             </h1>
             <p className="text-navy font-bold text-[30px] md:text-[40px] leading-[1.3] tracking-tight mb-6">
-              हजारो विद्यार्थी दररोज सराव करत आहेत.
-              <br />
-              तुम्ही मागे तर राहत नाही ना?
+              {customSubtitle || (
+                <>
+                  हजारो विद्यार्थी दररोज सराव करत आहेत.
+                  <br />
+                  तुम्ही मागे तर राहत नाही ना?
+                </>
+              )}
             </p>
 
             <p className="text-navy-soft font-bold text-lg md:text-xl max-w-[520px] mb-8 leading-relaxed">
-              चालू घडामोडी, आता मराठीत. <br />
-              UPSC, MPSC, तलाठी, सरळसेवा — एका जागी. रोज अपडेट. मोफत.
+              {customDescription || (
+                <>
+                  चालू घडामोडी, आता मराठीत. <br />
+                  UPSC, MPSC, तलाठी, सरळसेवा — एका जागी. रोज अपडेट. मोफत.
+                </>
+              )}
             </p>
 
             {/* Buttons */}

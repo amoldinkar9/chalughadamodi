@@ -1,50 +1,58 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getActiveDomain, getDomainConfig } from "@/lib/domain";
 
-export const metadata: Metadata = {
-  title: "आमच्याबद्दल | चालू घडामोडी — मराठी Current Affairs Platform",
-  description:
-    "चालू घडामोडी कोण आहे, आमचे ध्येय काय आहे, आणि आम्ही मराठी विद्यार्थ्यांना कसे मदत करतो. MPSC, तलाठी, पोलीस भरती विद्यार्थ्यांसाठी मोफत मराठी current affairs platform.",
-  alternates: {
-    canonical: "/about",
-  },
-  openGraph: {
-    title: "आमच्याबद्दल | चालू घडामोडी",
+export async function generateMetadata(): Promise<Metadata> {
+  const domain = await getActiveDomain();
+  const config = getDomainConfig(domain);
+
+  return {
+    title: `आमच्याबद्दल | ${config.brandName} — मराठी Current Affairs Platform`,
     description:
-      "मराठी विद्यार्थ्यांसाठी मोफत current affairs platform — आमची कथा, आमचे ध्येय.",
-    url: "https://chalughadamodi.in/about",
-    images: [
-      {
-        url: "https://chalughadamodi.in/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "चालू घडामोडी About Page",
-      },
-    ],
-  },
-};
+      "चालू घडामोडी कोण आहे, आमचे ध्येय काय आहे, आणि आम्ही मराठी विद्यार्थ्यांना कसे मदत करतो. MPSC, तलाठी, पोलीस भरती विद्यार्थ्यांसाठी मोफत मराठी current affairs platform.",
+    alternates: {
+      canonical: "/about",
+    },
+    openGraph: {
+      title: `आमच्याबद्दल | ${config.brandName}`,
+      description:
+        "मराठी विद्यार्थ्यांसाठी मोफत current affairs platform — आमची कथा, आमचे ध्येय.",
+      url: `${config.baseUrl}/about`,
+      images: [
+        {
+          url: `${config.baseUrl}/og-image.png`,
+          width: 1200,
+          height: 630,
+          alt: "चालू घडामोडी About Page",
+        },
+      ],
+    },
+  };
+}
 
-const aboutSchema = {
-  "@context": "https://schema.org",
-  "@type": "AboutPage",
-  "@id": "https://chalughadamodi.in/about#webpage",
-  name: "आमच्याबद्दल — चालू घडामोडी",
-  url: "https://chalughadamodi.in/about",
-  description:
-    "चालू घडामोडी हे महाराष्ट्रातील स्पर्धा परीक्षा विद्यार्थ्यांसाठी मोफत मराठी current affairs platform आहे.",
-  inLanguage: "mr",
-  isPartOf: { "@id": "https://chalughadamodi.in/#website" },
-  about: { "@id": "https://chalughadamodi.in/#organization" },
-  breadcrumb: {
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "मुख्यपान", item: "https://chalughadamodi.in" },
-      { "@type": "ListItem", position: 2, name: "आमच्याबद्दल", item: "https://chalughadamodi.in/about" },
-    ],
-  },
-};
+export default async function AboutPage() {
+  const domain = await getActiveDomain();
+  const config = getDomainConfig(domain);
 
-export default function AboutPage() {
+  const aboutSchema = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "@id": `${config.baseUrl}/about#webpage`,
+    name: `आमच्याबद्दल — ${config.brandName}`,
+    url: `${config.baseUrl}/about`,
+    description:
+      "चालू घडामोडी हे महाराष्ट्रातील स्पर्धा परीक्षा विद्यार्थ्यांसाठी मोफत मराठी current affairs platform आहे.",
+    inLanguage: "mr",
+    isPartOf: { "@id": `${config.baseUrl}/#website` },
+    about: { "@id": `${config.baseUrl}/#organization` },
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "मुख्यपान", item: config.baseUrl },
+        { "@type": "ListItem", position: 2, name: "आमच्याबद्दल", item: `${config.baseUrl}/about` },
+      ],
+    },
+  };
   return (
     <>
       <script

@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
+import { getActiveDomain, getDomainConfig } from "@/lib/domain";
 
-export default function robots(): MetadataRoute.Robots {
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const domain = await getActiveDomain();
+  const config = getDomainConfig(domain);
   return {
     rules: [
       // Default: allow all crawlers
@@ -81,7 +84,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin/", "/api/admin/"],
       },
     ],
-    sitemap: "https://chalughadamodi.in/sitemap.xml",
-    host: "https://chalughadamodi.in",
+    sitemap: `${config.baseUrl}/sitemap.xml`,
+    host: config.baseUrl,
   };
 }

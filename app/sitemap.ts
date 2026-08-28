@@ -1,8 +1,11 @@
 import type { MetadataRoute } from "next";
 import { SEO_KEYWORDS } from "@/lib/seo-keywords";
+import { getActiveDomain, getDomainConfig } from "@/lib/domain";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://chalughadamodi.in";
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const domain = await getActiveDomain();
+  const config = getDomainConfig(domain);
+  const baseUrl = config.baseUrl;
 
   // Base routes
   const routes: MetadataRoute.Sitemap = [
