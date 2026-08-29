@@ -16,6 +16,14 @@
     {
       "pattern": "veronica.chalughadamodi.in",
       "custom_domain": true
+    },
+    {
+      "pattern": "mpsccurrentaffairs.in",
+      "custom_domain": true
+    },
+    {
+      "pattern": "veronica.mpsccurrentaffairs.in",
+      "custom_domain": true
     }
   ],
   "r2_buckets": [

@@ -1,6 +1,7 @@
 import nextDynamic from "next/dynamic";
 import StickyHeader from "@/components/sections/StickyHeader";
 import Hero from "@/components/sections/Hero";
+import { getActiveDomain } from "@/lib/domain";
 import Announcements from "@/components/sections/Announcements";
 import Magazine from "@/components/sections/Magazine";
 import { getDb, mapRows } from "@/lib/db";
@@ -58,18 +59,44 @@ const fallbackContent: PublicContent = {
   ],
 };
 
-async function getHeroImageUrls(): Promise<{ imageUrl: string; mobileImageUrl: string; imageLink: string; mobileImageLink: string }> {
+async function getHeroImageUrls(domain?: string): Promise<{ 
+  imageUrl: string; 
+  mobileImageUrl: string; 
+  imageLink: string; 
+  mobileImageLink: string; 
+  heroTitle?: string; 
+  heroSubtitle?: string;
+  heroDescription?: string;
+}> {
   try {
     const db = await getDb();
-    const rows = await db.prepare("SELECT key, value FROM site_settings WHERE key IN (?, ?, ?, ?)")
-      .bind("hero_image_url", "hero_mobile_image_url", "hero_image_link", "hero_mobile_image_link")
-      .all<{ key: string; value: string }>();
+    const rows = await db.prepare("SELECT key, value FROM site_settings").all<{ key: string; value: string }>();
     
-    const desktop = rows.results.find(r => r.key === "hero_image_url")?.value || "";
-    const mobile = rows.results.find(r => r.key === "hero_mobile_image_url")?.value || "";
-    const desktopLink = rows.results.find(r => r.key === "hero_image_link")?.value || "";
-    const mobileLink = rows.results.find(r => r.key === "hero_mobile_image_link")?.value || "";
-    return { imageUrl: desktop, mobileImageUrl: mobile, imageLink: desktopLink, mobileImageLink: mobileLink };
+    const getSetting = (baseKey: string): string => {
+      if (domain) {
+        const specific = rows.results.find(r => r.key === `${domain}:${baseKey}`)?.value;
+        if (specific !== undefined && specific !== "") return specific;
+      }
+      return rows.results.find(r => r.key === baseKey)?.value || "";
+    };
+
+    const desktop = getSetting("hero_image_url");
+    const mobile = getSetting("hero_mobile_image_url");
+    const desktopLink = getSetting("hero_image_link");
+    const mobileLink = getSetting("hero_mobile_image_link");
+    const heroTitle = getSetting("hero_title");
+    const heroSubtitle = getSetting("hero_subtitle");
+    const heroDescription = getSetting("hero_description");
+
+    return { 
+      imageUrl: desktop, 
+      mobileImageUrl: mobile, 
+      imageLink: desktopLink, 
+      mobileImageLink: mobileLink,
+      heroTitle: heroTitle || undefined,
+      heroSubtitle: heroSubtitle || undefined,
+      heroDescription: heroDescription || undefined
+    };
   } catch {
     return { imageUrl: "", mobileImageUrl: "", imageLink: "", mobileImageLink: "" };
   }
@@ -136,7 +163,8 @@ function getCategoryDetails(slug?: string) {
 }
 
 export default async function Home({ heroTitle, keywordSlug }: { heroTitle?: string; keywordSlug?: string }) {
-  const [content, heroImages] = await Promise.all([getContent(), getHeroImageUrls()]);
+  const domain = await getActiveDomain();
+  const [content, heroImages] = await Promise.all([getContent(), getHeroImageUrls(domain)]);
 
   const catDetails = getCategoryDetails(keywordSlug);
   const keywords = catDetails.keywords;
@@ -194,7 +222,15 @@ export default async function Home({ heroTitle, keywordSlug }: { heroTitle?: str
     <>
       <StickyHeader />
       <main>
-        <Hero imageUrl={heroImages.imageUrl} mobileImageUrl={heroImages.mobileImageUrl} customTitle={heroTitle} imageLink={heroImages.imageLink} mobileImageLink={heroImages.mobileImageLink} />
+        <Hero 
+          imageUrl={heroImages.imageUrl} 
+          mobileImageUrl={heroImages.mobileImageUrl} 
+          customTitle={heroTitle || heroImages.heroTitle} 
+          customSubtitle={heroImages.heroSubtitle}
+          customDescription={heroImages.heroDescription}
+          imageLink={heroImages.imageLink} 
+          mobileImageLink={heroImages.mobileImageLink} 
+        />
         <Announcements announcements={announcements} />
         <Magazine magazines={content.magazines} />
         <StaticGS customTitle={staticGSTitle} />

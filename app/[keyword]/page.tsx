@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SEO_KEYWORDS } from "@/lib/seo-keywords";
+import { getActiveDomain, getDomainConfig } from "@/lib/domain";
 import Home from "../page";
 
 // Tell Next.js to statically generate all these keyword routes at build time
@@ -19,6 +20,9 @@ export async function generateMetadata({ params }: { params: Promise<{ keyword: 
     return {};
   }
 
+  const domain = await getActiveDomain();
+  const config = getDomainConfig(domain);
+
   return {
     title: `${keywordObj.title} | मराठी Current Affairs मोफत`,
     description: `${keywordObj.title} — MPSC, तलाठी, पोलीस भरती, रेल्वे, SSC GD सर्व परीक्षांसाठी मोफत मराठी चालू घडामोडी, मासिक PDF, आणि रोजच्या टेस्ट.`,
@@ -27,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ keyword: 
     },
     openGraph: {
       title: `${keywordObj.title} | मोफत मराठी चालू घडामोडी`,
-      url: `https://chalughadamodi.in/${keywordObj.slug}`,
+      url: `${config.baseUrl}/${keywordObj.slug}`,
     },
   };
 }
@@ -40,6 +44,9 @@ export default async function KeywordLandingPage({ params }: { params: Promise<{
     notFound();
   }
 
+  const domain = await getActiveDomain();
+  const config = getDomainConfig(domain);
+
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -48,13 +55,13 @@ export default async function KeywordLandingPage({ params }: { params: Promise<{
         "@type": "ListItem",
         "position": 1,
         "name": "मुख्यपान",
-        "item": "https://chalughadamodi.in"
+        "item": config.baseUrl
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": keywordObj.title,
-        "item": `https://chalughadamodi.in/${keywordObj.slug}`
+        "item": `${config.baseUrl}/${keywordObj.slug}`
       }
     ]
   };
