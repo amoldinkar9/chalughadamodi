@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createSessionCookie, clearSessionCookie } from "@/lib/auth";
+import { createSessionCookie, clearSessionCookie, getAdminPassword } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   const { password, action } = await req.json() as Record<string, unknown>;
@@ -10,9 +10,10 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  if (password === process.env.ADMIN_PASSWORD) {
+  const adminPassword = await getAdminPassword();
+  if (adminPassword && password === adminPassword) {
     return NextResponse.json({ success: true }, {
-      headers: { "Set-Cookie": createSessionCookie() },
+      headers: { "Set-Cookie": await createSessionCookie() },
     });
   }
 
