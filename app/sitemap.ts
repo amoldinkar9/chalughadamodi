@@ -16,6 +16,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/about`,
       lastModified: new Date(),
       changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/budgetform`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
       priority: 0.7,
     },
   ];
@@ -25,7 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${baseUrl}/${k.slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
-    priority: 0.8, // High priority since these are landing pages
+    priority: 0.8,
   }));
 
   return [...routes, ...keywordRoutes];
