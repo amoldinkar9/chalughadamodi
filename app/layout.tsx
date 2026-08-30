@@ -329,16 +329,21 @@ fbq('track', 'PageView');`,
           />
         </noscript>
         {children}
-        {/* GA4 — loads after page is interactive */}
+        {/* GA4 & Google Tags — loads after page is interactive */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-DDQPJQ7VLG"
+          strategy="afterInteractive"
+        />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-X7ETP4Q2CH"
           strategy="afterInteractive"
         />
         <Script id="gtag-init" strategy="afterInteractive">
           {`window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-DDQPJQ7VLG');`}
+            gtag('config', 'G-DDQPJQ7VLG');
+            gtag('config', 'G-X7ETP4Q2CH');`}
         </Script>
         {/* Microsoft Clarity — lazy-loaded, lowest priority analytics */}
         <Script id="microsoft-clarity" strategy="lazyOnload">
