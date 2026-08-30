@@ -174,12 +174,19 @@ export default function AdminCrudPage({ title, apiPath, fields, columns, initial
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: item.id, published: !item.published }),
       });
-      if (!res.ok) throw new Error("Toggle failed");
+      if (!res.ok) {
+        let errMsg = "Toggle failed";
+        try {
+          const errData = await res.json() as Record<string, unknown>;
+          if (errData?.error) errMsg = String(errData.error);
+        } catch {}
+        throw new Error(errMsg);
+      }
       const updated = await res.json() as Record<string, unknown>;
       setItems(items.map((i) => (i.id === updated.id ? updated : i)));
       toast.success(updated.published ? "Published!" : "Unpublished!");
-    } catch {
-      toast.error("Toggle failed.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Toggle failed.");
     }
   };
 

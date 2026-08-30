@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb, mapRows, mapRow } from "@/lib/db";
 import { verifyAdmin } from "@/lib/auth";
 
+const BOOL_COLS = new Set(["published", "is_new", "date_extended"]);
+
 export async function GET() {
   if (!(await verifyAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
@@ -22,7 +24,7 @@ export async function POST(req: NextRequest) {
     const now = new Date().toISOString();
     const row = await db
       .prepare("INSERT INTO gallery (id, name, image_url, start_date, last_date, link, apply_link, is_new, date_extended, published, display_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING *")
-      .bind(id, body.name, body.image_url ?? "", body.start_date ?? null, body.last_date ?? null, body.link ?? "", body.apply_link ?? "", body.is_new ? 1 : 0, body.date_extended ? 1 : 0, body.published ?? 1, body.display_order ?? 0, now, now)
+      .bind(id, body.name, body.image_url ?? "", body.start_date ?? null, body.last_date ?? null, body.link ?? "", body.apply_link ?? "", body.is_new ? 1 : 0, body.date_extended ? 1 : 0, body.published !== undefined ? (body.published ? 1 : 0) : 1, body.display_order ?? 0, now, now)
       .first();
     if (!row) return NextResponse.json({ error: "Insert failed" }, { status: 500 });
     return NextResponse.json(mapRow(row as Record<string, unknown>));
@@ -47,15 +49,14 @@ export async function PUT(req: NextRequest) {
     sets.push("updated_at = ?");
     vals.push(new Date().toISOString());
     vals.push(id);
-    const row = await db.prepare(`UPDATE gallery SET ${sets.join(", ")} WHERE id = ? RETURNING *`).bind(...vals).first();
+    const sql = `UPDATE gallery SET ${sets.join(", ")} WHERE id = ? RETURNING *`;
+    const row = await db.prepare(sql).bind(...vals).first();
     if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
     return NextResponse.json(mapRow(row as Record<string, unknown>));
   } catch (e) {
     return NextResponse.json({ error: e instanceof Error ? e.message : "DB error" }, { status: 500 });
   }
 }
-
-const BOOL_COLS = new Set(["published", "is_new", "date_extended"]);
 
 export async function DELETE(req: NextRequest) {
   if (!(await verifyAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
