@@ -2,37 +2,46 @@ import type { MetadataRoute } from "next";
 import { SEO_KEYWORDS } from "@/lib/seo-keywords";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://chalughadamodi.in";
-
-  // Base routes
-  const routes: MetadataRoute.Sitemap = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/budgetform`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
+  const domains = [
+    "https://chalughadamodi.in",
+    "https://mpsccurrentaffairs.in"
   ];
 
-  // Dynamically generate sitemap entries for all SEO keyword landing pages
-  const keywordRoutes = SEO_KEYWORDS.map((k) => ({
-    url: `${baseUrl}/${k.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
+  const allEntries: MetadataRoute.Sitemap = [];
 
-  return [...routes, ...keywordRoutes];
+  for (const baseUrl of domains) {
+    // Base routes
+    allEntries.push(
+      {
+        url: baseUrl,
+        lastModified: new Date(),
+        changeFrequency: "daily",
+        priority: 1,
+      },
+      {
+        url: `${baseUrl}/about`,
+        lastModified: new Date(),
+        changeFrequency: "monthly",
+        priority: 0.8,
+      },
+      {
+        url: `${baseUrl}/budgetform`,
+        lastModified: new Date(),
+        changeFrequency: "monthly",
+        priority: 0.7,
+      }
+    );
+
+    // Dynamic SEO keyword landing pages
+    const keywordRoutes: MetadataRoute.Sitemap = SEO_KEYWORDS.map((k) => ({
+      url: `${baseUrl}/${k.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }));
+
+    allEntries.push(...keywordRoutes);
+  }
+
+  return allEntries;
 }
