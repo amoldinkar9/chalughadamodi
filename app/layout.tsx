@@ -265,7 +265,7 @@ export default function RootLayout({
 
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2842099037465132"
           crossOrigin="anonymous"></script>
-        {/* Google Tag Manager */}
+        {/* Google Tag Manager - chalughadamodi */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -273,6 +273,16 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-PFFP2NSZ');`,
+          }}
+        />
+        {/* Google Tag Manager - mpsccurrentaffairs */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NB7RJ6BG');`,
           }}
         />
         {/* End Google Tag Manager */}
@@ -320,9 +330,19 @@ fbq('track', 'PageView');`,
       </head>
 
       <body className="min-h-screen font-sans">
+        {/* Google Tag Manager (noscript) - chalughadamodi */}
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-PFFP2NSZ"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
+        {/* Google Tag Manager (noscript) - mpsccurrentaffairs */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-NB7RJ6BG"
             height="0"
             width="0"
             style={{ display: "none", visibility: "hidden" }}
