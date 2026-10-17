@@ -182,6 +182,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: "#0A2540",
+  viewportFit: "cover",
 };
 
 // Module-level constants — defined outside the component to guarantee

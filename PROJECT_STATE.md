@@ -1,0 +1,143 @@
+# PROJECT STATE & DEVELOPMENT MEMORY
+
+> **MANDATORY FOR ALL AI AGENTS & DEVELOPERS:**
+> 1. **READ THIS FILE FIRST** before writing any code, modifying configs, or making architectural decisions.
+> 2. **CHECK PAST ERRORS & LESSONS** in this document to avoid repeating known mistakes.
+> 3. **UPDATE THIS FILE** after completing a task, encountering/resolving a bug, pausing a feature, or changing architecture.
+
+---
+
+## 1. Quick Project Profile
+
+| Item | Details |
+| :--- | :--- |
+| **Project Name** | Chalu Ghadamodi (`chalughadamodi`) |
+| **Primary Domain** | `chalughadamodi.in` |
+| **Secondary Domain** | `mpsccurrentaffairs.in` |
+| **Framework** | Next.js 16.2.5 (App Router) + React 19.2.4 |
+| **Runtime & Host** | Cloudflare Workers via `@opennextjs/cloudflare` (^1.19.7) |
+| **Styling** | Tailwind CSS v4, `@tailwindcss/postcss`, shadcn/ui |
+| **Database / Backend**| Supabase (`@supabase/ssr` / API) |
+| **Cross-Platform Target**| Mobile (iOS & Android) via Ionic Capacitor |
+
+---
+
+## 2. Mandatory Agent Workflow
+
+Whenever a new agent session begins:
+1. 📖 **Read this file (`PROJECT_STATE.md`)** to get latest context.
+2. 🎯 **Verify active task & paused items** in Section 3.
+3. ⚠️ **Review the Error & Gotcha Log** in Section 4 to prevent regressions.
+4. 🛠️ **Execute the task** following project standards.
+5. 📝 **Record results & updates** back into this file before ending the turn.
+
+---
+
+## 3. Current Status & Task Roadmap
+
+### 🟡 Active Focus
+- **Mobile Store Assets & Push Notifications**:
+  - Add App Icons & Splash Screen artwork using `@capacitor/assets`.
+  - Configure native Push Notifications (`@capacitor/push-notifications`) for breaking news alerts.
+
+### 🟢 Completed Milestones
+- **Android `.apk` File Built**:
+  - Configured OpenJDK 21 via Homebrew and installed Android SDK 36 (`platforms;android-36`, `build-tools;35.0.0/36.0.0`).
+  - Compiled with Gradle (`./android/gradlew assembleDebug`).
+  - Output binary located at: `dist-mobile/chalughadamodi.apk` (4.4 MB).
+- **iOS `.app` Bundle Built**:
+  - Compiled with `xcodebuild` using `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`.
+  - Output bundle located at: `dist-mobile/App.app` and zipped at `dist-mobile/chalughadamodi-ios.zip`.
+- **Cross-Platform Mobile App (iOS / Android) via Ionic Capacitor**:
+  - Installed `@capacitor/core`, `@capacitor/ios`, `@capacitor/android`, `@capacitor/status-bar`, `@capacitor/splash-screen`, `@capacitor/haptics`, and `@capacitor/app`.
+  - Configured `capacitor.config.ts` pointing to `https://chalughadamodi.in` for live SSR & instant OTA updates.
+  - Added fallback offline index at `public/index.html`.
+  - Generated native iOS (`ios/` with Swift Package Manager) and Android (`android/` with Gradle) projects.
+  - Added mobile notch/safe-area support in `app/layout.tsx` (`viewportFit: 'cover'`) and CSS utilities (`.safe-top`, `.safe-bottom`, etc. in `app/globals.css`).
+  - Added npm scripts: `npm run cap:sync`, `npm run cap:ios`, `npm run cap:android`.
+- **Multi-domain support**: Unified setup for `chalughadamodi.in` and `mpsccurrentaffairs.in`.
+- **Google Tag Manager & Analytics**: Added GTM containers (`GTM-NB7RJ6BG`) and GA tags (`G-X7ETP4Q2CH`).
+- **SEO & Sitemaps**: Unified sitemap generator (`sitemap.xml`) covering all SEO routes and keywords for both domains.
+- **Security Headers & CSP**: Configured in `next.config.ts` covering Supabase, Clarity, CloudFront, Google Analytics, and GTM.
+- **OpenNext Cloudflare Deployments**: Build script `npm run build:worker` and `wrangler` configuration set up with remote bindings.
+
+### ⏸️ Paused / Deferred Items
+| Task | Reason Paused | Resumption Trigger |
+| :--- | :--- | :--- |
+| **Offline Static Export (`output: 'export'`)** | Paused in favor of Live Hosted Capacitor setup because app relies heavily on dynamic Cloudflare worker bindings and SSR. | Resume only if pure offline browsing is strictly required. |
+| **Full Ionic UI Component Migration (`@ionic/react`)** | Paused to avoid rewriting existing high-quality Tailwind/shadcn UI. | Keep Tailwind/shadcn UI; use Capacitor for native layer only. |
+
+---
+
+## 4. Errors, Gotchas & Solutions Log (Bug Prevention)
+
+This table records real errors encountered in this repository and how they were solved. **Consult this before touching related code.**
+
+| Issue / Error | Trigger / Cause | Solution / Prevention | Date Logged |
+| :--- | :--- | :--- | :--- |
+| **Next.js 16 breaking API changes** | Next.js 16 has breaking conventions compared to Next.js 14/15 (e.g. async params, turbopack configs). | Always inspect `node_modules/next/dist/docs/` or verify docs before using deprecated APIs. | 2026-08-15 |
+| **Cloudflare Worker size / OpenNext build** | Next.js server bundles can exceed Cloudflare Worker script size limits if heavy client libs are imported in server paths. | Use `turbopack` root config, optimize package imports (`lucide-react`), and test with `opennextjs-cloudflare build`. | 2026-08-28 |
+| **Content Security Policy (CSP) blocking external scripts** | Adding new scripts (GTM, Clarity, analytics) failed due to strict CSP in `next.config.ts`. | Add new hostnames to `securityHeaders` in `next.config.ts` under `script-src`, `connect-src`, or `frame-src`. | 2026-08-29 |
+| **Unoptimized Images on Cloudflare** | Cloudflare Workers without Cloudflare Images transformation can fail with default Next.js image optimization. | `images.unoptimized: true` is explicitly configured in `next.config.ts`. Keep this setting unless using Cloudflare Images service. | 2026-08-29 |
+| **Remote Bindings in Local Dev** | Local OpenNext dev server failed to connect to Cloudflare D1/KV. | `initOpenNextCloudflareForDev({ experimental: { remoteBindings: true } })` is required in `next.config.ts`. | 2026-08-29 |
+| **Mobile Notch / Safe Area Inset** | Top navbar and bottom tabs clipped behind iOS dynamic island / home indicator. | Use CSS `env(safe-area-inset-top)` and `env(safe-area-inset-bottom)` with `viewport-fit=cover`. | 2026-09-18 |
+| **Gradle Class File Version 69 (Java 25)** | Android Studio Canary JBR runs Java 25 which triggers `Unsupported class file major version 69` in Gradle 8.14. | Use OpenJDK 21 via Homebrew (`/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home`). | 2026-09-18 |
+| **Android SDK Manager Deprecation** | Homebrew `android-commandlinetools` deprecated `sdkmanager` CLI. | Use `android sdk install "platforms;android-36" "build-tools;36.0.0"` and set `sdk.dir` in `android/local.properties`. | 2026-09-18 |
+
+---
+
+## 5. Development & Build Commands
+
+```bash
+# Local development
+npm run dev
+
+# Cloudflare OpenNext build & preview
+npm run build:worker
+npm run preview
+
+# Deploy to Cloudflare
+npm run deploy
+
+# Linting
+npm run lint
+
+# Mobile App (Capacitor & Direct Builds)
+npm run cap:sync       # Sync web assets & plugins to native projects
+npm run cap:ios        # Open iOS project in Xcode
+npm run cap:android    # Open Android project in Android Studio
+npm run build:ios      # Direct CLI build of iOS App.app and chalughadamodi-ios.zip
+npm run build:apk      # Direct CLI build of Android APK (dist-mobile/chalughadamodi.apk)
+```
+
+---
+
+## 6. Architecture & Code Conventions
+
+1. **Routing:** Next.js App Router under `app/`. Key routes:
+   - `app/page.tsx` — Homepage
+   - `app/[keyword]/page.tsx` — Dynamic SEO / keyword pages
+   - `app/admin/` — Admin portal
+   - `middleware.ts` — Hostname detection & domain routing
+2. **Components:**
+   - `components/` — Shared UI, shadcn components, layout elements
+   - `components/admin/` — Admin-specific views and controls
+3. **Styling:**
+   - Tailwind CSS v4 configured via `@tailwindcss/postcss` in `postcss.config.mjs`
+   - Dark/light mode powered by `next-themes`
+4. **Mobile Hybrid Rules:**
+   - All interactive elements must support touch (minimum 44x44px touch targets).
+   - Ensure external links handle target correctly or use `@capacitor/browser`.
+
+---
+
+## 7. Change History & Session Log
+
+| Date | Author / Agent | Task / Feature | Status | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| 2026-09-18 | Agent | Mobile App Assessment | Evaluated | Checked Capacitor compatibility with Next.js 16 + Cloudflare OpenNext. |
+| 2026-09-18 | Agent | Created `PROJECT_STATE.md` | Completed | Set up centralized persistent memory and error tracking system. |
+| 2026-09-18 | Agent | Ionic Capacitor Cross-Platform | Completed | Added iOS (SPM) and Android (Gradle), plugins, configs, safe-area styles, and cap npm scripts. |
+| 2026-09-18 | Agent | Built iOS .app Bundle | Completed | Successfully built `App.app` and zipped `chalughadamodi-ios.zip` in `dist-mobile/`. |
+| 2026-09-18 | Agent | Built Android .apk (Option B) | Completed | Configured OpenJDK 21, Android SDK 36, and built `chalughadamodi.apk` (4.4 MB). |
+| 2026-10-17 | Agent | Added ADMIN_PASSWORD env var to wrangler.jsonc | Completed | Updated wrangler config with secure admin password. |

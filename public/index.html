@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>चालू घडामोडी</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #0A2540;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+    .logo {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+      color: #38bdf8;
+    }
+    .sub {
+      font-size: 16px;
+      color: #94a3b8;
+      max-width: 320px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+    .btn {
+      background: #2563eb;
+      color: #ffffff;
+      border: none;
+      padding: 12px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 9999px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+      transition: transform 0.1s ease;
+    }
+    .btn:active {
+      transform: scale(0.96);
+    }
+  </style>
+</head>
+<body>
+  <div class="logo">चालू घडामोडी</div>
+  <div class="sub">अ‍ॅप लोड होत आहे... कृपया इंटरनेट कनेक्शन चालू ठेवा.</div>
+  <button class="btn" onclick="window.location.href='https://chalughadamodi.in'">पुन्हा प्रयत्न करा</button>
+  <script>
+    if (navigator.onLine) {
+      window.location.href = 'https://chalughadamodi.in';
+    }
+    window.addEventListener('online', function() {
+      window.location.href = 'https://chalughadamodi.in';
+    });
+  </script>
+</body>
+</html>
