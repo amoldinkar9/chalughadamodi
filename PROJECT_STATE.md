@@ -83,6 +83,8 @@ This table records real errors encountered in this repository and how they were 
 | **Mobile Notch / Safe Area Inset** | Top navbar and bottom tabs clipped behind iOS dynamic island / home indicator. | Use CSS `env(safe-area-inset-top)` and `env(safe-area-inset-bottom)` with `viewport-fit=cover`. | 2026-09-18 |
 | **Gradle Class File Version 69 (Java 25)** | Android Studio Canary JBR runs Java 25 which triggers `Unsupported class file major version 69` in Gradle 8.14. | Use OpenJDK 21 via Homebrew (`/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home`). | 2026-09-18 |
 | **Android SDK Manager Deprecation** | Homebrew `android-commandlinetools` deprecated `sdkmanager` CLI. | Use `android sdk install "platforms;android-36" "build-tools;36.0.0"` and set `sdk.dir` in `android/local.properties`. | 2026-09-18 |
+| **`public/index.html` intercepts root URL on Cloudflare** | Having `public/index.html` causes Cloudflare Assets to serve it directly at `/`, bypassing Next.js SSR worker entirely. | Do not place `index.html` inside `public/`. Keep public purely for assets (images, icons, robots, etc.). | 2026-10-17 |
+| **Path apostrophe breaks OpenNext esbuild** | File paths containing single quotes (e.g. `Amol's MacBook Air`) cause esbuild bundling to fail with syntax errors. | Work and build inside a safe directory path without quotes (e.g., `~/GitHub/chalughadamodi`). | 2026-10-17 |
 
 ---
 
@@ -141,3 +143,4 @@ npm run build:apk      # Direct CLI build of Android APK (dist-mobile/chalughada
 | 2026-09-18 | Agent | Built iOS .app Bundle | Completed | Successfully built `App.app` and zipped `chalughadamodi-ios.zip` in `dist-mobile/`. |
 | 2026-09-18 | Agent | Built Android .apk (Option B) | Completed | Configured OpenJDK 21, Android SDK 36, and built `chalughadamodi.apk` (4.4 MB). |
 | 2026-10-17 | Agent | Added ADMIN_PASSWORD env var to wrangler.jsonc | Completed | Updated wrangler config with secure admin password. |
+| 2026-10-17 | Agent | Resolved fallback screen issue & redeployed | Completed | Removed `public/index.html` intercepting SSR route, rebuilt, and deployed version `c412fcfc`. |
