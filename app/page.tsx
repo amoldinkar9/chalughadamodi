@@ -1,46 +1,45 @@
-import nextDynamic from "next/dynamic";
 import StickyHeader from "@/components/sections/StickyHeader";
 import Hero from "@/components/sections/Hero";
+import DailyUpdates from "@/components/sections/DailyUpdates";
 import Announcements from "@/components/sections/Announcements";
 import Magazine from "@/components/sections/Magazine";
+import StaticGS from "@/components/sections/StaticGS";
+import Tests from "@/components/sections/Tests";
+import Gallery from "@/components/sections/Gallery";
+import Testimonials from "@/components/sections/Testimonials";
+import FAQ from "@/components/sections/FAQ";
+import FinalCTA from "@/components/sections/FinalCTA";
+import Footer from "@/components/sections/Footer";
 import { getDb, mapRows } from "@/lib/db";
 import type { PublicContent } from "@/lib/types";
-
-const StaticGS = nextDynamic(() => import("@/components/sections/StaticGS"));
-const Tests = nextDynamic(() => import("@/components/sections/Tests"));
-const Gallery = nextDynamic(() => import("@/components/sections/Gallery"));
-const Testimonials = nextDynamic(() => import("@/components/sections/Testimonials"));
-const FAQ = nextDynamic(() => import("@/components/sections/FAQ"));
-const FinalCTA = nextDynamic(() => import("@/components/sections/FinalCTA"));
-const Footer = nextDynamic(() => import("@/components/sections/Footer"));
 
 // Fallback data in case D1 is not configured yet
 const fallbackContent: PublicContent = {
   announcements: [
-    { id: "a1", title: "MPSC राज्यसेवा 2026 अधिसूचना", image_url: "https://placehold.co/1280x360/0A2540/D4A24C?text=MPSC+राज्यसेवा+2026", backlink: "#tests", published: true, display_order: 1, created_at: "", updated_at: "" },
-    { id: "a2", title: "तलाठी भरती अपडेट", image_url: "https://placehold.co/1280x360/163A5F/FAF7F2?text=तलाठी+भरती+अपडेट", backlink: "#tests", published: true, display_order: 2, created_at: "", updated_at: "" },
-    { id: "a3", title: "मोफत मासिक PDF डाउनलोड करा", image_url: "https://placehold.co/1280x360/D4A24C/0A2540?text=मोफत+मासिक+PDF", backlink: "#magazine", published: true, display_order: 3, created_at: "", updated_at: "" },
+    { id: "a1", title: "MPSC राज्यसेवा 2026 अधिसूचना", image_url: "", backlink: "/mpsc-chalu-ghadamodi", published: true, display_order: 1, created_at: "", updated_at: "" },
+    { id: "a2", title: "तलाठी भरती व TCS पॅटर्न चालू घडामोडी", image_url: "", backlink: "/talathi-chalu-ghadamodi", published: true, display_order: 2, created_at: "", updated_at: "" },
+    { id: "a3", title: "मोफत मासिक चालू घडामोडी PDF डाउनलोड करा", image_url: "", backlink: "/chalu-ghadamodi-2026-pdf", published: true, display_order: 3, created_at: "", updated_at: "" },
   ],
   gallery: [
-    { id: "1", name: "महाराष्ट्र पोलीस भरती 2026", image_url: "", start_date: "2026-04-01", last_date: "2026-05-05", link: "", apply_link: "", is_new: true, date_extended: false, published: true, display_order: 1, created_at: "", updated_at: "" },
-    { id: "2", name: "तलाठी भरती 2026", image_url: "", start_date: "2026-04-10", last_date: "2026-05-20", link: "", apply_link: "", is_new: true, date_extended: false, published: true, display_order: 2, created_at: "", updated_at: "" },
-    { id: "3", name: "रेल्वे RRB Group D", image_url: "", start_date: "2026-04-15", last_date: "2026-06-01", link: "", apply_link: "", is_new: false, date_extended: false, published: true, display_order: 3, created_at: "", updated_at: "" },
-    { id: "4", name: "SSC GD भरती", image_url: "", start_date: "2026-05-01", last_date: "2026-06-10", link: "", apply_link: "", is_new: false, date_extended: true, published: true, display_order: 4, created_at: "", updated_at: "" },
-    { id: "5", name: "वनरक्षक भरती", image_url: "", start_date: "2026-05-05", last_date: "2026-06-25", link: "", apply_link: "", is_new: false, date_extended: false, published: true, display_order: 5, created_at: "", updated_at: "" },
-    { id: "6", name: "सरळसेवा भरती", image_url: "", start_date: "2026-05-10", last_date: "2026-06-30", link: "", apply_link: "", is_new: false, date_extended: false, published: true, display_order: 6, created_at: "", updated_at: "" },
+    { id: "1", name: "महाराष्ट्र पोलीस भरती 2026", image_url: "", start_date: "2026-10-01", last_date: "2026-11-30", link: "/police-bharti-chalu-ghadamodi", apply_link: "https://policerecruitment2026.mahait.org", is_new: true, date_extended: false, published: true, display_order: 1, created_at: "", updated_at: "" },
+    { id: "2", name: "तलाठी भरती 2026", image_url: "", start_date: "2026-10-10", last_date: "2026-12-15", link: "/talathi-chalu-ghadamodi", apply_link: "https://mahabhumi.gov.in", is_new: true, date_extended: false, published: true, display_order: 2, created_at: "", updated_at: "" },
+    { id: "3", name: "रेल्वे RRB Group D भरती", image_url: "", start_date: "2026-10-05", last_date: "2026-12-01", link: "/railway-bharti-marathi", apply_link: "https://rrbcdg.gov.in", is_new: false, date_extended: false, published: true, display_order: 3, created_at: "", updated_at: "" },
+    { id: "4", name: "SSC GD भरती 2026", image_url: "", start_date: "2026-09-15", last_date: "2026-11-20", link: "/ssc-gd-chalu-ghadamodi-marathi", apply_link: "https://ssc.gov.in", is_new: false, date_extended: true, published: true, display_order: 4, created_at: "", updated_at: "" },
+    { id: "5", name: "वनरक्षक भरती 2026", image_url: "", start_date: "2026-10-12", last_date: "2026-12-25", link: "/vanrakshak-bharti-chalu-ghadamodi", apply_link: "https://mahaforest.gov.in", is_new: false, date_extended: false, published: true, display_order: 5, created_at: "", updated_at: "" },
+    { id: "6", name: "सरळसेवा व जिल्हा परिषद भरती", image_url: "", start_date: "2026-10-15", last_date: "2026-12-31", link: "/zilha-parishad-bharti", apply_link: "https://rdd.maharashtra.gov.in", is_new: true, date_extended: false, published: true, display_order: 6, created_at: "", updated_at: "" },
   ],
   magazines: [
-    { id: "1", month: "एप्रिल 2026", image_url: "", pdf_url: "", published: true, display_order: 1, created_at: "", updated_at: "" },
-    { id: "2", month: "मार्च 2026", image_url: "", pdf_url: "", published: true, display_order: 2, created_at: "", updated_at: "" },
-    { id: "3", month: "फेब्रुवारी 2026", image_url: "", pdf_url: "", published: true, display_order: 3, created_at: "", updated_at: "" },
-    { id: "4", month: "जानेवारी 2026", image_url: "", pdf_url: "", published: true, display_order: 4, created_at: "", updated_at: "" },
-    { id: "5", month: "डिसेंबर 2025", image_url: "", pdf_url: "", published: true, display_order: 5, created_at: "", updated_at: "" },
-    { id: "6", month: "नोव्हेंबर 2025", image_url: "", pdf_url: "", published: true, display_order: 6, created_at: "", updated_at: "" },
+    { id: "1", month: "ऑक्टोबर 2026", image_url: "", pdf_url: "/chalu-ghadamodi-2026-pdf", published: true, display_order: 1, created_at: "", updated_at: "" },
+    { id: "2", month: "सप्टेंबर 2026", image_url: "", pdf_url: "/chalu-ghadamodi-2026-pdf", published: true, display_order: 2, created_at: "", updated_at: "" },
+    { id: "3", month: "ऑगस्ट 2026", image_url: "", pdf_url: "/chalu-ghadamodi-2026-pdf", published: true, display_order: 3, created_at: "", updated_at: "" },
+    { id: "4", month: "जुलै 2026", image_url: "", pdf_url: "/chalu-ghadamodi-2026-pdf", published: true, display_order: 4, created_at: "", updated_at: "" },
+    { id: "5", month: "जून 2026", image_url: "", pdf_url: "/chalu-ghadamodi-2026-pdf", published: true, display_order: 5, created_at: "", updated_at: "" },
+    { id: "6", month: "मे 2026", image_url: "", pdf_url: "/chalu-ghadamodi-2026-pdf", published: true, display_order: 6, created_at: "", updated_at: "" },
   ],
   tests: [
-    { id: "1", title: "आजची टेस्ट", href: "#tests", image_url: "", description: "आजची चालू घडामोडी टेस्ट सोडवा आणि स्वतःचे मूल्यमापन करा.", published: true, display_order: 1, created_at: "", updated_at: "" },
-    { id: "2", title: "या आठवड्याची टेस्ट", href: "#tests", image_url: "", description: "संपूर्ण आठवड्याच्या घडामोडींवर आधारित सराव परीक्षा.", published: true, display_order: 2, created_at: "", updated_at: "" },
-    { id: "3", title: "मागील महिना टेस्ट", href: "#tests", image_url: "", description: "मागील महिन्याच्या चालू घडामोडींवर आधारित विशेष टेस्ट.", published: true, display_order: 3, created_at: "", updated_at: "" },
+    { id: "1", title: "आजची चालू घडामोडी टेस्ट", href: "https://www.tcs9.in/mr/test-series", image_url: "", description: "आजच्या ताज्या चालू घडामोडींवर आधारित 20 सराव प्रश्न. लगेच निकाल आणि विश्लेषण.", published: true, display_order: 1, created_at: "", updated_at: "" },
+    { id: "2", title: "या आठवड्याची वीकली टेस्ट", href: "https://www.tcs9.in/mr/test-series", image_url: "", description: "संपूर्ण आठवड्याच्या घडामोडींवर आधारित 50 प्रश्नांची सराव परीक्षा.", published: true, display_order: 2, created_at: "", updated_at: "" },
+    { id: "3", title: "मागील महिना रिव्हिजन टेस्ट", href: "https://www.tcs9.in/mr/test-series", image_url: "", description: "महिन्याच्या चालू घडामोडींवर आधारित विशेष मेगा टेस्ट.", published: true, display_order: 3, created_at: "", updated_at: "" },
   ],
   testimonials: [
     { id: "1", initials: "प्रि", name: "प्रिया देशमुख", exam: "तलाठी, 2025", quote: "Static GS शी प्रत्येक बातमीची जोडणी मला खूप आवडली. Revision सोपी झाली.", published: true, display_order: 1, created_at: "", updated_at: "" },
@@ -142,7 +141,7 @@ export default async function Home({ heroTitle, keywordSlug }: { heroTitle?: str
   const keywords = catDetails.keywords;
 
   // 1. Sort/Filter Announcements
-  let announcements = [...content.announcements];
+  const announcements = [...content.announcements];
   if (keywords.length > 0) {
     announcements.sort((a, b) => {
       const aMatch = keywords.some(k => a.title.toLowerCase().includes(k));
@@ -154,7 +153,7 @@ export default async function Home({ heroTitle, keywordSlug }: { heroTitle?: str
   }
 
   // 2. Sort/Filter Gallery (Jobs)
-  let gallery = content.gallery.map(post => {
+  const gallery = content.gallery.map(post => {
     const isMatch = keywords.some(k => post.name.toLowerCase().includes(k));
     return {
       ...post,
@@ -163,7 +162,7 @@ export default async function Home({ heroTitle, keywordSlug }: { heroTitle?: str
   });
 
   // 3. Sort/Filter Testimonials
-  let testimonials = [...content.testimonials];
+  const testimonials = [...content.testimonials];
   if (keywords.length > 0) {
     testimonials.sort((a, b) => {
       const aMatch = keywords.some(k => a.exam.toLowerCase().includes(k) || a.quote.toLowerCase().includes(k));
@@ -175,7 +174,7 @@ export default async function Home({ heroTitle, keywordSlug }: { heroTitle?: str
   }
 
   // 4. Sort/Filter FAQs
-  let faqs = [...content.faqs];
+  const faqs = [...content.faqs];
   if (keywords.length > 0) {
     faqs.sort((a, b) => {
       const aMatch = keywords.some(k => a.question.toLowerCase().includes(k) || a.answer.toLowerCase().includes(k));
@@ -195,6 +194,7 @@ export default async function Home({ heroTitle, keywordSlug }: { heroTitle?: str
       <StickyHeader />
       <main>
         <Hero imageUrl={heroImages.imageUrl} mobileImageUrl={heroImages.mobileImageUrl} customTitle={heroTitle} imageLink={heroImages.imageLink} mobileImageLink={heroImages.mobileImageLink} />
+        <DailyUpdates />
         <Announcements announcements={announcements} />
         <Magazine magazines={content.magazines} />
         <StaticGS customTitle={staticGSTitle} />

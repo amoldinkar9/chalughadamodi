@@ -10,14 +10,35 @@ interface FAQProps {
   customSubtitle?: string;
 }
 
+function sanitizeHtml(html: string): string {
+  if (!html) return "";
+
+  // 1. Remove dangerous tags and their content
+  let safe = html.replace(/<(script|style|iframe|object|embed|form|input|button|svg|math)[^>]*>[\s\S]*?<\/\1>/gi, "");
+  safe = safe.replace(/<(script|style|iframe|object|embed|form|input|button|meta|link)[^>]*>/gi, "");
+
+  // 2. Remove all inline event handlers (on*, e.g., onload, onerror, onclick)
+  safe = safe.replace(/\s+on[a-z]+\s*=\s*(?:'[^']*'|"[^"]*"|[^\s>]+)/gi, "");
+
+  // 3. Remove javascript:, vbscript:, and data: schemes
+  safe = safe.replace(/(href|src)\s*=\s*['"]?\s*(javascript|vbscript|data):[^'">\s]*/gi, '$1="#"');
+
+  return safe;
+}
+
 function formatAnswerHtml(htmlAnswer: string) {
   if (!htmlAnswer) return "";
 
-  // 1. Convert `<font color="xxx">` to inline styles so it isn't overridden by class rules
-  let processed = htmlAnswer.replace(/<font\s+([^>]*color=["']([^"']+)["'][^>]*)>/gi, (match, attrs, color) => {
-    return `<span style="color: ${color};" ${attrs}>`;
+  // Sanitize input first against XSS
+  const sanitized = sanitizeHtml(htmlAnswer);
+
+  // 1. Convert `<font color="xxx">` to inline styles
+  let processed = sanitized.replace(/<font\s+([^>]*color=["']([^"']+)["'][^>]*)>/gi, (match, attrs, color) => {
+    // Sanitize color value
+    const cleanColor = color.replace(/[^\w#(),.%-]/g, "");
+    return `<span style="color: ${cleanColor};">`;
   });
-  
+
   // 2. Convert `<font size="xxx">` to CSS font-size spans
   const sizeMap: Record<string, string> = {
     "1": "12px",
@@ -30,26 +51,26 @@ function formatAnswerHtml(htmlAnswer: string) {
   };
   processed = processed.replace(/<font\s+([^>]*size=["']([^"']+)["'][^>]*)>/gi, (match, attrs, size) => {
     const pxSize = sizeMap[size] || "16px";
-    return `<span style="font-size: ${pxSize};" ${attrs}>`;
+    return `<span style="font-size: ${pxSize};">`;
   });
 
   // 3. Replace closing </font> tags with </span>
   processed = processed.replace(/<\/font>/gi, "</span>");
 
-  // 4. Ensure any existing <a> tags open in new tab
+  // 4. Ensure any existing <a> tags open safely in a new tab
   processed = processed.replace(/<a(\s[^>]*)?>/gi, (match) => {
     if (match.includes("target=")) return match;
     return match.replace("<a", '<a target="_blank" rel="noopener noreferrer"');
   });
 
-  // 5. Autolink Detection: convert raw URLs to links if they aren't inside an anchor tag
+  // 5. Autolink Detection: convert raw URLs to safe links if they aren't inside an anchor tag
   const tagOrUrlRegex = /(<\/?[a-z][^>]*>)/gi;
   const urlRegex = /(https?:\/\/[^\s<"']+)/gi;
-  
+
   const parts = processed.split(tagOrUrlRegex);
   let inAnchor = false;
-  
-  const mappedParts = parts.map(part => {
+
+  const mappedParts = parts.map((part) => {
     if (part.startsWith("<")) {
       if (part.toLowerCase().startsWith("<a")) {
         inAnchor = true;
@@ -60,13 +81,14 @@ function formatAnswerHtml(htmlAnswer: string) {
     } else {
       if (!inAnchor) {
         return part.replace(urlRegex, (url) => {
-          return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+          const safeUrl = encodeURI(url);
+          return `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${url}</a>`;
         });
       }
       return part;
     }
   });
-  
+
   return mappedParts.join("");
 }
 
@@ -123,14 +145,14 @@ export default function FAQ({ faqs, customTitle, customSubtitle }: FAQProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <div className="max-w-[800px] mx-auto px-6 md:px-12">
-        <div className={`text-center mb-12 ${visible ? "animate-fade-in" : "opacity-0"}`}>
-          <h2 className="text-navy font-bold text-2xl md:text-[32px]">{customTitle || "FAQ's"}</h2>
+        <div className="text-center mb-12">
+          <h2 className="text-navy font-bold text-2xl md:text-[32px]">{customTitle || "वारंवार विचारले जाणारे प्रश्न (FAQ)"}</h2>
           <span className="section-underline" />
-          <p className="text-muted font-medium text-base mt-4">{customSubtitle || "तुमचे शंका — आमची उत्तरे"}</p>
+          <p className="text-muted font-medium text-base mt-4">{customSubtitle || "तुमच्या शंका — आमची उत्तरे"}</p>
         </div>
 
         <div
-          className={`space-y-4 ${visible ? "animate-fade-in animate-delay-200" : "opacity-0"}`}
+          className="space-y-4"
           role="region"
           aria-label="वारंवार विचारले जाणारे प्रश्न"
         >

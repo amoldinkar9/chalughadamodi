@@ -85,6 +85,9 @@ This table records real errors encountered in this repository and how they were 
 | **Android SDK Manager Deprecation** | Homebrew `android-commandlinetools` deprecated `sdkmanager` CLI. | Use `android sdk install "platforms;android-36" "build-tools;36.0.0"` and set `sdk.dir` in `android/local.properties`. | 2026-09-18 |
 | **`public/index.html` intercepts root URL on Cloudflare** | Having `public/index.html` causes Cloudflare Assets to serve it directly at `/`, bypassing Next.js SSR worker entirely. | Do not place `index.html` inside `public/`. Keep public purely for assets (images, icons, robots, etc.). | 2026-10-17 |
 | **Path apostrophe breaks OpenNext esbuild** | File paths containing single quotes (e.g. `Amol's MacBook Air`) cause esbuild bundling to fail with syntax errors. | Work and build inside a safe directory path without quotes (e.g., `~/GitHub/chalughadamodi`). | 2026-10-17 |
+| **`public/sitemap.xml` intercepts dynamic route** | Static `public/sitemap.xml` overrides `app/sitemap.xml/route.ts` on Cloudflare, serving stale URLs & cross-domain leakage. | Delete `public/sitemap.xml` and let `app/sitemap.xml/route.ts` dynamically generate host-specific sitemaps. | 2026-10-19 |
+| **Bot invisibility via client-only hydration (`opacity-0`)** | Components guarded with `!mounted` or `opacity-0` hid content from search crawlers in server HTML. | Render SSR-first content directly; avoid blocking initial HTML with client-side mounts. | 2026-10-19 |
+| **Remote D1 hang during static generation** | 300+ dynamic routes querying remote D1 during build time caused build timeouts. | Pruned keyword catalog down to canonical routes; handled redirects via `next.config.ts`. | 2026-10-19 |
 
 ---
 
@@ -144,3 +147,7 @@ npm run build:apk      # Direct CLI build of Android APK (dist-mobile/chalughada
 | 2026-09-18 | Agent | Built Android .apk (Option B) | Completed | Configured OpenJDK 21, Android SDK 36, and built `chalughadamodi.apk` (4.4 MB). |
 | 2026-10-17 | Agent | Added ADMIN_PASSWORD env var to wrangler.jsonc | Completed | Updated wrangler config with secure admin password. |
 | 2026-10-17 | Agent | Resolved fallback screen issue & redeployed | Completed | Removed `public/index.html` intercepting SSR route, rebuilt, and deployed version `c412fcfc`. |
+| 2026-10-19 | Agent | Technical SEO & Multi-Domain Sitemap | Completed | Implemented dynamic host-specific sitemap (`/sitemap.xml`) & robots.txt (`/robots.txt`) ensuring complete domain isolation between `chalughadamodi.in` and `mpsccurrentaffairs.in`. Fixed 301 redirects, SSR hydration, Daily Updates section, NewsArticle + FAQPage schemas, and dead links. |
+| 2026-10-19 | Agent | Full Security Audit & Hardening (OWASP 20) | Completed | Fixed SQL injection across all admin PUT routes via column whitelisting, sanitized stored XSS in FAQ HTML, implemented CSRF origin validation, hardened file uploads with magic bytes & extension mapping, added login rate limiting, upgraded session tokens to SHA-256 HMAC, removed plaintext secrets from wrangler.jsonc, and disabled production source maps. |
+
+

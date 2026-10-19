@@ -5,6 +5,7 @@ import Link from "next/link";
 
 const navLinks = [
   { label: "Home", href: "/#hero" },
+  { label: "Daily Updates", href: "/#daily-updates" },
   { label: "Current Affairs Magazine", href: "/#magazine" },
   { label: "Tests", href: "/#tests" },
   { label: "Contact", href: "/#faq" },
@@ -104,8 +105,10 @@ export default function StickyHeader() {
     if (nameParam) {
       setCookie("tcs9_username", nameParam);
       localStorage.setItem("tcs9_username", nameParam);
-      setUsername(nameParam);
-      setLoggedIn(true);
+      queueMicrotask(() => {
+        setUsername(nameParam);
+        setLoggedIn(true);
+      });
       window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
       return;
     }
@@ -117,15 +120,19 @@ export default function StickyHeader() {
     if (stored) {
       if (!fromCookie) setCookie("tcs9_username", stored);
       if (!fromLS) localStorage.setItem("tcs9_username", stored);
-      setUsername(stored);
-      setLoggedIn(true);
+      queueMicrotask(() => {
+        setUsername(stored);
+        setLoggedIn(true);
+      });
       return;
     }
 
     // 3. loggedIn flag only (name was never captured)
     const wasLoggedIn = getCookie("tcs9_logged_in") || localStorage.getItem("tcs9_logged_in");
     if (wasLoggedIn) {
-      setLoggedIn(true);
+      queueMicrotask(() => {
+        setLoggedIn(true);
+      });
       // Try to fetch the name in the background
       fetchTcs9Name().then((name) => {
         if (name) {
@@ -151,12 +158,42 @@ export default function StickyHeader() {
     return () => window.removeEventListener("storage", onStorage);
   }, []);
 
+  // ── close modal + mark logged in ─────────────────────────────────────────
+  const closeModal = useCallback((afterLogin = false) => {
+    if (profileTimerRef.current) { clearTimeout(profileTimerRef.current); profileTimerRef.current = null; }
+    setModalOpen(false);
+    setLoginSrc("");
+
+    if (!afterLogin) return;
+
+    // Mark as logged in regardless of whether we have the name
+    setLoggedIn(true);
+    setCookie("tcs9_logged_in", "true");
+    localStorage.setItem("tcs9_logged_in", "true");
+
+    // Check if name already arrived in storage
+    const stored = getCookie("tcs9_username") || localStorage.getItem("tcs9_username") || "";
+    if (stored) {
+      setUsername(stored);
+      return;
+    }
+
+    // Try to fetch name from tcs9 profile page
+    fetchTcs9Name().then((name) => {
+      if (name) {
+        setCookie("tcs9_username", name);
+        localStorage.setItem("tcs9_username", name);
+        setUsername(name);
+      }
+    });
+  }, []);
+
   // ── Escape key ────────────────────────────────────────────────────────────
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape" && modalOpen) closeModal(); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [modalOpen]);
+  }, [modalOpen, closeModal]);
 
   // ── cleanup timer ─────────────────────────────────────────────────────────
   useEffect(() => () => { if (profileTimerRef.current) clearTimeout(profileTimerRef.current); }, []);
@@ -194,36 +231,6 @@ export default function StickyHeader() {
     setModalOpen(true);
     setMenuOpen(false);
   };
-
-  // ── close modal + mark logged in ─────────────────────────────────────────
-  const closeModal = useCallback((afterLogin = false) => {
-    if (profileTimerRef.current) { clearTimeout(profileTimerRef.current); profileTimerRef.current = null; }
-    setModalOpen(false);
-    setLoginSrc("");
-
-    if (!afterLogin) return;
-
-    // Mark as logged in regardless of whether we have the name
-    setLoggedIn(true);
-    setCookie("tcs9_logged_in", "true");
-    localStorage.setItem("tcs9_logged_in", "true");
-
-    // Check if name already arrived in storage
-    const stored = getCookie("tcs9_username") || localStorage.getItem("tcs9_username") || "";
-    if (stored) {
-      setUsername(stored);
-      return;
-    }
-
-    // Try to fetch name from tcs9 profile page
-    fetchTcs9Name().then((name) => {
-      if (name) {
-        setCookie("tcs9_username", name);
-        localStorage.setItem("tcs9_username", name);
-        setUsername(name);
-      }
-    });
-  }, []);
 
   // ── iframe load handler ───────────────────────────────────────────────────
   const handleIframeLoad = useCallback(() => {

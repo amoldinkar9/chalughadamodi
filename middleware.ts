@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { APP_CONFIG } from "@/lib/config";
 
-const ADMIN_HOSTNAME = "veronica.chalughadamodi.in";
+const ADMIN_HOSTNAME = APP_CONFIG.domains.adminHostname;
 
 export function middleware(request: NextRequest) {
   const hostname = request.headers.get("host")?.split(":")[0] ?? "";

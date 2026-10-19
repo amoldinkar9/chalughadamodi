@@ -1,69 +1,73 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getDb, mapRows, mapRow } from "@/lib/db";
-import { verifyAdmin } from "@/lib/auth";
+import { NextRequest } from "next/server";
+import { verifyAdmin, verifyCsrf } from "@/lib/auth";
+import {
+  apiSuccess,
+  apiError,
+  apiUnauthorized,
+  apiForbidden,
+  apiNotFound,
+  apiBadRequest,
+} from "@/lib/api/response";
+import { AnnouncementService } from "@/lib/services/content.service";
 
 export async function GET() {
-  if (!(await verifyAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await verifyAdmin())) return apiUnauthorized();
   try {
-    const db = await getDb();
-    const { results } = await db.prepare("SELECT * FROM announcements ORDER BY display_order").all();
-    return NextResponse.json(mapRows(results));
-  } catch (e) {
-    return NextResponse.json({ error: e instanceof Error ? e.message : "DB error" }, { status: 500 });
+    const list = await AnnouncementService.list();
+    return apiSuccess(list);
+  } catch (error) {
+    return apiError(error instanceof Error ? error.message : "Database error");
   }
 }
 
 export async function POST(req: NextRequest) {
-  if (!(await verifyAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!verifyCsrf(req)) return apiForbidden("CSRF validation failed");
+  if (!(await verifyAdmin())) return apiUnauthorized();
+
   try {
-    const body = await req.json() as Record<string, unknown>;
-    const db = await getDb();
-    const id = crypto.randomUUID();
-    const now = new Date().toISOString();
-    const row = await db
-      .prepare("INSERT INTO announcements (id, title, image_url, backlink, published, display_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING *")
-      .bind(id, body.title, body.image_url ?? "", body.backlink ?? "", body.published !== undefined ? (body.published ? 1 : 0) : 1, body.display_order ?? 0, now, now)
-      .first();
-    if (!row) return NextResponse.json({ error: "Insert failed" }, { status: 500 });
-    return NextResponse.json(mapRow(row as Record<string, unknown>));
-  } catch (e) {
-    return NextResponse.json({ error: e instanceof Error ? e.message : "DB error" }, { status: 500 });
+    const body = (await req.json().catch(() => null)) as Record<string, unknown> | null;
+    if (!body) return apiBadRequest("Request body required");
+
+    const created = await AnnouncementService.create(body);
+    return apiSuccess(created, 201);
+  } catch (error) {
+    return apiError(error instanceof Error ? error.message : "Database error");
   }
 }
 
 export async function PUT(req: NextRequest) {
-  if (!(await verifyAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!verifyCsrf(req)) return apiForbidden("CSRF validation failed");
+  if (!(await verifyAdmin())) return apiUnauthorized();
+
   try {
-    const body = await req.json() as Record<string, unknown>;
-    const { id, ...updates } = body;
-    const db = await getDb();
-    const sets: string[] = [];
-    const vals: unknown[] = [];
-    for (const [k, v] of Object.entries(updates)) {
-      if (k === "created_at") continue;
-      sets.push(`${k} = ?`);
-      vals.push(k === "published" ? (v ? 1 : 0) : v);
+    const body = (await req.json().catch(() => null)) as Record<string, unknown> | null;
+    if (!body || !body.id || typeof body.id !== "string") {
+      return apiBadRequest("Valid ID required");
     }
-    sets.push("updated_at = ?");
-    vals.push(new Date().toISOString());
-    vals.push(id);
-    const sql = `UPDATE announcements SET ${sets.join(", ")} WHERE id = ? RETURNING *`;
-    const row = await db.prepare(sql).bind(...vals).first();
-    if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
-    return NextResponse.json(mapRow(row as Record<string, unknown>));
-  } catch (e) {
-    return NextResponse.json({ error: e instanceof Error ? e.message : "DB error" }, { status: 500 });
+
+    const { id, ...updates } = body;
+    const updated = await AnnouncementService.update(id, updates);
+    if (!updated) return apiNotFound("Announcement not found");
+
+    return apiSuccess(updated);
+  } catch (error) {
+    return apiError(error instanceof Error ? error.message : "Database error");
   }
 }
 
 export async function DELETE(req: NextRequest) {
-  if (!(await verifyAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!verifyCsrf(req)) return apiForbidden("CSRF validation failed");
+  if (!(await verifyAdmin())) return apiUnauthorized();
+
   try {
-    const { id } = await req.json() as Record<string, unknown>;
-    const db = await getDb();
-    await db.prepare("DELETE FROM announcements WHERE id = ?").bind(id).run();
-    return NextResponse.json({ success: true });
-  } catch (e) {
-    return NextResponse.json({ error: e instanceof Error ? e.message : "DB error" }, { status: 500 });
+    const body = (await req.json().catch(() => null)) as Record<string, unknown> | null;
+    if (!body || !body.id || typeof body.id !== "string") {
+      return apiBadRequest("Valid ID required");
+    }
+
+    await AnnouncementService.delete(body.id);
+    return apiSuccess({ success: true });
+  } catch (error) {
+    return apiError(error instanceof Error ? error.message : "Database error");
   }
 }

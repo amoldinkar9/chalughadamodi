@@ -1,51 +1,25 @@
-import { Send, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import Link from "next/link";
 
 const footerLinks = [
   { label: "मुख्यपान", href: "/#hero" },
+  { label: "ताज्या घडामोडी", href: "/#daily-updates" },
   { label: "मासिके", href: "/#magazine" },
   { label: "टेस्ट", href: "/#tests" },
-  { label: "About", href: "/about" }, // Let's also fix the About link to point to /about!
+  { label: "About", href: "/about" },
   { label: "Contact", href: "/#faq" },
-  { label: "Privacy Policy", href: "#" },
+  { label: "Privacy Policy", href: "/privacy-policy" },
 ];
 
 const popularKeywordLinks = [
   { label: "चालू घडामोडी 2026", href: "/chalu-ghadamodi-2026" },
+  { label: "चालू घडामोडी 2026 PDF", href: "/chalu-ghadamodi-2026-pdf" },
+  { label: "आजच्या चालू घडामोडी", href: "/today-current-affairs-in-marathi" },
   { label: "MPSC चालू घडामोडी", href: "/mpsc-chalu-ghadamodi" },
   { label: "तलाठी भरती चालू घडामोडी", href: "/talathi-chalu-ghadamodi" },
   { label: "पोलीस भरती चालू घडामोडी", href: "/police-bharti-chalu-ghadamodi" },
   { label: "रेल्वे भरती मराठी", href: "/railway-bharti-marathi" },
-  { label: "मराठी Current Affairs", href: "/current-affairs-marathi" },
-  { label: "चालू घडामोडी PDF", href: "/chalu-ghadamodi-pdf" },
 ];
-
-function InstagramIcon({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-      <circle cx="12" cy="12" r="5" />
-      <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
-    </svg>
-  );
-}
-
-function FacebookIcon({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-    </svg>
-  );
-}
-
-function YoutubeIcon({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
-      <path d="m10 15 5-3-5-3z" />
-    </svg>
-  );
-}
 
 type SocialItem = {
   icon: React.ReactNode;
@@ -54,11 +28,7 @@ type SocialItem = {
 };
 
 const socialIcons: SocialItem[] = [
-  { icon: <InstagramIcon />, href: "#", label: "Instagram" },
-  { icon: <FacebookIcon />, href: "#", label: "Facebook" },
-  { icon: <Send size={20} />, href: "#", label: "Telegram" },
-  { icon: <MessageCircle size={20} />, href: "https://wa.me/919579616908", label: "WhatsApp" },
-  { icon: <YoutubeIcon />, href: "#", label: "Youtube" },
+  { icon: <MessageCircle size={20} />, href: "https://wa.me/919579616908", label: "WhatsApp वर संपर्क करा" },
 ];
 
 export default function Footer() {

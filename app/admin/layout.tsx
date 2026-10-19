@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { verifyAdmin } from "@/lib/auth";
 import { Toaster } from "@/components/ui/sonner";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";

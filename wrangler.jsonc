@@ -39,8 +39,5 @@
       "migrations_dir": "migrations",
       "experimental_remote": true
     }
-  ],
-  "vars": {
-    "ADMIN_PASSWORD": "3103@moL..**"
-  }
+  ]
 }

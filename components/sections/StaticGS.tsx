@@ -36,39 +36,35 @@ export default function StaticGS({ customTitle }: StaticGSProps) {
           </p>
         </div>
 
-        {/* Desktop horizontal */}
-        <div className={`hidden md:flex items-start justify-center gap-0 ${visible ? "animate-fade-in animate-delay-200" : "opacity-0"}`}>
+        {/* Unified Responsive Steps Layout */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0">
           {steps.map((step, i) => (
-            <div key={i} className="contents">
+            <div key={i} className="flex flex-col md:flex-row items-center">
               <div className="flex flex-col items-center text-center w-[260px]">
-                <div className="w-14 h-14 rounded-full border-2 border-gold flex items-center justify-center text-gold font-bold text-xl mb-3">{step.number}</div>
-                <p className="text-gold font-semibold uppercase tracking-widest text-[12px] mb-2">{step.label}</p>
+                <div className="w-14 h-14 rounded-full border-2 border-gold flex items-center justify-center text-gold font-bold text-xl mb-3">
+                  {step.number}
+                </div>
+                <p className="text-gold font-semibold uppercase tracking-widest text-[12px] mb-2">
+                  {step.label}
+                </p>
                 <h3 className="text-navy font-bold text-lg mb-1">{step.heading}</h3>
-                {step.sub && <p className="text-muted font-medium text-sm leading-snug">{step.sub}</p>}
+                {step.sub && (
+                  <p className="text-muted font-medium text-sm leading-snug">{step.sub}</p>
+                )}
               </div>
               {i < steps.length - 1 && (
-                <div className="flex items-center px-4 mt-6"><div className="step-connector-h w-16" /></div>
+                <>
+                  <div className="hidden md:flex items-center px-4">
+                    <div className="step-connector-h w-16" />
+                  </div>
+                  <div className="md:hidden step-connector-v my-3" />
+                </>
               )}
             </div>
           ))}
         </div>
 
-        {/* Mobile vertical */}
-        <div className={`md:hidden flex flex-col items-center ${visible ? "animate-fade-in animate-delay-200" : "opacity-0"}`}>
-          {steps.map((step, i) => (
-            <div key={i} className="flex flex-col items-center">
-              <div className="flex flex-col items-center text-center max-w-[280px]">
-                <div className="w-14 h-14 rounded-full border-2 border-gold flex items-center justify-center text-gold font-bold text-xl mb-3">{step.number}</div>
-                <p className="text-gold font-semibold uppercase tracking-widest text-[12px] mb-2">{step.label}</p>
-                <h3 className="text-navy font-bold text-lg mb-1">{step.heading}</h3>
-                {step.sub && <p className="text-muted font-medium text-sm leading-snug">{step.sub}</p>}
-              </div>
-              {i < steps.length - 1 && <div className="step-connector-v my-2" />}
-            </div>
-          ))}
-        </div>
-
-        <p className={`text-center text-muted text-sm mt-10 ${visible ? "animate-fade-in animate-delay-400" : "opacity-0"}`}>
+        <p className="text-center text-muted text-sm mt-10">
           अशा प्रकारे प्रत्येक चालू घडामोडी आमच्या मासिकात जोडलेली असते.
         </p>
       </div>

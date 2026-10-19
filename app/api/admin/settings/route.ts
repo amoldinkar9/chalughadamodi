@@ -1,22 +1,37 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/db";
-import { verifyAdmin } from "@/lib/auth";
+import { NextRequest } from "next/server";
+import { verifyAdmin, verifyCsrf } from "@/lib/auth";
+import {
+  apiSuccess,
+  apiError,
+  apiUnauthorized,
+  apiForbidden,
+  apiBadRequest,
+} from "@/lib/api/response";
+import { SettingsService } from "@/lib/services/content.service";
 
 export async function GET() {
-  if (!(await verifyAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const db = await getDb();
-  const { results } = await db.prepare("SELECT * FROM site_settings").all();
-  return NextResponse.json(results);
+  if (!(await verifyAdmin())) return apiUnauthorized();
+  try {
+    const settings = await SettingsService.getAll();
+    return apiSuccess(settings);
+  } catch (error) {
+    return apiError(error instanceof Error ? error.message : "Database error");
+  }
 }
 
 export async function PUT(req: NextRequest) {
-  if (!(await verifyAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const { key, value } = await req.json() as Record<string, unknown>;
-  const db = await getDb();
-  const row = await db
-    .prepare("INSERT INTO site_settings (key, value, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at RETURNING *")
-    .bind(key, value, new Date().toISOString())
-    .first();
-  if (!row) return NextResponse.json({ error: "Upsert failed" }, { status: 500 });
-  return NextResponse.json(row);
+  if (!verifyCsrf(req)) return apiForbidden("CSRF validation failed");
+  if (!(await verifyAdmin())) return apiUnauthorized();
+
+  try {
+    const body = (await req.json().catch(() => null)) as Record<string, unknown> | null;
+    if (!body || !body.key || typeof body.key !== "string") {
+      return apiBadRequest("Valid setting key required");
+    }
+
+    const row = await SettingsService.set(body.key, String(body.value ?? ""));
+    return apiSuccess(row);
+  } catch (error) {
+    return apiError(error instanceof Error ? error.message : "Database error");
+  }
 }
