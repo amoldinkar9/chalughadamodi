@@ -8,6 +8,12 @@ import type {
   Test,
   Testimonial,
 } from "@/lib/types";
+import {
+  type SectionItem,
+  DEFAULT_HOMEPAGE_SECTIONS,
+  VALID_SECTION_IDS,
+  parseSectionConfig,
+} from "@/lib/config/sections";
 
 // Column whitelists to prevent SQL injection and unwanted mutations
 const ALLOWED_COLUMNS: Record<string, Set<string>> = {
@@ -311,6 +317,63 @@ export const SettingsService = {
 
     if (!row) throw new Error("Upsert failed");
     return row;
+  },
+};
+
+/**
+ * Section Manager Service for Homepage & Landing Page Sections
+ */
+export const SectionService = {
+  async getSections(): Promise<SectionItem[]> {
+    try {
+      const db = await getDb();
+      const row = await db
+        .prepare("SELECT value FROM site_settings WHERE key = 'homepage_sections'")
+        .first<{ value: string }>();
+      return parseSectionConfig(row?.value);
+    } catch {
+      return parseSectionConfig(null);
+    }
+  },
+
+  async saveSections(
+    sections: Array<{ id: string; enabled: boolean }>
+  ): Promise<SectionItem[]> {
+    if (!Array.isArray(sections)) {
+      throw new Error("Invalid sections payload: Expected array");
+    }
+
+    const cleanList: Array<{ id: string; enabled: boolean }> = [];
+    const seen = new Set<string>();
+
+    for (const item of sections) {
+      if (
+        item &&
+        typeof item.id === "string" &&
+        VALID_SECTION_IDS.has(item.id) &&
+        !seen.has(item.id)
+      ) {
+        cleanList.push({
+          id: item.id,
+          enabled: item.enabled !== false,
+        });
+        seen.add(item.id);
+      }
+    }
+
+    // Append any omitted sections from default list to ensure none are orphaned
+    for (const def of DEFAULT_HOMEPAGE_SECTIONS) {
+      if (!seen.has(def.id)) {
+        cleanList.push({
+          id: def.id,
+          enabled: def.enabled,
+        });
+      }
+    }
+
+    const jsonString = JSON.stringify(cleanList);
+    await SettingsService.set("homepage_sections", jsonString);
+    return parseSectionConfig(jsonString);
   },
 };
 

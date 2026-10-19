@@ -41,6 +41,13 @@ Whenever a new agent session begins:
   - Configure native Push Notifications (`@capacitor/push-notifications`) for breaking news alerts.
 
 ### 🟢 Completed Milestones
+- **Homepage & Landing Page Dynamic Section Manager (Admin Panel)**:
+  - Created typed configuration schema & parser in `lib/config/sections.ts`.
+  - Added `SectionService` in `lib/services/content.service.ts` backed by `site_settings` in D1.
+  - Added secure API endpoint `app/api/admin/sections/route.ts` with CSRF protection and admin session validation.
+  - Built interactive Drag-and-Drop and Up/Down reorder UI with toggle switches in `components/admin/SectionManager.tsx` and `app/admin/sections/page.tsx`.
+  - Rendered homepage (`app/page.tsx`) and keyword landing pages (`app/[keyword]/page.tsx`) dynamically according to configured section sequence and enabled/disabled state.
+  - Added navigation item in `AdminSidebar.tsx` and quick access widget on `AdminDashboard.tsx`.
 - **Android `.apk` File Built**:
   - Configured OpenJDK 21 via Homebrew and installed Android SDK 36 (`platforms;android-36`, `build-tools;35.0.0/36.0.0`).
   - Compiled with Gradle (`./android/gradlew assembleDebug`).

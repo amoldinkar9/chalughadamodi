@@ -3,7 +3,7 @@ import { verifyAdmin } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Megaphone, Newspaper, BookOpen, ClipboardList, MessageSquareQuote, HelpCircle, ExternalLink } from "lucide-react";
+import { Megaphone, Newspaper, BookOpen, ClipboardList, MessageSquareQuote, HelpCircle, ExternalLink, Sliders } from "lucide-react";
 import Link from "next/link";
 
 async function getCounts() {
@@ -36,7 +36,7 @@ export default async function AdminDashboard() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold mb-1">Dashboard</h1>
           <p className="text-muted-foreground">Manage your website content</p>
@@ -48,6 +48,27 @@ export default async function AdminDashboard() {
         >
           <ExternalLink size={16} />
           View Website
+        </Link>
+      </div>
+
+      {/* Quick Access to Sections Layout Manager */}
+      <div className="mb-6 p-4 rounded-xl border bg-gradient-to-r from-primary/10 via-primary/5 to-transparent flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-lg bg-primary text-primary-foreground">
+            <Sliders size={22} />
+          </div>
+          <div>
+            <h2 className="font-semibold text-base">Homepage Sections & Layout Order</h2>
+            <p className="text-sm text-muted-foreground">
+              Enable/disable specific sections or drag and drop to change their display order.
+            </p>
+          </div>
+        </div>
+        <Link
+          href="/admin/sections"
+          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2 shrink-0"
+        >
+          Manage Sections Order
         </Link>
       </div>
 

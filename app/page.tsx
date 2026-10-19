@@ -12,6 +12,7 @@ import FinalCTA from "@/components/sections/FinalCTA";
 import Footer from "@/components/sections/Footer";
 import { getDb, mapRows } from "@/lib/db";
 import type { PublicContent } from "@/lib/types";
+import { SectionService } from "@/lib/services/content.service";
 
 // Fallback data in case D1 is not configured yet
 const fallbackContent: PublicContent = {
@@ -135,7 +136,11 @@ function getCategoryDetails(slug?: string) {
 }
 
 export default async function Home({ heroTitle, keywordSlug }: { heroTitle?: string; keywordSlug?: string }) {
-  const [content, heroImages] = await Promise.all([getContent(), getHeroImageUrls()]);
+  const [content, heroImages, sections] = await Promise.all([
+    getContent(),
+    getHeroImageUrls(),
+    SectionService.getSections(),
+  ]);
 
   const catDetails = getCategoryDetails(keywordSlug);
   const keywords = catDetails.keywords;
@@ -193,16 +198,43 @@ export default async function Home({ heroTitle, keywordSlug }: { heroTitle?: str
     <>
       <StickyHeader />
       <main>
-        <Hero imageUrl={heroImages.imageUrl} mobileImageUrl={heroImages.mobileImageUrl} customTitle={heroTitle} imageLink={heroImages.imageLink} mobileImageLink={heroImages.mobileImageLink} />
-        <DailyUpdates />
-        <Announcements announcements={announcements} />
-        <Magazine magazines={content.magazines} />
-        <StaticGS customTitle={staticGSTitle} />
-        <Tests tests={content.tests} />
-        <Gallery posts={gallery} />
-        <Testimonials testimonials={testimonials} />
-        <FAQ faqs={faqs} customTitle={faqTitle} customSubtitle={faqSubtitle} />
-        <FinalCTA />
+        {sections
+          .filter((s) => s.enabled)
+          .map((s) => {
+            switch (s.id) {
+              case "hero":
+                return (
+                  <Hero
+                    key="hero"
+                    imageUrl={heroImages.imageUrl}
+                    mobileImageUrl={heroImages.mobileImageUrl}
+                    customTitle={heroTitle}
+                    imageLink={heroImages.imageLink}
+                    mobileImageLink={heroImages.mobileImageLink}
+                  />
+                );
+              case "daily_updates":
+                return <DailyUpdates key="daily_updates" />;
+              case "announcements":
+                return <Announcements key="announcements" announcements={announcements} />;
+              case "magazine":
+                return <Magazine key="magazine" magazines={content.magazines} />;
+              case "static_gs":
+                return <StaticGS key="static_gs" customTitle={staticGSTitle} />;
+              case "tests":
+                return <Tests key="tests" tests={content.tests} />;
+              case "gallery":
+                return <Gallery key="gallery" posts={gallery} />;
+              case "testimonials":
+                return <Testimonials key="testimonials" testimonials={testimonials} />;
+              case "faq":
+                return <FAQ key="faq" faqs={faqs} customTitle={faqTitle} customSubtitle={faqSubtitle} />;
+              case "final_cta":
+                return <FinalCTA key="final_cta" />;
+              default:
+                return null;
+            }
+          })}
       </main>
       <Footer />
     </>
