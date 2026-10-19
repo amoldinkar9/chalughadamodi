@@ -2,11 +2,13 @@ import type { NextConfig } from "next";
 import { resolve } from "path";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
-initOpenNextCloudflareForDev({
-  experimental: {
-    remoteBindings: true,
-  },
-} as unknown as Parameters<typeof initOpenNextCloudflareForDev>[0]);
+if (process.env.NODE_ENV === "development") {
+  initOpenNextCloudflareForDev({
+    experimental: {
+      remoteBindings: true,
+    },
+  } as unknown as Parameters<typeof initOpenNextCloudflareForDev>[0]);
+}
 
 const securityHeaders = [
   {
@@ -91,9 +93,6 @@ const nextConfig: NextConfig = {
     const staticCacheHeaders = isDev
       ? [{ key: "Cache-Control", value: "no-store, no-cache, must-revalidate, proxy-revalidate" }]
       : [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }];
-    const imageCacheHeaders = isDev
-      ? [{ key: "Cache-Control", value: "no-store, no-cache, must-revalidate" }]
-      : [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }];
 
     return [
       {
@@ -107,10 +106,6 @@ const nextConfig: NextConfig = {
       {
         source: "/(.*)\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)",
         headers: staticCacheHeaders,
-      },
-      {
-        source: "/_next/image(.*)",
-        headers: imageCacheHeaders,
       },
     ];
   },
@@ -186,9 +181,11 @@ const nextConfig: NextConfig = {
       { source: "/mumbai-police-bharti", destination: "/police-bharti-chalu-ghadamodi", permanent: true },
 
       // 8. Doorway pages: city classes and libraries
-      { source: "/mpsc-classes-in-:city*", destination: "/mpsc-chalu-ghadamodi", permanent: true },
+      { source: "/mpsc-classes-in-:city", destination: "/mpsc-chalu-ghadamodi", permanent: true },
+      { source: "/mpsc-classes-in-:city/:path*", destination: "/mpsc-chalu-ghadamodi", permanent: true },
       { source: "/best-mpsc-classes-in-maharashtra", destination: "/mpsc-chalu-ghadamodi", permanent: true },
-      { source: "/mpsc-library-in-:city*", destination: "/mpsc-chalu-ghadamodi", permanent: true },
+      { source: "/mpsc-library-in-:city", destination: "/mpsc-chalu-ghadamodi", permanent: true },
+      { source: "/mpsc-library-in-:city/:path*", destination: "/mpsc-chalu-ghadamodi", permanent: true },
 
       // 9. Past year pages
       { source: "/chalu-ghadamodi-2019-marathi", destination: "/chalu-ghadamodi-2026", permanent: true },

@@ -88,6 +88,9 @@ This table records real errors encountered in this repository and how they were 
 | **`public/sitemap.xml` intercepts dynamic route** | Static `public/sitemap.xml` overrides `app/sitemap.xml/route.ts` on Cloudflare, serving stale URLs & cross-domain leakage. | Delete `public/sitemap.xml` and let `app/sitemap.xml/route.ts` dynamically generate host-specific sitemaps. | 2026-10-19 |
 | **Bot invisibility via client-only hydration (`opacity-0`)** | Components guarded with `!mounted` or `opacity-0` hid content from search crawlers in server HTML. | Render SSR-first content directly; avoid blocking initial HTML with client-side mounts. | 2026-10-19 |
 | **Remote D1 hang during static generation** | 300+ dynamic routes querying remote D1 during build time caused build timeouts. | Pruned keyword catalog down to canonical routes; handled redirects via `next.config.ts`. | 2026-10-19 |
+| **Path-to-regexp wildcards without prefix/suffix (`:city*`)** | Next.js 16 build fails with `TypeError: Can not repeat "city" without a prefix and suffix` when wildcards are attached after hyphens (e.g. `/mpsc-classes-in-:city*`). | Use exact segment `/mpsc-classes-in-:city` and child segment `/mpsc-classes-in-:city/:path*` instead. | 2026-10-19 |
+| **`experimental_remote` in wrangler.jsonc** | Cloudflare Wrangler v4 warns on `experimental_remote` under `r2_buckets` and `d1_databases`. | Remove `experimental_remote: true` from `wrangler.jsonc`. | 2026-10-19 |
+| **`initOpenNextCloudflareForDev` during production builds** | Unconditional execution in `next.config.ts` initializes dev remote bindings during `next build` on CI. | Wrap in `if (process.env.NODE_ENV === "development")`. | 2026-10-19 |
 
 ---
 
