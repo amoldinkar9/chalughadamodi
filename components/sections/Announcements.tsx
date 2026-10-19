@@ -69,18 +69,21 @@ export default function Announcements({ announcements }: AnnouncementsProps) {
                   rel={linkUrl.startsWith("http") ? "noopener noreferrer" : undefined}
                   className="flex-shrink-0 w-full snap-center group block rounded-lg overflow-hidden border border-border card-hover shadow-sm"
                 >
-                  <div className="relative w-full bg-gradient-to-r from-navy via-navy/90 to-navy-soft flex items-center justify-between p-6 md:p-8" style={{ minHeight: "120px" }}>
-                    {item.image_url ? (
+                  {item.image_url ? (
+                    <div className="relative w-full overflow-hidden bg-navy/5" style={{ aspectRatio: "32/9" }}>
                       <Image
                         src={item.image_url}
                         alt={item.title}
                         fill
                         className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                        sizes="(max-width: 768px) 100vw, 1152px"
+                        sizes="(max-width: 768px) 100vw, 1200px"
                         priority={idx === 0}
                         loading={idx === 0 ? "eager" : "lazy"}
                       />
-                    ) : (
+                      <div className="absolute inset-0 bg-navy/0 group-hover:bg-navy/10 transition-colors duration-300 pointer-events-none" />
+                    </div>
+                  ) : (
+                    <div className="relative w-full bg-gradient-to-r from-navy via-navy/90 to-navy-soft flex items-center justify-between p-6 md:p-8" style={{ minHeight: "120px" }}>
                       <div className="flex flex-col md:flex-row items-start md:items-center justify-between w-full gap-4">
                         <div>
                           <span className="text-gold text-xs font-bold uppercase tracking-wider block mb-1">
@@ -94,9 +97,9 @@ export default function Announcements({ announcements }: AnnouncementsProps) {
                           अधिक माहिती पहा →
                         </span>
                       </div>
-                    )}
-                    <div className="absolute inset-0 bg-navy/0 group-hover:bg-navy/10 transition-colors duration-300 pointer-events-none" />
-                  </div>
+                      <div className="absolute inset-0 bg-navy/0 group-hover:bg-navy/10 transition-colors duration-300 pointer-events-none" />
+                    </div>
+                  )}
                 </a>
               );
             })}

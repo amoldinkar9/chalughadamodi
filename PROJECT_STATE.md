@@ -163,6 +163,7 @@ npm run build:apk      # Direct CLI build of Android APK (dist-mobile/chalughada
 | 2026-10-19 | Agent | Technical SEO & Multi-Domain Sitemap | Completed | Implemented dynamic host-specific sitemap (`/sitemap.xml`) & robots.txt (`/robots.txt`) ensuring complete domain isolation between `chalughadamodi.in` and `mpsccurrentaffairs.in`. Fixed 301 redirects, SSR hydration, Daily Updates section, NewsArticle + FAQPage schemas, and dead links. |
 | 2026-10-19 | Agent | Full Security Audit & Hardening (OWASP 20) | Completed | Fixed SQL injection across all admin PUT routes via column whitelisting, sanitized stored XSS in FAQ HTML, implemented CSRF origin validation, hardened file uploads with magic bytes & extension mapping, added login rate limiting, upgraded session tokens to SHA-256 HMAC, removed plaintext secrets from wrangler.jsonc, and disabled production source maps. |
 | 2026-10-19 | Agent | Fixed Section Manager Reset on Hard Refresh | Completed | Resolved client JSON parser expecting `{ data }` instead of direct array, added SSR prefetching of `initialSections`, added POST handler alias for beacon saves, and verified live site section exclusion. |
+| 2026-10-19 | Agent | Restored 32:9 Announcement Banner Aspect Ratio | Completed | Separated image container from fallback text notice in `Announcements.tsx`, restoring `aspectRatio: '32/9'` and removing 120px height/padding constraints. |
 
 
 
