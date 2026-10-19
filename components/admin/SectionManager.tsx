@@ -13,6 +13,8 @@ import {
   Eye,
   Sliders,
   ExternalLink,
+  Layers,
+  AlertCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -152,7 +154,7 @@ export function SectionManager() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center space-y-3">
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-sm text-muted-foreground">Loading sections layout...</p>
+          <p className="text-sm font-medium text-foreground">Loading sections layout...</p>
         </div>
       </div>
     );
@@ -161,23 +163,27 @@ export function SectionManager() {
   return (
     <div className="space-y-6 max-w-5xl">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-border pb-5">
         <div>
-          <div className="flex items-center gap-2">
-            <Sliders className="h-6 w-6 text-primary" />
-            <h1 className="text-2xl font-bold tracking-tight">Homepage Section Manager</h1>
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-lg bg-primary text-primary-foreground shadow-sm">
+              <Sliders className="h-5 w-5" />
+            </div>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+              Homepage Section Manager
+            </h1>
           </div>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm font-medium text-slate-600 dark:text-slate-300 mt-1.5">
             Enable or disable sections, or drag and drop to reorder their display sequence across the homepage and keyword landing pages.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <Button
             variant="outline"
             size="sm"
             onClick={() => window.open("/", "_blank")}
-            className="gap-2"
+            className="gap-2 font-medium border-slate-300 dark:border-slate-700 text-foreground hover:bg-slate-100 dark:hover:bg-slate-800"
           >
             <ExternalLink size={15} />
             View Live Site
@@ -187,7 +193,7 @@ export function SectionManager() {
             onClick={handleSave}
             disabled={saving || !hasChanges}
             size="sm"
-            className="gap-2 min-w-[130px]"
+            className="gap-2 min-w-[130px] font-semibold shadow"
           >
             {saving ? (
               <>
@@ -204,87 +210,94 @@ export function SectionManager() {
         </div>
       </div>
 
-      {/* Stats and Action Bar */}
+      {/* Stats and Action Bar - High Contrast */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="bg-card/50">
+        {/* Total Sections Card */}
+        <Card className="bg-card border-slate-200 dark:border-slate-800 shadow-sm">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                 Total Sections
               </p>
-              <p className="text-2xl font-bold mt-1">{sections.length}</p>
+              <p className="text-3xl font-extrabold text-foreground mt-1">
+                {sections.length}
+              </p>
             </div>
-            <div className="p-2.5 rounded-full bg-primary/10 text-primary">
-              <Sliders size={20} />
+            <div className="p-3 rounded-xl bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
+              <Layers size={22} />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-card/50">
+        {/* Active Sections Card */}
+        <Card className="bg-card border-emerald-200 dark:border-emerald-900/50 shadow-sm">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+              <p className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
                 Active / Visible
               </p>
-              <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
+              <p className="text-3xl font-extrabold text-emerald-700 dark:text-emerald-400 mt-1">
                 {activeCount}
               </p>
             </div>
-            <div className="p-2.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-              <Eye size={20} />
+            <div className="p-3 rounded-xl bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+              <Eye size={22} />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-card/50">
+        {/* Disabled Sections Card */}
+        <Card className="bg-card border-amber-200 dark:border-amber-900/50 shadow-sm">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+              <p className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400">
                 Disabled / Hidden
               </p>
-              <p className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1">
+              <p className="text-3xl font-extrabold text-amber-700 dark:text-amber-400 mt-1">
                 {disabledCount}
               </p>
             </div>
-            <div className="p-2.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400">
-              <EyeOff size={20} />
+            <div className="p-3 rounded-xl bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
+              <EyeOff size={22} />
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Quick Controls */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-muted/40 p-3 rounded-lg border text-sm">
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <span className="font-medium text-foreground">Controls:</span>
-          <span>Drag via handle or click ▲ ▼ to reorder.</span>
+      {/* Quick Controls Bar - High Contrast */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-100/80 dark:bg-slate-900/80 p-3.5 rounded-xl border border-slate-300 dark:border-slate-800 text-sm">
+        <div className="flex items-center gap-2.5 text-foreground">
+          <span className="font-bold text-foreground">Controls:</span>
+          <span className="text-slate-700 dark:text-slate-300">
+            Drag via the grip handle or use ▲ ▼ buttons to reorder.
+          </span>
         </div>
 
         <div className="flex items-center gap-2">
           <Button
             type="button"
-            variant="ghost"
+            variant="outline"
             size="sm"
             onClick={() => handleToggleAll(true)}
-            className="text-xs h-8"
+            className="text-xs h-8 font-semibold bg-background border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
           >
             Enable All
           </Button>
           <Button
             type="button"
-            variant="ghost"
+            variant="outline"
             size="sm"
             onClick={() => handleToggleAll(false)}
-            className="text-xs h-8"
+            className="text-xs h-8 font-semibold bg-background border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
           >
             Disable All
           </Button>
           <Button
             type="button"
-            variant="ghost"
+            variant="outline"
             size="sm"
             onClick={handleReset}
-            className="text-xs h-8 gap-1"
+            className="text-xs h-8 gap-1.5 font-semibold bg-background border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
           >
             <RotateCcw size={13} />
             Reset Order
@@ -292,21 +305,20 @@ export function SectionManager() {
         </div>
       </div>
 
-      {/* Unsaved alert banner */}
+      {/* Unsaved alert banner - High Contrast Vivid Amber */}
       {hasChanges && (
-        <div className="flex items-center justify-between bg-primary/10 border border-primary/20 text-primary px-4 py-3 rounded-lg text-sm">
-          <div className="flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+        <div className="flex items-center justify-between bg-amber-50 dark:bg-amber-950/60 border-2 border-amber-400 dark:border-amber-600 text-amber-950 dark:text-amber-100 px-4 py-3 rounded-xl shadow-sm">
+          <div className="flex items-center gap-2.5">
+            <AlertCircle className="h-5 w-5 text-amber-700 dark:text-amber-300 shrink-0" />
+            <span className="font-bold text-sm">
+              Unsaved changes: Click &quot;Save Layout&quot; to apply this section order to the live site.
             </span>
-            <span className="font-medium">You have unsaved layout modifications.</span>
           </div>
           <Button
             size="sm"
             onClick={handleSave}
             disabled={saving}
-            className="h-8 gap-1.5"
+            className="h-8 gap-1.5 font-bold shadow bg-amber-600 hover:bg-amber-700 text-white border-0"
           >
             <Save size={14} />
             Save Now
@@ -314,8 +326,8 @@ export function SectionManager() {
         </div>
       )}
 
-      {/* Draggable Sections List */}
-      <div className="space-y-3">
+      {/* Draggable Sections List - High Contrast Cards */}
+      <div className="space-y-3.5">
         {sections.map((section, index) => {
           const isDragging = draggedIdx === index;
           const isOver = dragOverIdx === index;
@@ -328,65 +340,80 @@ export function SectionManager() {
               onDragOver={(e) => handleDragOver(e, index)}
               onDrop={(e) => handleDrop(e, index)}
               onDragEnd={handleDragEnd}
-              className={`group relative flex items-center justify-between gap-4 p-4 rounded-xl border bg-card transition-all duration-150 ${
-                !section.enabled ? "opacity-60 bg-muted/20 border-dashed" : "shadow-sm hover:border-primary/50"
-              } ${isDragging ? "opacity-25 border-primary border-2 scale-[0.99]" : ""} ${
-                isOver ? "border-primary ring-2 ring-primary/20 bg-primary/5" : ""
+              className={`group relative flex items-center justify-between gap-4 p-4 rounded-xl border transition-all duration-150 ${
+                !section.enabled
+                  ? "bg-slate-100/70 dark:bg-slate-900/60 border-dashed border-slate-400 dark:border-slate-700"
+                  : "bg-card border-slate-300 dark:border-slate-800 shadow-sm hover:border-primary/80 hover:shadow-md"
+              } ${
+                isDragging ? "opacity-30 border-primary border-2 scale-[0.99]" : ""
+              } ${
+                isOver ? "border-primary ring-2 ring-primary/30 bg-primary/10" : ""
               }`}
             >
               {/* Left Column: Drag handle + Index + Title */}
               <div className="flex items-center gap-3.5 min-w-0">
+                {/* Drag Grip Handle */}
                 <div
-                  className="cursor-grab active:cursor-grabbing p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  className="cursor-grab active:cursor-grabbing p-2 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
                   title="Drag and drop to reorder"
                 >
                   <GripVertical size={20} />
                 </div>
 
-                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-muted text-xs font-bold text-muted-foreground shrink-0">
+                {/* Section Position Badge - High Contrast */}
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 font-extrabold text-sm shrink-0 shadow-sm">
                   {index + 1}
                 </div>
 
+                {/* Section Details */}
                 <div className="min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold text-base text-foreground truncate">
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    {/* Primary English Name */}
+                    <span className="font-bold text-base text-foreground truncate">
                       {section.name}
                     </span>
-                    <span className="text-xs text-muted-foreground font-medium px-2 py-0.5 rounded bg-muted/60">
+
+                    {/* Marathi Tag - High Contrast Pill */}
+                    <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-200/90 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700">
                       {section.marathiName}
                     </span>
+
+                    {/* Visibility Status Badge */}
                     {section.enabled ? (
                       <Badge
                         variant="outline"
-                        className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-[11px] gap-1"
+                        className="bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200 border-emerald-300 dark:border-emerald-700 text-xs font-bold gap-1 px-2.5 py-0.5 shadow-none"
                       >
-                        <CheckCircle2 size={12} />
+                        <CheckCircle2 size={13} className="text-emerald-700 dark:text-emerald-400" />
                         Active
                       </Badge>
                     ) : (
                       <Badge
                         variant="outline"
-                        className="bg-muted text-muted-foreground border-muted-foreground/20 text-[11px] gap-1"
+                        className="bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200 border-amber-300 dark:border-amber-700 text-xs font-bold gap-1 px-2.5 py-0.5 shadow-none"
                       >
-                        <EyeOff size={12} />
+                        <EyeOff size={13} className="text-amber-700 dark:text-amber-400" />
                         Hidden
                       </Badge>
                     )}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+
+                  {/* Description - Crisp Readable Text */}
+                  <p className="text-xs font-medium text-slate-600 dark:text-slate-300 mt-1 line-clamp-1">
                     {section.description}
                   </p>
                 </div>
               </div>
 
               {/* Right Column: Up/Down buttons + Switch */}
-              <div className="flex items-center gap-3 shrink-0">
-                <div className="flex items-center gap-1 border-r pr-3">
+              <div className="flex items-center gap-3.5 shrink-0">
+                {/* Single-Click Reorder Buttons */}
+                <div className="flex items-center gap-1.5 border-r border-slate-300 dark:border-slate-700 pr-3.5">
                   <Button
                     type="button"
-                    variant="ghost"
+                    variant="outline"
                     size="icon"
-                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                    className="h-8 w-8 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 disabled:opacity-40"
                     disabled={index === 0}
                     onClick={() => moveSection(index, index - 1)}
                     title="Move section up"
@@ -395,9 +422,9 @@ export function SectionManager() {
                   </Button>
                   <Button
                     type="button"
-                    variant="ghost"
+                    variant="outline"
                     size="icon"
-                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                    className="h-8 w-8 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 disabled:opacity-40"
                     disabled={index === sections.length - 1}
                     onClick={() => moveSection(index, index + 1)}
                     title="Move section down"
@@ -406,8 +433,11 @@ export function SectionManager() {
                   </Button>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground hidden sm:inline">
+                {/* Enable / Disable Switch */}
+                <div className="flex items-center gap-2.5">
+                  <span className={`text-xs font-bold hidden sm:inline ${
+                    section.enabled ? "text-emerald-700 dark:text-emerald-400" : "text-amber-700 dark:text-amber-400"
+                  }`}>
                     {section.enabled ? "Enabled" : "Disabled"}
                   </span>
                   <Switch
@@ -429,7 +459,7 @@ export function SectionManager() {
             size="lg"
             onClick={handleSave}
             disabled={saving}
-            className="shadow-lg gap-2 px-6"
+            className="shadow-xl gap-2 px-7 font-bold text-base"
           >
             {saving ? "Saving Changes..." : "Save Section Layout"}
           </Button>
