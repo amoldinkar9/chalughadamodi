@@ -100,6 +100,7 @@ This table records real errors encountered in this repository and how they were 
 | **`initOpenNextCloudflareForDev` during production builds** | Unconditional execution in `next.config.ts` initializes dev remote bindings during `next build` on CI. | Wrap in `if (process.env.NODE_ENV === "development")`. | 2026-10-19 |
 | **Empty `ADMIN_PASSWORD` causing failed logins** | If `ADMIN_PASSWORD` is missing from worker env, `getAdminPassword()` returns empty string, rejecting all passwords. | Set fallback password in `lib/auth.ts` and ensure `vars.ADMIN_PASSWORD` is defined in `wrangler.jsonc` and `.env.local`. | 2026-10-19 |
 | **Admin hostname 404 in `middleware.ts`** | `middleware.ts` only permitted `veronica.chalughadamodi.in`, returning 404 when navigating to `chalughadamodi.in/admin`. | Allowed primary (`chalughadamodi.in`) and secondary (`mpsccurrentaffairs.in`) alongside `veronica` and localhost. | 2026-10-19 |
+| **SectionManager reset on hard refresh** | `apiSuccess(sections)` returns raw `SectionItem[]`, while client expected `{ data: [...] }`. `json.data` evaluated to `undefined`, falling back to `DEFAULT_HOMEPAGE_SECTIONS`. | Support both `Array.isArray(json)` and `json?.data`, prefetch `initialSections` in `AdminSectionsPage` via SSR, and use `.all()` in `SectionService.getSections()`. | 2026-10-19 |
 
 ---
 
@@ -161,5 +162,7 @@ npm run build:apk      # Direct CLI build of Android APK (dist-mobile/chalughada
 | 2026-10-17 | Agent | Resolved fallback screen issue & redeployed | Completed | Removed `public/index.html` intercepting SSR route, rebuilt, and deployed version `c412fcfc`. |
 | 2026-10-19 | Agent | Technical SEO & Multi-Domain Sitemap | Completed | Implemented dynamic host-specific sitemap (`/sitemap.xml`) & robots.txt (`/robots.txt`) ensuring complete domain isolation between `chalughadamodi.in` and `mpsccurrentaffairs.in`. Fixed 301 redirects, SSR hydration, Daily Updates section, NewsArticle + FAQPage schemas, and dead links. |
 | 2026-10-19 | Agent | Full Security Audit & Hardening (OWASP 20) | Completed | Fixed SQL injection across all admin PUT routes via column whitelisting, sanitized stored XSS in FAQ HTML, implemented CSRF origin validation, hardened file uploads with magic bytes & extension mapping, added login rate limiting, upgraded session tokens to SHA-256 HMAC, removed plaintext secrets from wrangler.jsonc, and disabled production source maps. |
+| 2026-10-19 | Agent | Fixed Section Manager Reset on Hard Refresh | Completed | Resolved client JSON parser expecting `{ data }` instead of direct array, added SSR prefetching of `initialSections`, added POST handler alias for beacon saves, and verified live site section exclusion. |
+
 
 

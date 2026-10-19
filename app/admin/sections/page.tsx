@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { verifyAdmin } from "@/lib/auth";
+import { SectionService } from "@/lib/services/content.service";
 import { SectionManager } from "@/components/admin/SectionManager";
 
 export const metadata: Metadata = {
@@ -6,6 +9,14 @@ export const metadata: Metadata = {
   description: "Configure homepage and keyword page section ordering and visibility",
 };
 
-export default function AdminSectionsPage() {
-  return <SectionManager />;
+export const dynamic = "force-dynamic";
+
+export default async function AdminSectionsPage() {
+  const isAdmin = await verifyAdmin();
+  if (!isAdmin) redirect("/admin/login");
+
+  const initialSections = await SectionService.getSections();
+
+  return <SectionManager initialSections={initialSections} />;
 }
+

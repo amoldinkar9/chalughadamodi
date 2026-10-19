@@ -52,3 +52,8 @@ export async function PUT(req: NextRequest) {
     return apiError(error instanceof Error ? error.message : "Database error");
   }
 }
+
+export async function POST(req: NextRequest) {
+  return PUT(req);
+}
+

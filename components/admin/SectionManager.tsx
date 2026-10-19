@@ -23,11 +23,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { SectionItem } from "@/lib/config/sections";
 import { DEFAULT_HOMEPAGE_SECTIONS } from "@/lib/config/sections";
 
-const LOCAL_STORAGE_KEY = "cg_sections_order_backup";
+interface SectionManagerProps {
+  initialSections?: SectionItem[];
+}
 
-export function SectionManager() {
-  const [sections, setSections] = useState<SectionItem[]>([]);
-  const [loading, setLoading] = useState(true);
+export function SectionManager({ initialSections }: SectionManagerProps) {
+  const [sections, setSections] = useState<SectionItem[]>(() => {
+    if (initialSections && initialSections.length > 0) {
+      return initialSections;
+    }
+    return [];
+  });
+  const [loading, setLoading] = useState(() => !initialSections || initialSections.length === 0);
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved" | "error">("saved");
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
@@ -46,13 +53,6 @@ export function SectionManager() {
     try {
       const payload = listToSave.map((s) => ({ id: s.id, enabled: s.enabled }));
 
-      // Also backup to localStorage immediately
-      try {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(listToSave));
-      } catch {
-        // ignore localStorage quota
-      }
-
       const res = await fetch("/api/admin/sections", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -64,8 +64,12 @@ export function SectionManager() {
         throw new Error(errJson.error || "Failed to persist changes");
       }
 
-      const json = (await res.json()) as { success: boolean; data: SectionItem[] };
-      const savedData = json.data || listToSave;
+      const json = (await res.json()) as SectionItem[] | { data?: SectionItem[] };
+      const savedData: SectionItem[] = Array.isArray(json)
+        ? json
+        : Array.isArray(json?.data)
+        ? json.data
+        : listToSave;
       setSections(savedData);
       setSaveStatus("saved");
 
@@ -99,35 +103,25 @@ export function SectionManager() {
         });
 
         if (!res.ok) throw new Error("Failed to load section configuration");
-        const json = (await res.json()) as { success: boolean; data: SectionItem[] };
-        const data = json.data || DEFAULT_HOMEPAGE_SECTIONS;
+        const json = (await res.json()) as SectionItem[] | { data?: SectionItem[] };
+        const data: SectionItem[] = Array.isArray(json)
+          ? json
+          : Array.isArray(json?.data)
+          ? json.data
+          : (initialSections && initialSections.length > 0 ? initialSections : DEFAULT_HOMEPAGE_SECTIONS);
         setSections(data);
         setSaveStatus("saved");
       } catch (err) {
-        // Try fallback to localStorage
-        try {
-          const cached = localStorage.getItem(LOCAL_STORAGE_KEY);
-          if (cached) {
-            const parsed = JSON.parse(cached);
-            if (Array.isArray(parsed) && parsed.length > 0) {
-              setSections(parsed);
-              setSaveStatus("saved");
-              setLoading(false);
-              return;
-            }
-          }
-        } catch {
-          // ignore
-        }
-
         toast.error(err instanceof Error ? err.message : "Error loading sections");
-        setSections(DEFAULT_HOMEPAGE_SECTIONS);
+        if (initialSections && initialSections.length > 0) {
+          setSections(initialSections);
+        }
       } finally {
         setLoading(false);
       }
     }
     loadSections();
-  }, []);
+  }, [initialSections]);
 
   // Flush any pending save on unmount or tab close
   useEffect(() => {

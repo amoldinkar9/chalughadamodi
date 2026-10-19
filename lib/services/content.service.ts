@@ -345,11 +345,13 @@ export const SectionService = {
   async getSections(): Promise<SectionItem[]> {
     try {
       const db = await getDb();
-      const row = await db
+      const { results } = await db
         .prepare("SELECT value FROM site_settings WHERE key = 'homepage_sections'")
-        .first<{ value: string }>();
-      return parseSectionConfig(row?.value);
-    } catch {
+        .all<{ value: string }>();
+      const rawValue = results?.[0]?.value;
+      return parseSectionConfig(rawValue);
+    } catch (err) {
+      console.error("[SectionService.getSections] Error reading sections from D1:", err);
       return parseSectionConfig(null);
     }
   },
