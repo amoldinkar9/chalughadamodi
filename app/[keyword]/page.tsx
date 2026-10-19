@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ keyword: 
 
   return {
     title: `${keywordObj.title} | मराठी Current Affairs मोफत`,
-    description: `${keywordObj.title} — MPSC, तलाठी, पोलीस भरती, रेल्वे, SSC GD सर्व परीक्षांसाठी मोफत मराठी चालू घडामोडी, मासिक PDF, आणि रोजच्या टेस्ट.`,
+    description: `${keywordObj.title} — MPSC, तलाठी, पोलीस भरती, रेल्वे, SSC GD सर्व परीक्षांसाठी मोफत मराठी चालू घडामोडी, डिजिटल मासिके, आणि रोजच्या टेस्ट.`,
     alternates: {
       canonical: `/${keywordObj.slug}`,
     },
@@ -59,15 +59,14 @@ export default async function KeywordLandingPage({ params }: { params: Promise<{
     ]
   };
 
-  // Render the exact same Home page, but pass the specific keyword title 
-  // so the H1 changes dynamically for SEO, plus pass keywordSlug for sorting
+  // Render the Home page with keywordSlug for category sorting and footer SEO directory
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <Home heroTitle={keywordObj.title} keywordSlug={keywordObj.slug} />
+      <Home keywordSlug={keywordObj.slug} />
     </>
   );
 }

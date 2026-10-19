@@ -19,7 +19,7 @@ const fallbackContent: PublicContent = {
   announcements: [
     { id: "a1", title: "MPSC राज्यसेवा 2026 अधिसूचना", image_url: "", backlink: "/mpsc-chalu-ghadamodi", published: true, display_order: 1, created_at: "", updated_at: "" },
     { id: "a2", title: "तलाठी भरती व TCS पॅटर्न चालू घडामोडी", image_url: "", backlink: "/talathi-chalu-ghadamodi", published: true, display_order: 2, created_at: "", updated_at: "" },
-    { id: "a3", title: "मोफत मासिक चालू घडामोडी PDF डाउनलोड करा", image_url: "", backlink: "/chalu-ghadamodi-2026-pdf", published: true, display_order: 3, created_at: "", updated_at: "" },
+    { id: "a3", title: "मोफत मासिक चालू घडामोडी डाउनलोड करा", image_url: "", backlink: "/chalu-ghadamodi-2026-pdf", published: true, display_order: 3, created_at: "", updated_at: "" },
   ],
   gallery: [
     { id: "1", name: "महाराष्ट्र पोलीस भरती 2026", image_url: "", start_date: "2026-10-01", last_date: "2026-11-30", link: "/police-bharti-chalu-ghadamodi", apply_link: "https://policerecruitment2026.mahait.org", is_new: true, date_extended: false, published: true, display_order: 1, created_at: "", updated_at: "" },
@@ -45,14 +45,14 @@ const fallbackContent: PublicContent = {
   testimonials: [
     { id: "1", initials: "प्रि", name: "प्रिया देशमुख", exam: "तलाठी, 2025", quote: "Static GS शी प्रत्येक बातमीची जोडणी मला खूप आवडली. Revision सोपी झाली.", published: true, display_order: 1, created_at: "", updated_at: "" },
     { id: "2", initials: "सं", name: "संदीप पाटील", exam: "महाराष्ट्र पोलीस, 2025", quote: "मराठीत स्पष्टीकरण असल्यामुळे current affairs कधीच कठीण वाटले नाहीत.", published: true, display_order: 2, created_at: "", updated_at: "" },
-    { id: "3", initials: "रो", name: "रोहित जाधव", exam: "रेल्वे RRB, 2025", quote: "मोफत मासिक PDF मुळे मला coaching ची गरज पडली नाही. प्रामाणिक platform.", published: true, display_order: 3, created_at: "", updated_at: "" },
+    { id: "3", initials: "रो", name: "रोहित जाधव", exam: "रेल्वे RRB, 2025", quote: "मोफत मासिक आवृत्त्यांमुळे मला coaching ची गरज पडली नाही. प्रामाणिक platform.", published: true, display_order: 3, created_at: "", updated_at: "" },
   ],
   faqs: [
     { id: "1", question: "हे website मोफत आहे का?", answer: "होय, संपूर्णपणे मोफत. कुठलेही शुल्क नाही, login नाही.", published: true, display_order: 1, created_at: "", updated_at: "" },
-    { id: "2", question: "मासिक PDF download करता येते का?", answer: "होय. प्रत्येक मासिकाच्या पानावर PDF download बटण आहे.", published: true, display_order: 2, created_at: "", updated_at: "" },
+    { id: "2", question: "मासिक आवृत्त्या download करता येतात का?", answer: "होय. प्रत्येक मासिकाच्या पानावर download बटण आहे.", published: true, display_order: 2, created_at: "", updated_at: "" },
     { id: "3", question: "टेस्ट किती कठीण आहे?", answer: "MPSC, तलाठी, पोलीस भरती च्या प्रत्यक्ष परीक्षेसारखीच पातळी. सरावासाठी योग्य.", published: true, display_order: 3, created_at: "", updated_at: "" },
     { id: "4", question: "MPSC आणि तलाठी दोन्हीसाठी useful आहे का?", answer: "होय. आम्ही प्रत्येक चालू घडामोडी सर्व प्रमुख परीक्षांच्या syllabus नुसार tag करतो.", published: true, display_order: 4, created_at: "", updated_at: "" },
-    { id: "5", question: "Content रोज update होते का?", answer: "होय. आठवड्यातील 6 दिवस ताज्या चालू घडामोडी. मासिक एकदा PDF स्वरूपात.", published: true, display_order: 5, created_at: "", updated_at: "" },
+    { id: "5", question: "Content रोज update होते का?", answer: "होय. आठवड्यातील 6 दिवस ताज्या चालू घडामोडी. मासिक एकदा डिजिटल स्वरूपात.", published: true, display_order: 5, created_at: "", updated_at: "" },
     { id: "6", question: "मराठीतच सर्व content आहे का?", answer: "होय. 100% मराठी. कठीण इंग्रजी संज्ञा असल्यास त्यांचा मराठीत अर्थ देखील दिला जातो.", published: true, display_order: 6, created_at: "", updated_at: "" },
     { id: "7", question: "अजून प्रश्न असतील तर?", answer: "खाली WhatsApp बटणावर click करा. आम्हाला थेट संपर्क करा.", published: true, display_order: 7, created_at: "", updated_at: "" },
   ],
@@ -236,7 +236,7 @@ export default async function Home({ heroTitle, keywordSlug }: { heroTitle?: str
             }
           })}
       </main>
-      <Footer />
+      <Footer currentKeyword={keywordSlug} />
     </>
   );
 }

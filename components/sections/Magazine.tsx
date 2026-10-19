@@ -32,7 +32,7 @@ export default function Magazine({ magazines }: MagazineProps) {
         <div className={`text-center mb-12 ${visible ? "animate-fade-in" : "opacity-0"}`}>
           <h2 className="text-navy font-bold text-2xl md:text-[32px]">मासिके - Magazines</h2>
           <span className="section-underline" />
-          <p className="text-muted font-medium text-base mt-4 max-w-xl mx-auto">महिन्याची संपूर्ण चालू घडामोडी — एका PDF मध्ये. मोफत वाचा.</p>
+          <p className="text-muted font-medium text-base mt-4 max-w-xl mx-auto">महिन्याची संपूर्ण चालू घडामोडी — एकाच ठिकाणी. मोफत वाचा.</p>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
@@ -73,7 +73,7 @@ export default function Magazine({ magazines }: MagazineProps) {
                     className="block text-center px-2 py-2 md:px-4 md:py-3 rounded-md font-semibold text-xs md:text-sm"
                     style={{ backgroundColor: "#c20101ff", color: "#ffffff" }}
                   >
-                    ▶︎ वाचा (PDF) ◀︎
+                    ▶︎ वाचा / डाउनलोड करा ◀︎
                   </span>
                 </div>
               </a>

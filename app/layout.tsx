@@ -14,7 +14,7 @@ const anekDevanagari = Anek_Devanagari({
 export const metadata: Metadata = {
   title: "चालू घडामोडी | मराठी Current Affairs मोफत — MPSC, तलाठी, पोलीस भरती",
   description:
-    "MPSC, तलाठी, पोलीस भरती व इतर परीक्षांसाठी मोफत मराठी चालू घडामोडी, मासिक PDF, रोजच्या टेस्ट आणि Static GS विश्लेषण. दररोज मोफत अपडेट.",
+    "MPSC, तलाठी, पोलीस भरती व इतर परीक्षांसाठी मोफत मराठी चालू घडामोडी, डिजिटल मासिके, रोजच्या टेस्ट आणि Static GS विश्लेषण. दररोज मोफत अपडेट.",
   metadataBase: new URL("https://chalughadamodi.in"),
   alternates: {
     canonical: "/",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "चालू घडामोडी | मराठी Current Affairs मोफत — MPSC, तलाठी, पोलीस भरती",
     description:
-      "MPSC, तलाठी, पोलीस भरती, रेल्वे, SSC GD — सर्व परीक्षांसाठी मोफत मराठी चालू घडामोडी, मासिक PDF, रोजच्या टेस्ट.",
+      "MPSC, तलाठी, पोलीस भरती, रेल्वे, SSC GD — सर्व परीक्षांसाठी मोफत मराठी चालू घडामोडी, डिजिटल मासिके, रोजच्या टेस्ट.",
     locale: "mr_IN",
     type: "website",
     url: "https://chalughadamodi.in",
@@ -91,7 +91,7 @@ const websiteSchema = {
   "@id": "https://chalughadamodi.in/#website",
   name: "चालू घडामोडी",
   url: "https://chalughadamodi.in",
-  description: "मराठी विद्यार्थ्यांसाठी मोफत चालू घडामोडी, मासिक PDF, आणि टेस्ट.",
+  description: "मराठी विद्यार्थ्यांसाठी मोफत चालू घडामोडी, डिजिटल मासिके, आणि टेस्ट.",
   inLanguage: "mr",
   potentialAction: {
     "@type": "SearchAction",
@@ -109,7 +109,7 @@ const educationalOrgSchema = {
   url: "https://chalughadamodi.in",
   logo: "https://chalughadamodi.in/og-image.png",
   description:
-    "महाराष्ट्रातील स्पर्धा परीक्षा विद्यार्थ्यांसाठी मोफत मराठी चालू घडामोडी, मासिक PDF, आणि सराव टेस्ट.",
+    "महाराष्ट्रातील स्पर्धा परीक्षा विद्यार्थ्यांसाठी मोफत मराठी चालू घडामोडी, डिजिटल मासिके, आणि सराव टेस्ट.",
   inLanguage: "mr",
   areaServed: {
     "@type": "State",

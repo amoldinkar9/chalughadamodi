@@ -79,3 +79,11 @@ All contributors, engineers, and AI coding agents working on **Chalu Ghadamodi**
   - `apiBadRequest()`
   - `apiRateLimited()`
 - Never expose raw database stack traces or internal server error details to clients.
+
+---
+
+## 7. Deployment & Git Commit Workflow
+- **Localhost-First Verification**:
+  - Do NOT automatically commit changes to git or push to remote / Cloudflare.
+  - Test and verify all changes locally first on `localhost:3000`.
+  - Only commit to git and deploy when the user explicitly requests to commit or deploy.

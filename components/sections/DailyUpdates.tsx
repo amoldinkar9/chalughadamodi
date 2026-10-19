@@ -211,20 +211,20 @@ export default function DailyUpdates() {
           ))}
         </div>
 
-        {/* Bottom banner for PDF and tests */}
+        {/* Bottom banner for magazine and tests */}
         <div className="mt-12 text-center bg-navy rounded-xl p-8 text-cream shadow-md">
           <h4 className="text-xl md:text-2xl font-bold mb-2">
-            संपूर्ण महिन्याची चालू घडामोडी एकाच PDF मध्ये हवी आहे?
+            संपूर्ण महिन्याची चालू घडामोडी एकाच ठिकाणी हवी आहे?
           </h4>
           <p className="text-cream/80 text-sm md:text-base max-w-xl mx-auto mb-6">
-            आमच्या मोफत मासिक PDF मासिकातून संपूर्ण महिनाभर घडलेल्या सर्व घटनांचे विषयानुसार सविस्तर वाचन करा.
+            आमच्या मोफत मासिकातून संपूर्ण महिनाभर घडलेल्या सर्व घटनांचे विषयानुसार सविस्तर वाचन करा.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/chalu-ghadamodi-2026-pdf"
               className="btn-primary px-6 py-3 rounded-md font-bold text-sm"
             >
-              मासिक PDF डाउनलोड करा
+              मासिक आवृत्ती डाउनलोड करा
             </Link>
             <Link
               href="/today-current-affairs-in-marathi"

@@ -124,7 +124,7 @@ export default function AboutPage() {
                   {
                     icon: "📅",
                     title: "रोज अपडेट",
-                    desc: "आठवड्यातील 6 दिवस ताज्या चालू घडामोडी. मासिक एकदा PDF स्वरूपात.",
+                    desc: "आठवड्यातील 6 दिवस ताज्या चालू घडामोडी. मासिक एकदा डिजिटल स्वरूपात.",
                   },
                 ].map((item) => (
                   <div
@@ -181,8 +181,8 @@ export default function AboutPage() {
                   desc: "प्रत्येक current event हे static general studies च्या topic शी जोडले जाते. त्यामुळे फक्त घटना नाही, तर पार्श्वभूमी सुद्धा समजते.",
                 },
                 {
-                  title: "मासिक PDF",
-                  desc: "दर महिन्याला सर्व चालू घडामोडी एका PDF मध्ये. Download करा, print करा — internet नसला तरी revision शक्य.",
+                  title: "मासिक आवृत्ती",
+                  desc: "दर महिन्याला सर्व चालू घडामोडी एकाच संचात. Download करा, print करा — internet नसला तरी revision शक्य.",
                 },
                 {
                   title: "सराव टेस्ट",

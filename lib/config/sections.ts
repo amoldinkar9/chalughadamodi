@@ -30,9 +30,9 @@ export const DEFAULT_HOMEPAGE_SECTIONS: SectionItem[] = [
   },
   {
     id: "magazine",
-    name: "Monthly Magazines & PDFs",
-    marathiName: "मासिक चालू घडामोडी मासिके व PDF",
-    description: "Downloadable monthly magazine cards and PDF archives",
+    name: "Monthly Magazines",
+    marathiName: "मासिक चालू घडामोडी मासिके",
+    description: "Downloadable monthly magazine cards and archives",
     enabled: true,
   },
   {

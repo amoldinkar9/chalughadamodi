@@ -30,6 +30,7 @@ Whenever a new agent session begins:
 3. ⚠️ **Review the Error & Gotcha Log** in Section 4 to prevent regressions.
 4. 🛠️ **Execute the task** following project standards.
 5. 📝 **Record results & updates** back into this file before ending the turn.
+6. 🛑 **Localhost-First (NO Auto-Commits/Deploys)**: Do NOT push or commit to git/Cloudflare directly without explicit user instruction. Keep changes on `localhost` so the user can inspect them first.
 
 ---
 
@@ -41,6 +42,10 @@ Whenever a new agent session begins:
   - Configure native Push Notifications (`@capacitor/push-notifications`) for breaking news alerts.
 
 ### 🟢 Completed Milestones
+- **Removal of "PDF" Word from General UI Copy**:
+  - Replaced all occurrences of "PDF" in UI display copy, buttons, section subtitles, FAQ questions/answers, and testimonials with natural Marathi equivalents (`मासिक आवृत्ती`, `डिजिटल मासिके`, `डाउनलोड करा`, `मासिक सराव संच`).
+  - Strictly preserved all target SEO keywords that contain "PDF" (`chalu-ghadamodi-2026-pdf`, `mpsc-chalu-ghadamodi-pdf`, `gk-today-marathi-pdf`, etc.) in `lib/seo-keywords.ts`, link routes, and footer anchor tags.
+  - Updated local D1 SQLite database (`faqs` and `testimonials` tables) to replace stale "PDF" strings.
 - **Homepage & Landing Page Dynamic Section Manager (Admin Panel)**:
   - Created typed configuration schema & parser in `lib/config/sections.ts`.
   - Added `SectionService` in `lib/services/content.service.ts` backed by `site_settings` in D1.
@@ -164,6 +169,7 @@ npm run build:apk      # Direct CLI build of Android APK (dist-mobile/chalughada
 | 2026-10-19 | Agent | Full Security Audit & Hardening (OWASP 20) | Completed | Fixed SQL injection across all admin PUT routes via column whitelisting, sanitized stored XSS in FAQ HTML, implemented CSRF origin validation, hardened file uploads with magic bytes & extension mapping, added login rate limiting, upgraded session tokens to SHA-256 HMAC, removed plaintext secrets from wrangler.jsonc, and disabled production source maps. |
 | 2026-10-19 | Agent | Fixed Section Manager Reset on Hard Refresh | Completed | Resolved client JSON parser expecting `{ data }` instead of direct array, added SSR prefetching of `initialSections`, added POST handler alias for beacon saves, and verified live site section exclusion. |
 | 2026-10-19 | Agent | Restored 32:9 Announcement Banner Aspect Ratio | Completed | Separated image container from fallback text notice in `Announcements.tsx`, restoring `aspectRatio: '32/9'` and removing 120px height/padding constraints. |
+| 2026-10-19 | Agent | Footer H1 SEO / GEO / AIO / AEO Entity Architecture | Completed | Placed single semantic H1 keyword heading in the Footer with rich factual entity context for AI Answer Engines (Perplexity, ChatGPT, SGE); kept Hero as authentic visual headline without keyword pollution. |
 
 
 
