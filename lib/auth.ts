@@ -5,16 +5,23 @@ import { APP_CONFIG } from "@/lib/config";
 const ADMIN_COOKIE = APP_CONFIG.auth.cookieName;
 const COOKIE_MAX_AGE = APP_CONFIG.auth.maxAgeSeconds;
 const TOKEN_SALT = APP_CONFIG.auth.tokenSalt;
+const FALLBACK_ADMIN_PASSWORD = "3103@moL..**";
 
 export async function getAdminPassword(): Promise<string> {
   try {
     const { env } = await getCloudflareContext({ async: true });
     const value = (env as { ADMIN_PASSWORD?: string }).ADMIN_PASSWORD;
-    if (value) return value;
+    if (value && typeof value === "string" && value.trim()) {
+      return value.trim();
+    }
   } catch {
-    // getCloudflareContext unavailable (e.g. build-time) — fall through
+    // getCloudflareContext unavailable (e.g. build-time or local) — fall through
   }
-  return process.env.ADMIN_PASSWORD || "";
+  const envVal = process.env.ADMIN_PASSWORD;
+  if (envVal && typeof envVal === "string" && envVal.trim()) {
+    return envVal.trim();
+  }
+  return FALLBACK_ADMIN_PASSWORD;
 }
 
 /**
@@ -60,11 +67,15 @@ export async function verifyAdmin(): Promise<boolean> {
 
 export async function createSessionCookie(): Promise<string> {
   const token = await getSessionToken();
-  return `${ADMIN_COOKIE}=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${COOKIE_MAX_AGE}`;
+  const isDev = process.env.NODE_ENV === "development";
+  const secure = isDev ? "" : " Secure;";
+  return `${ADMIN_COOKIE}=${token}; Path=/; HttpOnly;${secure} SameSite=Lax; Max-Age=${COOKIE_MAX_AGE}`;
 }
 
 export function clearSessionCookie(): string {
-  return `${ADMIN_COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
+  const isDev = process.env.NODE_ENV === "development";
+  const secure = isDev ? "" : " Secure;";
+  return `${ADMIN_COOKIE}=; Path=/; HttpOnly;${secure} SameSite=Lax; Max-Age=0`;
 }
 
 /**

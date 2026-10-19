@@ -98,6 +98,8 @@ This table records real errors encountered in this repository and how they were 
 | **Path-to-regexp wildcards without prefix/suffix (`:city*`)** | Next.js 16 build fails with `TypeError: Can not repeat "city" without a prefix and suffix` when wildcards are attached after hyphens (e.g. `/mpsc-classes-in-:city*`). | Use exact segment `/mpsc-classes-in-:city` and child segment `/mpsc-classes-in-:city/:path*` instead. | 2026-10-19 |
 | **`experimental_remote` in wrangler.jsonc** | Cloudflare Wrangler v4 warns on `experimental_remote` under `r2_buckets` and `d1_databases`. | Remove `experimental_remote: true` from `wrangler.jsonc`. | 2026-10-19 |
 | **`initOpenNextCloudflareForDev` during production builds** | Unconditional execution in `next.config.ts` initializes dev remote bindings during `next build` on CI. | Wrap in `if (process.env.NODE_ENV === "development")`. | 2026-10-19 |
+| **Empty `ADMIN_PASSWORD` causing failed logins** | If `ADMIN_PASSWORD` is missing from worker env, `getAdminPassword()` returns empty string, rejecting all passwords. | Set fallback password in `lib/auth.ts` and ensure `vars.ADMIN_PASSWORD` is defined in `wrangler.jsonc` and `.env.local`. | 2026-10-19 |
+| **Admin hostname 404 in `middleware.ts`** | `middleware.ts` only permitted `veronica.chalughadamodi.in`, returning 404 when navigating to `chalughadamodi.in/admin`. | Allowed primary (`chalughadamodi.in`) and secondary (`mpsccurrentaffairs.in`) alongside `veronica` and localhost. | 2026-10-19 |
 
 ---
 

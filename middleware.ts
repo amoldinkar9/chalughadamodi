@@ -5,10 +5,15 @@ import { APP_CONFIG } from "@/lib/config";
 const ADMIN_HOSTNAME = APP_CONFIG.domains.adminHostname;
 
 export function middleware(request: NextRequest) {
-  const hostname = request.headers.get("host")?.split(":")[0] ?? "";
+  const hostname = request.headers.get("host")?.split(":")[0]?.toLowerCase() ?? "";
   const isLocalhost = hostname === "localhost" || hostname === "127.0.0.1";
+  const isAllowedHost =
+    isLocalhost ||
+    hostname === ADMIN_HOSTNAME ||
+    hostname === APP_CONFIG.domains.primary ||
+    hostname === APP_CONFIG.domains.secondary;
 
-  if (!isLocalhost && hostname !== ADMIN_HOSTNAME) {
+  if (!isAllowedHost) {
     return new NextResponse(null, { status: 404 });
   }
 
