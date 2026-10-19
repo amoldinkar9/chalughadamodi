@@ -24,7 +24,17 @@ export const viewport: Viewport = {
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
   const rawHost = headersList.get("x-forwarded-host") || headersList.get("host") || "";
-  const { domain, siteName, brandTitle } = getDomainFromHost(rawHost);
+  const { domain, siteName, brandTitle, isSecondary } = getDomainFromHost(rawHost);
+
+  const googleVerificationTokens = isSecondary
+    ? [
+        process.env.GOOGLE_SITE_VERIFICATION_MPSC,
+        "OBz7y9gz0xSkB80yxSyFv_gypHJ37M6opGFH7V8RJeo",
+      ]
+    : [
+        process.env.GOOGLE_SITE_VERIFICATION,
+        "W-T-sp-qvFNp_4EvsfZrVBdYU8ppOWF8qVDWBl6FQ1A",
+      ];
 
   return {
     metadataBase: new URL(domain),
@@ -43,15 +53,7 @@ export async function generateMetadata(): Promise<Metadata> {
     publisher: siteName,
     category: "education",
     verification: {
-      google: Array.from(
-        new Set(
-          [
-            "OBz7y9gz0xSkB80yxSyFv_gypHJ37M6opGFH7V8RJeo",
-            process.env.GOOGLE_SITE_VERIFICATION,
-            process.env.GOOGLE_SITE_VERIFICATION_MPSC,
-          ].filter(Boolean)
-        )
-      ) as string[],
+      google: Array.from(new Set(googleVerificationTokens.filter(Boolean))) as string[],
     },
     openGraph: {
       title: brandTitle,
