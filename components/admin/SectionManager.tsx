@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { toast } from "sonner";
 import {
   GripVertical,
@@ -14,7 +14,7 @@ import {
   Sliders,
   ExternalLink,
   Layers,
-  AlertCircle,
+  CloudUpload,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -23,26 +23,103 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { SectionItem } from "@/lib/config/sections";
 import { DEFAULT_HOMEPAGE_SECTIONS } from "@/lib/config/sections";
 
+const LOCAL_STORAGE_KEY = "cg_sections_order_backup";
+
 export function SectionManager() {
   const [sections, setSections] = useState<SectionItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [hasChanges, setHasChanges] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved" | "error">("saved");
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
 
-  const initialSectionsRef = useRef<string>("");
+  const pendingSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const latestSectionsRef = useRef<SectionItem[]>([]);
 
+  // Keep latestSectionsRef in sync
+  useEffect(() => {
+    latestSectionsRef.current = sections;
+  }, [sections]);
+
+  // Persist sections to API
+  const persistToApi = useCallback(async (listToSave: SectionItem[], showToast = false) => {
+    setSaveStatus("saving");
+    try {
+      const payload = listToSave.map((s) => ({ id: s.id, enabled: s.enabled }));
+
+      // Also backup to localStorage immediately
+      try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(listToSave));
+      } catch {
+        // ignore localStorage quota
+      }
+
+      const res = await fetch("/api/admin/sections", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sections: payload }),
+      });
+
+      if (!res.ok) {
+        const errJson = (await res.json().catch(() => ({}))) as { error?: string };
+        throw new Error(errJson.error || "Failed to persist changes");
+      }
+
+      const json = (await res.json()) as { success: boolean; data: SectionItem[] };
+      const savedData = json.data || listToSave;
+      setSections(savedData);
+      setSaveStatus("saved");
+
+      if (showToast) {
+        toast.success("Section layout saved and published to live website!");
+      }
+    } catch (err) {
+      setSaveStatus("error");
+      toast.error(err instanceof Error ? err.message : "Error saving changes");
+    }
+  }, []);
+
+  // Debounced auto-save
+  const triggerAutoSave = useCallback((updatedList: SectionItem[]) => {
+    setSaveStatus("unsaved");
+    if (pendingSaveTimeoutRef.current) {
+      clearTimeout(pendingSaveTimeoutRef.current);
+    }
+    pendingSaveTimeoutRef.current = setTimeout(() => {
+      persistToApi(updatedList, false);
+    }, 400); // 400ms debounce
+  }, [persistToApi]);
+
+  // Load sections on mount
   useEffect(() => {
     async function loadSections() {
       try {
-        const res = await fetch("/api/admin/sections");
+        const res = await fetch(`/api/admin/sections?t=${Date.now()}`, {
+          cache: "no-store",
+          headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
+        });
+
         if (!res.ok) throw new Error("Failed to load section configuration");
         const json = (await res.json()) as { success: boolean; data: SectionItem[] };
         const data = json.data || DEFAULT_HOMEPAGE_SECTIONS;
         setSections(data);
-        initialSectionsRef.current = JSON.stringify(data);
+        setSaveStatus("saved");
       } catch (err) {
+        // Try fallback to localStorage
+        try {
+          const cached = localStorage.getItem(LOCAL_STORAGE_KEY);
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setSections(parsed);
+              setSaveStatus("saved");
+              setLoading(false);
+              return;
+            }
+          }
+        } catch {
+          // ignore
+        }
+
         toast.error(err instanceof Error ? err.message : "Error loading sections");
         setSections(DEFAULT_HOMEPAGE_SECTIONS);
       } finally {
@@ -52,15 +129,35 @@ export function SectionManager() {
     loadSections();
   }, []);
 
-  const checkIfChanged = (updated: SectionItem[]) => {
-    const isDifferent = JSON.stringify(updated) !== initialSectionsRef.current;
-    setHasChanges(isDifferent);
-  };
+  // Flush any pending save on unmount or tab close
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (pendingSaveTimeoutRef.current) {
+        clearTimeout(pendingSaveTimeoutRef.current);
+        // Use sendBeacon for reliable delivery if tab closes
+        try {
+          const payload = latestSectionsRef.current.map((s) => ({ id: s.id, enabled: s.enabled }));
+          const blob = new Blob([JSON.stringify({ sections: payload })], { type: "application/json" });
+          navigator.sendBeacon("/api/admin/sections", blob);
+        } catch {
+          // ignore
+        }
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      if (pendingSaveTimeoutRef.current) {
+        clearTimeout(pendingSaveTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleToggle = (id: string, enabled: boolean) => {
     const updated = sections.map((s) => (s.id === id ? { ...s, enabled } : s));
     setSections(updated);
-    checkIfChanged(updated);
+    triggerAutoSave(updated);
   };
 
   const moveSection = (fromIndex: number, toIndex: number) => {
@@ -69,7 +166,7 @@ export function SectionManager() {
     const [moved] = updated.splice(fromIndex, 1);
     updated.splice(toIndex, 0, moved);
     setSections(updated);
-    checkIfChanged(updated);
+    triggerAutoSave(updated);
   };
 
   // Drag and Drop handlers
@@ -107,43 +204,22 @@ export function SectionManager() {
   const handleReset = () => {
     const defaults = DEFAULT_HOMEPAGE_SECTIONS.map((s) => ({ ...s }));
     setSections(defaults);
-    checkIfChanged(defaults);
-    toast.info("Reset to default order. Remember to save changes.");
+    triggerAutoSave(defaults);
+    toast.info("Reset to default order and auto-saved.");
   };
 
   const handleToggleAll = (enabled: boolean) => {
     const updated = sections.map((s) => ({ ...s, enabled }));
     setSections(updated);
-    checkIfChanged(updated);
-    toast.info(enabled ? "All sections enabled" : "All sections disabled");
+    triggerAutoSave(updated);
+    toast.info(enabled ? "All sections enabled & saved" : "All sections disabled & saved");
   };
 
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      const payload = sections.map((s) => ({ id: s.id, enabled: s.enabled }));
-      const res = await fetch("/api/admin/sections", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sections: payload }),
-      });
-
-      if (!res.ok) {
-        const errJson = (await res.json().catch(() => ({}))) as { error?: string };
-        throw new Error(errJson.error || "Failed to save section layout");
-      }
-
-      const json = (await res.json()) as { success: boolean; data: SectionItem[] };
-      const savedData = json.data || sections;
-      setSections(savedData);
-      initialSectionsRef.current = JSON.stringify(savedData);
-      setHasChanges(false);
-      toast.success("Section layout and visibility updated successfully!");
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Error saving changes");
-    } finally {
-      setSaving(false);
+  const handleManualSave = () => {
+    if (pendingSaveTimeoutRef.current) {
+      clearTimeout(pendingSaveTimeoutRef.current);
     }
+    persistToApi(sections, true);
   };
 
   const activeCount = sections.filter((s) => s.enabled).length;
@@ -174,11 +250,36 @@ export function SectionManager() {
             </h1>
           </div>
           <p className="text-sm font-medium text-slate-600 dark:text-slate-300 mt-1.5">
-            Enable or disable sections, or drag and drop to reorder their display sequence across the homepage and keyword landing pages.
+            Enable or disable sections, or drag and drop to reorder. <strong>Changes are auto-saved automatically.</strong>
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-3">
+          {/* Live Auto-save indicator */}
+          <div className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md border border-slate-200 dark:border-slate-800 bg-background shadow-xs">
+            {saveStatus === "saving" && (
+              <>
+                <CloudUpload className="h-3.5 w-3.5 text-primary animate-pulse" />
+                <span className="text-primary font-medium">Auto-saving...</span>
+              </>
+            )}
+            {saveStatus === "saved" && (
+              <>
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                <span className="text-emerald-700 dark:text-emerald-400">All changes saved</span>
+              </>
+            )}
+            {saveStatus === "unsaved" && (
+              <>
+                <div className="h-2 w-2 rounded-full bg-amber-500 animate-ping" />
+                <span className="text-amber-700 dark:text-amber-400">Unsaved changes</span>
+              </>
+            )}
+            {saveStatus === "error" && (
+              <span className="text-red-600 dark:text-red-400 font-medium">Save failed</span>
+            )}
+          </div>
+
           <Button
             variant="outline"
             size="sm"
@@ -190,12 +291,12 @@ export function SectionManager() {
           </Button>
 
           <Button
-            onClick={handleSave}
-            disabled={saving || !hasChanges}
+            onClick={handleManualSave}
+            disabled={saveStatus === "saving"}
             size="sm"
-            className="gap-2 min-w-[130px] font-semibold shadow"
+            className="gap-2 min-w-[120px] font-semibold shadow"
           >
-            {saving ? (
+            {saveStatus === "saving" ? (
               <>
                 <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
                 Saving...
@@ -269,7 +370,7 @@ export function SectionManager() {
         <div className="flex items-center gap-2.5 text-foreground">
           <span className="font-bold text-foreground">Controls:</span>
           <span className="text-slate-700 dark:text-slate-300">
-            Drag via the grip handle or use ▲ ▼ buttons to reorder.
+            Drag via the grip handle or use ▲ ▼ buttons to reorder. <em>Auto-saved automatically.</em>
           </span>
         </div>
 
@@ -304,27 +405,6 @@ export function SectionManager() {
           </Button>
         </div>
       </div>
-
-      {/* Unsaved alert banner - High Contrast Vivid Amber */}
-      {hasChanges && (
-        <div className="flex items-center justify-between bg-amber-50 dark:bg-amber-950/60 border-2 border-amber-400 dark:border-amber-600 text-amber-950 dark:text-amber-100 px-4 py-3 rounded-xl shadow-sm">
-          <div className="flex items-center gap-2.5">
-            <AlertCircle className="h-5 w-5 text-amber-700 dark:text-amber-300 shrink-0" />
-            <span className="font-bold text-sm">
-              Unsaved changes: Click &quot;Save Layout&quot; to apply this section order to the live site.
-            </span>
-          </div>
-          <Button
-            size="sm"
-            onClick={handleSave}
-            disabled={saving}
-            className="h-8 gap-1.5 font-bold shadow bg-amber-600 hover:bg-amber-700 text-white border-0"
-          >
-            <Save size={14} />
-            Save Now
-          </Button>
-        </div>
-      )}
 
       {/* Draggable Sections List - High Contrast Cards */}
       <div className="space-y-3.5">
@@ -451,20 +531,6 @@ export function SectionManager() {
           );
         })}
       </div>
-
-      {/* Floating Save button if dirty */}
-      {hasChanges && (
-        <div className="sticky bottom-6 z-20 flex justify-end">
-          <Button
-            size="lg"
-            onClick={handleSave}
-            disabled={saving}
-            className="shadow-xl gap-2 px-7 font-bold text-base"
-          >
-            {saving ? "Saving Changes..." : "Save Section Layout"}
-          </Button>
-        </div>
-      )}
     </div>
   );
 }

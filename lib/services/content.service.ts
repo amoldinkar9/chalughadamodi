@@ -308,15 +308,33 @@ export const SettingsService = {
 
   async set(key: string, value: string): Promise<Record<string, unknown>> {
     const db = await getDb();
-    const row = await db
-      .prepare(
-        "INSERT INTO site_settings (key, value, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at RETURNING *"
-      )
-      .bind(key, value, new Date().toISOString())
-      .first();
-
-    if (!row) throw new Error("Upsert failed");
-    return row;
+    const now = new Date().toISOString();
+    try {
+      await db
+        .prepare(
+          "INSERT INTO site_settings (key, value, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at"
+        )
+        .bind(key, value, now)
+        .run();
+    } catch {
+      // Fallback for engines/drivers where ON CONFLICT is not supported
+      const existing = await db
+        .prepare("SELECT key FROM site_settings WHERE key = ?")
+        .bind(key)
+        .first();
+      if (existing) {
+        await db
+          .prepare("UPDATE site_settings SET value = ?, updated_at = ? WHERE key = ?")
+          .bind(value, now, key)
+          .run();
+      } else {
+        await db
+          .prepare("INSERT INTO site_settings (key, value, updated_at) VALUES (?, ?, ?)")
+          .bind(key, value, now)
+          .run();
+      }
+    }
+    return { key, value, updated_at: now };
   },
 };
 
