@@ -52,3 +52,21 @@ export const APP_CONFIG = {
 
 export type AllowedUploadFolder = typeof APP_CONFIG.uploads.allowedFolders[number];
 export type AllowedMimeType = typeof APP_CONFIG.uploads.allowedMimeTypes[number];
+
+export function getDomainFromHost(hostHeader?: string | null): {
+  domain: string;
+  isSecondary: boolean;
+  siteName: string;
+  brandTitle: string;
+} {
+  const host = (hostHeader || "").toLowerCase().split(":")[0];
+  const isSecondary = host.includes("mpsccurrentaffairs");
+  return {
+    domain: isSecondary ? APP_CONFIG.domains.secondaryUrl : APP_CONFIG.domains.primaryUrl,
+    isSecondary,
+    siteName: isSecondary ? "MPSC Current Affairs" : "चालू घडामोडी",
+    brandTitle: isSecondary
+      ? "MPSC Current Affairs | मराठी चालू घडामोडी — MPSC, तलाठी, पोलीस भरती"
+      : "चालू घडामोडी | मराठी Current Affairs मोफत — MPSC, तलाठी, पोलीस भरती",
+  };
+}

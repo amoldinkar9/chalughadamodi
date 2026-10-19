@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { SEO_KEYWORDS } from "@/lib/seo-keywords";
+import { getDomainFromHost } from "@/lib/config";
 import Home from "../page";
 
 // Tell Next.js to statically generate all these keyword routes at build time
@@ -27,7 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ keyword: 
     },
     openGraph: {
       title: `${keywordObj.title} | मोफत मराठी चालू घडामोडी`,
-      url: `https://chalughadamodi.in/${keywordObj.slug}`,
+      url: `/${keywordObj.slug}`,
     },
   };
 }
@@ -40,6 +42,10 @@ export default async function KeywordLandingPage({ params }: { params: Promise<{
     notFound();
   }
 
+  const headersList = await headers();
+  const rawHost = headersList.get("x-forwarded-host") || headersList.get("host") || "";
+  const { domain } = getDomainFromHost(rawHost);
+
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -48,13 +54,13 @@ export default async function KeywordLandingPage({ params }: { params: Promise<{
         "@type": "ListItem",
         "position": 1,
         "name": "मुख्यपान",
-        "item": "https://chalughadamodi.in"
+        "item": domain
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": keywordObj.title,
-        "item": `https://chalughadamodi.in/${keywordObj.slug}`
+        "item": `${domain}/${keywordObj.slug}`
       }
     ]
   };

@@ -42,6 +42,12 @@ Whenever a new agent session begins:
   - Configure native Push Notifications (`@capacitor/push-notifications`) for breaking news alerts.
 
 ### 🟢 Completed Milestones
+- **Multi-Domain Canonical & Google Search Console Fix (`mpsccurrentaffairs.in`)**:
+  - Identified root cause of GSC "Alternate page with proper canonical tag (192 URLs)": `metadataBase` and JSON-LD schemas were hardcoded to `https://chalughadamodi.in`.
+  - Replaced static `metadata` with dynamic `generateMetadata()` in `app/layout.tsx` that reads the request host via `headers()`.
+  - Dynamically switches canonical URL, OpenGraph tags, hreflang, and JSON-LD structured data between `chalughadamodi.in` and `mpsccurrentaffairs.in`.
+  - Updated `app/[keyword]/page.tsx` and `app/about/page.tsx` to use dynamic domain-specific breadcrumbs and canonical URLs.
+  - Added Google Search Console verification token for `mpsccurrentaffairs.in`: `OBz7y9gz0xSkB80yxSyFv_gypHJ37M6opGFH7V8RJeo`.
 - **Restored Full 331 SEO Keywords Catalog in `lib/seo-keywords.ts`**:
   - Restored the comprehensive 331-keyword dataset in `lib/seo-keywords.ts` covering MPSC, Talathi, Police Bharti, Railway, Anganwadi, Arogya Vibhag, and Zilla Parishad.
   - Verified dynamic sitemap generator at `app/sitemap.xml/route.ts` which now properly generates all 331 landing pages (334 total URLs).

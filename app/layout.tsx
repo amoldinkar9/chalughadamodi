@@ -11,70 +11,8 @@ const anekDevanagari = Anek_Devanagari({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "चालू घडामोडी | मराठी Current Affairs मोफत — MPSC, तलाठी, पोलीस भरती",
-  description:
-    "MPSC, तलाठी, पोलीस भरती व इतर परीक्षांसाठी मोफत मराठी चालू घडामोडी, डिजिटल मासिके, रोजच्या टेस्ट आणि Static GS विश्लेषण. दररोज मोफत अपडेट.",
-  metadataBase: new URL("https://chalughadamodi.in"),
-  alternates: {
-    canonical: "/",
-    languages: {
-      "mr": "/",
-      "x-default": "/",
-    },
-  },
-  authors: [{ name: "चालू घडामोडी", url: "https://chalughadamodi.in" }],
-  creator: "चालू घडामोडी",
-  publisher: "चालू घडामोडी",
-  category: "education",
-  openGraph: {
-    title: "चालू घडामोडी | मराठी Current Affairs मोफत — MPSC, तलाठी, पोलीस भरती",
-    description:
-      "MPSC, तलाठी, पोलीस भरती, रेल्वे, SSC GD — सर्व परीक्षांसाठी मोफत मराठी चालू घडामोडी, डिजिटल मासिके, रोजच्या टेस्ट.",
-    locale: "mr_IN",
-    type: "website",
-    url: "https://chalughadamodi.in",
-    siteName: "चालू घडामोडी",
-    images: [
-      {
-        url: "https://chalughadamodi.in/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "चालू घडामोडी — मराठी Current Affairs MPSC तलाठी पोलीस भरती",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "चालू घडामोडी | मराठी Current Affairs मोफत",
-    description: "MPSC, तलाठी, पोलीस भरती — सर्व परीक्षांसाठी मोफत मराठी चालू घडामोडी",
-    images: ["https://chalughadamodi.in/og-image.png"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-snippet": -1,
-      "max-image-preview": "large",
-      "max-video-preview": -1,
-    },
-  },
-  other: {
-    // GEO — Citation signals for AI models
-    "citation_title": "चालू घडामोडी — मराठी Current Affairs",
-    "citation_language": "mr",
-    "citation_author": "चालू घडामोडी",
-    "citation_publisher": "chalughadamodi.in",
-    // Regional signals
-    "geo.region": "IN-MH",
-    "geo.country": "IN",
-    "language": "Marathi",
-    // AI discovery
-    "llms-txt": "https://chalughadamodi.in/llms.txt",
-  },
-};
+import { headers } from "next/headers";
+import { APP_CONFIG, getDomainFromHost } from "@/lib/config";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -83,80 +21,151 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-// Module-level constants — defined outside the component to guarantee
-// a single instance and prevent any risk of duplicate injection.
-const websiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "@id": "https://chalughadamodi.in/#website",
-  name: "चालू घडामोडी",
-  url: "https://chalughadamodi.in",
-  description: "मराठी विद्यार्थ्यांसाठी मोफत चालू घडामोडी, डिजिटल मासिके, आणि टेस्ट.",
-  inLanguage: "mr",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: "https://chalughadamodi.in/?q={search_term_string}",
-    "query-input": "required name=search_term_string",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = await headers();
+  const rawHost = headersList.get("x-forwarded-host") || headersList.get("host") || "";
+  const { domain, siteName, brandTitle } = getDomainFromHost(rawHost);
 
-const educationalOrgSchema = {
-  "@context": "https://schema.org",
-  "@type": ["EducationalOrganization", "Organization"],
-  "@id": "https://chalughadamodi.in/#organization",
-  name: "चालू घडामोडी",
-  alternateName: "Chalu Ghadamodi",
-  url: "https://chalughadamodi.in",
-  logo: "https://chalughadamodi.in/og-image.png",
-  description:
-    "महाराष्ट्रातील स्पर्धा परीक्षा विद्यार्थ्यांसाठी मोफत मराठी चालू घडामोडी, डिजिटल मासिके, आणि सराव टेस्ट.",
-  inLanguage: "mr",
-  areaServed: {
-    "@type": "State",
-    name: "Maharashtra",
-    containedInPlace: { "@type": "Country", name: "India" },
-  },
-  knowsAbout: [
-    // Exam categories
-    "MPSC Rajyaseva Pariksha", "MPSC PSI STI ASO", "Talathi Bharti Maharashtra",
-    "Maharashtra Police Bharti", "Mumbai Police Bharti", "SSC GD Bharti",
-    "Railway RRB Group D", "RRB NTPC", "Vanrakshak Bharti", "Saralseva Bharti",
-    "Zilha Parishad Bharti", "Agniveer Bharti", "IBPS Bank Bharti", "Combine Pariksha MPSC",
-    // Content types
-    "Current Affairs Marathi", "Chalu Ghadamodi Marathi", "Marathi Current Affairs PDF",
-    "Monthly Current Affairs Marathi", "Current Affairs Quiz Marathi",
-    "Competitive Exam Preparation Maharashtra", "Maharashtra Government Jobs",
-    "Marathi Current Affairs 2025", "Marathi Current Affairs 2026",
-    // Topics covered
-    "Maharashtra Government GR", "Central Government Schemes", "International News Marathi",
-    "Science Technology Current Affairs", "Sports Current Affairs Marathi",
-    "Awards and Honours Current Affairs", "Static GK Marathi", "General Science Marathi",
-    "Reasoning Marathi", "Mathematics Competitive Exam", "General Awareness Marathi",
-    // Syllabus topics
-    "Talathi Syllabus Maharashtra", "Police Bharti Syllabus Maharashtra",
-    "MPSC Syllabus Marathi", "RRB Group D Syllabus", "SSC GD Syllabus",
-    "TCS Mock Test Talathi", "PIB News Marathi", "Akashvani News",
-    "Loksatta Sampadkiya", "Maharashtra News", "Rajyasabha Loksabha News",
-  ],
-  contactPoint: {
-    "@type": "ContactPoint",
-    contactType: "customer support",
-    url: "https://wa.me/919579616908",
-    availableLanguage: ["Marathi", "Hindi"],
-  },
-};
+  return {
+    metadataBase: new URL(domain),
+    title: brandTitle,
+    description:
+      "MPSC, तलाठी, पोलीस भरती व इतर परीक्षांसाठी मोफत मराठी चालू घडामोडी, डिजिटल मासिके, रोजच्या टेस्ट आणि Static GS विश्लेषण. दररोज मोफत अपडेट.",
+    alternates: {
+      canonical: "/",
+      languages: {
+        "mr": "/",
+        "x-default": "/",
+      },
+    },
+    authors: [{ name: siteName, url: domain }],
+    creator: siteName,
+    publisher: siteName,
+    category: "education",
+    verification: {
+      google: Array.from(
+        new Set(
+          [
+            "OBz7y9gz0xSkB80yxSyFv_gypHJ37M6opGFH7V8RJeo",
+            process.env.GOOGLE_SITE_VERIFICATION,
+            process.env.GOOGLE_SITE_VERIFICATION_MPSC,
+          ].filter(Boolean)
+        )
+      ) as string[],
+    },
+    openGraph: {
+      title: brandTitle,
+      description:
+        "MPSC, तलाठी, पोलीस भरती, रेल्वे, SSC GD — सर्व परीक्षांसाठी मोफत मराठी चालू घडामोडी, डिजिटल मासिके, रोजच्या टेस्ट.",
+      locale: "mr_IN",
+      type: "website",
+      url: domain,
+      siteName: siteName,
+      images: [
+        {
+          url: "/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: `${siteName} — मराठी Current Affairs MPSC तलाठी पोलीस भरती`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: brandTitle,
+      description: "MPSC, तलाठी, पोलीस भरती — सर्व परीक्षांसाठी मोफत मराठी चालू घडामोडी",
+      images: ["/og-image.png"],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-snippet": -1,
+        "max-image-preview": "large",
+        "max-video-preview": -1,
+      },
+    },
+    other: {
+      "citation_title": `${siteName} — मराठी Current Affairs`,
+      "citation_language": "mr",
+      "citation_author": siteName,
+      "citation_publisher": domain.replace(/^https?:\/\//, ""),
+      "geo.region": "IN-MH",
+      "geo.country": "IN",
+      "language": "Marathi",
+      "llms-txt": `${domain}/llms.txt`,
+    },
+  };
+}
 
-// NOTE: ItemList (Carousel) removed — Google requires each ListItem to have
-// a UNIQUE url. Since all exams currently land on the same homepage, the
-// schema caused validation errors ("Identical property values given, but
-// unique values are required"). It will be re-added once dedicated pages
-// exist per exam category (e.g. /mpsc, /talathi, etc.).
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const rawHost = headersList.get("x-forwarded-host") || headersList.get("host") || "";
+  const { domain, siteName, isSecondary } = getDomainFromHost(rawHost);
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${domain}/#website`,
+    name: siteName,
+    url: domain,
+    description: "मराठी विद्यार्थ्यांसाठी मोफत चालू घडामोडी, डिजिटल मासिके, आणि टेस्ट.",
+    inLanguage: "mr",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${domain}/?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  };
+
+  const educationalOrgSchema = {
+    "@context": "https://schema.org",
+    "@type": ["EducationalOrganization", "Organization"],
+    "@id": `${domain}/#organization`,
+    name: siteName,
+    alternateName: isSecondary ? "MPSC Current Affairs Marathi" : "Chalu Ghadamodi",
+    url: domain,
+    logo: `${domain}/og-image.png`,
+    description:
+      "महाराष्ट्रातील स्पर्धा परीक्षा विद्यार्थ्यांसाठी मोफत मराठी चालू घडामोडी, डिजिटल मासिके, आणि सराव टेस्ट.",
+    inLanguage: "mr",
+    areaServed: {
+      "@type": "State",
+      name: "Maharashtra",
+      containedInPlace: { "@type": "Country", name: "India" },
+    },
+    knowsAbout: [
+      "MPSC Rajyaseva Pariksha", "MPSC PSI STI ASO", "Talathi Bharti Maharashtra",
+      "Maharashtra Police Bharti", "Mumbai Police Bharti", "SSC GD Bharti",
+      "Railway RRB Group D", "RRB NTPC", "Vanrakshak Bharti", "Saralseva Bharti",
+      "Zilha Parishad Bharti", "Agniveer Bharti", "IBPS Bank Bharti", "Combine Pariksha MPSC",
+      "Current Affairs Marathi", "Chalu Ghadamodi Marathi", "Marathi Current Affairs PDF",
+      "Monthly Current Affairs Marathi", "Current Affairs Quiz Marathi",
+      "Competitive Exam Preparation Maharashtra", "Maharashtra Government Jobs",
+      "Marathi Current Affairs 2025", "Marathi Current Affairs 2026",
+      "Maharashtra Government GR", "Central Government Schemes", "International News Marathi",
+      "Science Technology Current Affairs", "Sports Current Affairs Marathi",
+      "Awards and Honours Current Affairs", "Static GK Marathi", "General Science Marathi",
+      "Reasoning Marathi", "Mathematics Competitive Exam", "General Awareness Marathi",
+      "Talathi Syllabus Maharashtra", "Police Bharti Syllabus Maharashtra",
+      "MPSC Syllabus Marathi", "RRB Group D Syllabus", "SSC GD Syllabus",
+      "TCS Mock Test Talathi", "PIB News Marathi", "Akashvani News",
+      "Loksatta Sampadkiya", "Maharashtra News", "Rajyasabha Loksabha News",
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      url: "https://wa.me/919579616908",
+      availableLanguage: ["Marathi", "Hindi"],
+    },
+  };
+
   return (
     <html lang="mr" className={cn("antialiased", anekDevanagari.variable, "font-sans")}>
       <head>
@@ -165,12 +174,12 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.clarity.ms" />
 
-        {/* Hreflang for language/region targeting */}
-        <link rel="alternate" hrefLang="mr" href="https://chalughadamodi.in" />
-        <link rel="alternate" hrefLang="x-default" href="https://chalughadamodi.in" />
+        {/* Dynamic Hreflang for active domain */}
+        <link rel="alternate" hrefLang="mr" href={domain} />
+        <link rel="alternate" hrefLang="x-default" href={domain} />
 
         {/* AI/LLM discovery */}
-        <link rel="llms-txt" href="https://chalughadamodi.in/llms.txt" />
+        <link rel="llms-txt" href={`${domain}/llms.txt`} />
 
         {/* Structured Data — single injection */}
         <script

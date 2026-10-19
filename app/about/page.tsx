@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { headers } from "next/headers";
+import { getDomainFromHost } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "आमच्याबद्दल | चालू घडामोडी — मराठी Current Affairs Platform",
@@ -12,10 +14,10 @@ export const metadata: Metadata = {
     title: "आमच्याबद्दल | चालू घडामोडी",
     description:
       "मराठी विद्यार्थ्यांसाठी मोफत current affairs platform — आमची कथा, आमचे ध्येय.",
-    url: "https://chalughadamodi.in/about",
+    url: "/about",
     images: [
       {
-        url: "https://chalughadamodi.in/og-image.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "चालू घडामोडी About Page",
@@ -24,27 +26,31 @@ export const metadata: Metadata = {
   },
 };
 
-const aboutSchema = {
-  "@context": "https://schema.org",
-  "@type": "AboutPage",
-  "@id": "https://chalughadamodi.in/about#webpage",
-  name: "आमच्याबद्दल — चालू घडामोडी",
-  url: "https://chalughadamodi.in/about",
-  description:
-    "चालू घडामोडी हे महाराष्ट्रातील स्पर्धा परीक्षा विद्यार्थ्यांसाठी मोफत मराठी current affairs platform आहे.",
-  inLanguage: "mr",
-  isPartOf: { "@id": "https://chalughadamodi.in/#website" },
-  about: { "@id": "https://chalughadamodi.in/#organization" },
-  breadcrumb: {
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "मुख्यपान", item: "https://chalughadamodi.in" },
-      { "@type": "ListItem", position: 2, name: "आमच्याबद्दल", item: "https://chalughadamodi.in/about" },
-    ],
-  },
-};
+export default async function AboutPage() {
+  const headersList = await headers();
+  const rawHost = headersList.get("x-forwarded-host") || headersList.get("host") || "";
+  const { domain, siteName } = getDomainFromHost(rawHost);
 
-export default function AboutPage() {
+  const aboutSchema = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "@id": `${domain}/about#webpage`,
+    name: `आमच्याबद्दल — ${siteName}`,
+    url: `${domain}/about`,
+    description:
+      `${siteName} हे महाराष्ट्रातील स्पर्धा परीक्षा विद्यार्थ्यांसाठी मोफत मराठी current affairs platform आहे.`,
+    inLanguage: "mr",
+    isPartOf: { "@id": `${domain}/#website` },
+    about: { "@id": `${domain}/#organization` },
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "मुख्यपान", item: domain },
+        { "@type": "ListItem", position: 2, name: "आमच्याबद्दल", item: `${domain}/about` },
+      ],
+    },
+  };
+
   return (
     <>
       <script
