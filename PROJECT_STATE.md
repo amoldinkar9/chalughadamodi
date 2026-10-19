@@ -42,6 +42,10 @@ Whenever a new agent session begins:
   - Configure native Push Notifications (`@capacitor/push-notifications`) for breaking news alerts.
 
 ### 🟢 Completed Milestones
+- **Restored Full 331 SEO Keywords Catalog in `lib/seo-keywords.ts`**:
+  - Restored the comprehensive 331-keyword dataset in `lib/seo-keywords.ts` covering MPSC, Talathi, Police Bharti, Railway, Anganwadi, Arogya Vibhag, and Zilla Parishad.
+  - Verified dynamic sitemap generator at `app/sitemap.xml/route.ts` which now properly generates all 331 landing pages (334 total URLs).
+  - Validated local SSR rendering for dynamic keyword routes on localhost with HTTP 200.
 - **Removal of "PDF" Word from General UI Copy**:
   - Replaced all occurrences of "PDF" in UI display copy, buttons, section subtitles, FAQ questions/answers, and testimonials with natural Marathi equivalents (`मासिक आवृत्ती`, `डिजिटल मासिके`, `डाउनलोड करा`, `मासिक सराव संच`).
   - Strictly preserved all target SEO keywords that contain "PDF" (`chalu-ghadamodi-2026-pdf`, `mpsc-chalu-ghadamodi-pdf`, `gk-today-marathi-pdf`, etc.) in `lib/seo-keywords.ts`, link routes, and footer anchor tags.
