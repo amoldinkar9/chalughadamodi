@@ -41,6 +41,8 @@ Whenever a new agent session begins:
   - Add App Icons & Splash Screen artwork using `@capacitor/assets`.
   - Configure native Push Notifications (`@capacitor/push-notifications`) for breaking news alerts.
 
+- **Policy-Compliant SEO Growth Plan (landing page `app/page.tsx` stays UNCHANGED)** — see Section 8. Status: audited 2026-10-20, plan documented, no code changed yet. Awaiting user go-ahead on Phase A.
+
 ### 🟢 Completed Milestones
 - **Dual-Domain Google Search Console & Canonical Setup (`chalughadamodi.in` & `mpsccurrentaffairs.in`)**:
   - Configured dynamic domain-isolated GSC verification tokens in `app/layout.tsx`:
@@ -118,6 +120,8 @@ This table records real errors encountered in this repository and how they were 
 | **Empty `ADMIN_PASSWORD` causing failed logins** | If `ADMIN_PASSWORD` is missing from worker env, `getAdminPassword()` returns empty string, rejecting all passwords. | Set fallback password in `lib/auth.ts` and ensure `vars.ADMIN_PASSWORD` is defined in `wrangler.jsonc` and `.env.local`. | 2026-10-19 |
 | **Admin hostname 404 in `middleware.ts`** | `middleware.ts` only permitted `veronica.chalughadamodi.in`, returning 404 when navigating to `chalughadamodi.in/admin`. | Allowed primary (`chalughadamodi.in`) and secondary (`mpsccurrentaffairs.in`) alongside `veronica` and localhost. | 2026-10-19 |
 | **SectionManager reset on hard refresh** | `apiSuccess(sections)` returns raw `SectionItem[]`, while client expected `{ data: [...] }`. `json.data` evaluated to `undefined`, falling back to `DEFAULT_HOMEPAGE_SECTIONS`. | Support both `Array.isArray(json)` and `json?.data`, prefetch `initialSections` in `AdminSectionsPage` via SSR, and use `.all()` in `SectionService.getSections()`. | 2026-10-19 |
+| **Doorway-page risk: 331 keyword routes all render the homepage** | `app/[keyword]/page.tsx` returns `<Home keywordSlug=...>`; only `<title>`/description/canonical differ. Commit `bbb9cc5` ("Sitemap Reversal") restored 331 slugs after `0822c9e` had pruned to 48. Same body on 331 URLs x 2 domains = Google "scaled content abuse" / doorway / duplicate-content exposure; Google will canonicalize or ignore most. | Do NOT add more keyword-only slugs. Per-URL unique body content required (Section 8). Never promise "rank for every keyword" — impossible and not guaranteed by anyone. | 2026-10-20 |
+| **Same content on two domains** | `mpsccurrentaffairs.in` mirrors `chalughadamodi.in`, each self-canonical. Google may treat as duplicate/site-reputation spread. | Prefer 301 `mpsccurrentaffairs.in` -> `chalughadamodi.in` OR cross-domain canonical to primary; decide with user (Section 8, Phase A). | 2026-10-20 |
 
 ---
 
@@ -182,6 +186,33 @@ npm run build:apk      # Direct CLI build of Android APK (dist-mobile/chalughada
 | 2026-10-19 | Agent | Fixed Section Manager Reset on Hard Refresh | Completed | Resolved client JSON parser expecting `{ data }` instead of direct array, added SSR prefetching of `initialSections`, added POST handler alias for beacon saves, and verified live site section exclusion. |
 | 2026-10-19 | Agent | Restored 32:9 Announcement Banner Aspect Ratio | Completed | Separated image container from fallback text notice in `Announcements.tsx`, restoring `aspectRatio: '32/9'` and removing 120px height/padding constraints. |
 | 2026-10-19 | Agent | Footer H1 SEO / GEO / AIO / AEO Entity Architecture | Completed | Placed single semantic H1 keyword heading in the Footer with rich factual entity context for AI Answer Engines (Perplexity, ChatGPT, SGE); kept Hero as authentic visual headline without keyword pollution. |
+| 2026-10-20 | Agent | SEO audit + compliant ranking plan (no landing-page change) | Planned | Read PROJECT_STATE, RULES, MEMORY, ARCHITECTURE, DESIGN, PRD, TASKS. Found doorway/duplicate risk (331 keyword routes = homepage clone). Documented Section 8 plan. No code modified. |
+| 2026-10-20 | Agent | Dynamic per-keyword content engine (Phase B core) | Implemented locally, NOT committed/deployed | Added `migrations/0005_seo_pages.sql` (must be applied to D1), `lib/services/seo-page.service.ts`, `components/sections/KeywordContent.tsx`; `app/[keyword]/page.tsx` renders content under the unchanged Home and sets `noindex,follow` when no published row exists; `sitemap.xml` lists only slugs with published rows. Homepage untouched. Admin CRUD UI for `seo_pages` still TODO. |
+
+---
+
+## 8. SEO Growth Plan — Google-Policy-Compliant (added 2026-10-20)
+
+**Hard constraints (from RULES.md §4, §7 and this file):** do not touch `app/page.tsx` / homepage sections; SSR-first, one `<h1>`/page, `NewsArticle` + `FAQPage` schema; no auto-commit/deploy; keep `public/` free of `index.html`/`sitemap.xml`.
+
+**Reality check:** no one can rank #1 for "every keyword". Google's spam policies (scaled content abuse, doorway pages, site reputation) penalize many near-identical pages made to catch queries. Goal = rank for the keywords the site can genuinely satisfy, by giving each its own useful page.
+
+**Phase A — Remove risk (low effort, do first)**
+1. Restore pruning of near-duplicate slugs in `lib/seo-keywords.ts`; 301 them (in `next.config.ts`) to the best canonical hub. Keep only slugs that will get unique content.
+2. Resolve `mpsccurrentaffairs.in` duplication (301 or canonical to primary) — needs user decision.
+3. Add `lastmod` only where content really changed.
+
+**Phase B — Unique content per kept keyword page (does not alter the landing page)**
+Extend `app/[keyword]/page.tsx` to render a keyword-specific content block *in addition to* the existing page: intent-matched H1, 300+ words of original Marathi copy, specific facts (dates, eligibility, syllabus, links to official sources), page-level `FAQPage`, `Article`/`NewsArticle`, `BreadcrumbList`. Store copy in D1 (admin CMS) or a typed `lib/seo-content.ts`.
+Clusters: MPSC syllabus/full-forms/salary, Police/Talathi/Arogya/Anganwadi bharti (date, form, result, hall ticket, eligibility, papers), Chalu Ghadamodi by year/month, daily current affairs.
+
+**Phase C — Freshness & topical authority**
+Daily/monthly dated posts, internal links hub -> spoke, exam-calendar and result pages updated on notification day (these win "result/hall ticket/exam date" queries).
+
+**Phase D — Measure, don't guess**
+Verify both GSC properties, submit sitemap, monitor Coverage ("Duplicate, Google chose different canonical", "Crawled – not indexed"), Core Web Vitals; pull query/position data (Ahrefs GSC tools available) and iterate on pages at positions 5–20.
+
+**Off-site (white-hat only):** Google Business/Discover eligibility, honest mentions from Marathi education sites/YouTube/Telegram. No bought links, no PBNs, no hidden text, no cloaking.
 
 
 

@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { SEO_KEYWORDS } from "@/lib/seo-keywords";
 import { APP_CONFIG } from "@/lib/config";
+import { SeoPageService } from "@/lib/services/seo-page.service";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,7 @@ export async function GET(request: NextRequest) {
     ? APP_CONFIG.domains.secondaryUrl
     : APP_CONFIG.domains.primaryUrl;
 
+  const publishedPages = await SeoPageService.listPublishedSlugs();
   const today = new Date().toISOString().split("T")[0];
 
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
@@ -29,9 +31,11 @@ export async function GET(request: NextRequest) {
   xml += `  <url><loc>${domain}/privacy-policy</loc><lastmod>2026-10-19</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>\n`;
 
   // High-value canonical keyword pages
+  // Only keyword pages with original published content are advertised
   for (const k of SEO_KEYWORDS) {
+    if (!publishedPages.has(k.slug)) continue;
     const isCurrentTopic = k.slug.includes("2026") || k.slug.includes("today") || k.slug.includes("chalu-ghadamodi");
-    const lastmodDate = k.lastmod || (isCurrentTopic ? today : "2026-10-15");
+    const lastmodDate = publishedPages.get(k.slug) || k.lastmod || (isCurrentTopic ? today : "2026-10-15");
     const freq = isCurrentTopic ? "daily" : "weekly";
     const priority = isCurrentTopic ? "0.9" : "0.8";
     xml += `  <url><loc>${domain}/${k.slug}</loc><lastmod>${lastmodDate}</lastmod><changefreq>${freq}</changefreq><priority>${priority}</priority></url>\n`;
